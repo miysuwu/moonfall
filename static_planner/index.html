@@ -190,10 +190,13 @@
     width:36px; height:36px; border-radius:10px;
     font-size:12px; font-weight:800; letter-spacing:.02em;
     flex-shrink:0; color:#0a0a10; overflow:hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-soft);
   }
   .class-icon.small{ width:28px; height:28px; font-size:10.5px; border-radius:8px; }
-  .class-icon.tile{ width:44px; height:44px; font-size:14px; border-radius:10px; }
-  .class-icon.has-image{ background: var(--panel-2); padding:0; border:1px solid var(--border); }
+  .class-icon.tile{ width:36px; height:36px; font-size:12px; border-radius:8px; }
+  .class-icon.has-image{ background: rgba(19, 19, 25, 0.25); padding:0; border:1px solid var(--border); }
   .class-icon img{ width:100%; height:100%; object-fit:cover; display:block; }
   .field-with-icon{ display:flex; align-items:center; gap:8px; }
   .field-with-icon select{ flex:1; }
@@ -237,39 +240,46 @@
   .difficulty-row input{ width:96px; flex-shrink:0; padding:6px 8px; font-size:12.5px; }
 
   /* --- raid two-column layout --- */
-  .raid-columns{ display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start; }
+  .raid-columns{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items:start; }
   @media (max-width: 900px){ .raid-columns{ grid-template-columns: 1fr; } }
-  .raid-col{ display:flex; flex-direction:column; gap: 18px; }
+  .raid-col{ display:flex; flex-direction:column; gap: 12px; }
   .raid-col .card{ margin-top:0; }
 
-  .party-block{ margin-top: 10px; }
-  .party-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-  .party-head .pl{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color: var(--muted); }
-  .party-fill{ font-size:11px; font-weight:700; color: var(--muted-2); }
+  .party-block{ margin-top: 7px; }
+  .party-block + .party-block{
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .party-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:4px; }
+  .party-head .pl{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em; color: var(--muted); }
+  .party-fill{ font-size:10px; font-weight:700; color: var(--muted-2); }
   
   /* Dense slot tile grid matching image */
   .slot-grid{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
   @media (max-width: 600px){
     .slot-grid{ grid-template-columns: 1fr; }
   }
 
   .slot{
-    background: #0d0d13;
+    background: rgba(13, 13, 19, 0.08);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    padding: 8px;
+    border-radius: 8px;
+    padding: 6px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    transition: border-color 0.15s ease;
+    gap: 8px;
+    transition: border-color 0.15s ease, background 0.15s ease;
   }
   .slot.filled{
     border-color: var(--border);
-    background: #111118;
+    background: rgba(19, 19, 26, 0.1);
   }
   .slot-icon-wrap{ flex-shrink: 0; }
   .slot-body{
@@ -277,25 +287,29 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 3px;
   }
   .slot-body select.char-select{
-    font-size: 12px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 13px;
     font-weight: 700;
-    padding: 4px 6px;
-    height: 28px;
-    background: var(--panel);
+    padding: 2px 20px 2px 5px;
+    height: 23px;
+    background: rgba(19, 19, 25, 0.06) url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%238a8a95' d='M5.5 7.5l4.5 4.5 4.5-4.5z'/%3E%3C/svg%3E") no-repeat right 4px center / 12px;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 5px;
+    color: var(--text);
   }
   .slot-bottom-row{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 6px;
+    gap: 5px;
   }
   .slot-class-text{
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--muted);
     white-space: nowrap;
@@ -303,20 +317,100 @@
     text-overflow: ellipsis;
   }
   .slot-body select.player-select{
-    font-size: 11px;
-    padding: 2px 5px;
-    height: 24px;
-    background: var(--panel);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 12px;
+    padding: 1px 16px 1px 4px;
+    height: 19px;
+    background: rgba(19, 19, 25, 0.06) url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%238a8a95' d='M5.5 7.5l4.5 4.5 4.5-4.5z'/%3E%3C/svg%3E") no-repeat right 3px center / 10px;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 5px;
     width: auto;
     max-width: 95px;
     flex-shrink: 0;
   }
 
-  .raid-card .card-title .rate.pink{ background: var(--pink-soft); color: var(--pink); }
-  .raid-card .card-title .rate.amber{ background: var(--amber-soft); color: var(--amber); }
-  .raid-card .card-title .rate.teal{ background: var(--teal-soft); color: var(--teal); }
+  .raid-card{ padding: 16px 18px 18px; }
+  .raid-card .card-title{ font-size: 14px; margin-bottom: 2px; }
+
+  /* --- edit mode toggle switch --- */
+  .switch-row{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .switch-row .switch-label{ font-size: 13.5px; font-weight: 700; }
+  .switch-row .switch-desc{ font-size: 12px; color: var(--muted); margin-top:2px; }
+  .switch{
+    position: relative; display:inline-block; width:42px; height:24px; flex-shrink:0; cursor:pointer;
+  }
+  .switch input{ opacity:0; width:0; height:0; position:absolute; }
+  .switch .track{
+    position:absolute; inset:0; border-radius:999px;
+    background: rgba(19, 19, 25, 0.5); border:1px solid var(--border);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .switch .thumb{
+    position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%;
+    background: var(--muted); transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .switch input:checked + .track{ background: rgba(109, 63, 209, 0.35); border-color: var(--violet); }
+  .switch input:checked + .track .thumb{ transform: translateX(18px); background: #f2ecff; }
+
+  /* --- edit mode vs view mode --- */
+  .slot-view{ display: none; }
+
+  body.edit-mode .slot-body{ display: flex; }
+  body.edit-mode .slot-view{ display: none; }
+  body.edit-mode .slot{ background: rgba(13, 13, 19, 0.14); padding: 6px; }
+
+  /* view mode (default): clean, compact, premium — icon left, name/class stacked, player right */
+  body:not(.edit-mode) .slot-body{ display: none; }
+  body:not(.edit-mode) .slot-view{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    min-width: 0;
+    gap: 10px;
+  }
+  body:not(.edit-mode) .slot{
+    padding: 9px 12px;
+    gap: 10px;
+    background: rgba(13, 13, 19, 0.1);
+  }
+  .slot-view-main{
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .slot-name-display{
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .slot-name-display.empty-text{ color: var(--muted-2); font-weight: 600; }
+  .slot-class-display{
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .slot-player-display{
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .slot-player-display.empty-text{ color: var(--muted-2); }
+
+  .raid-card .card-title .rate.pink{ background: rgba(255, 79, 163, 0.12); color: var(--pink); }
+  .raid-card .card-title .rate.amber{ background: rgba(245, 185, 66, 0.12); color: var(--amber); }
+  .raid-card .card-title .rate.teal{ background: rgba(63, 230, 196, 0.12); color: var(--teal); }
 
   footer{ text-align:center; color: var(--muted-2); font-size: 11.5px; margin-top: 30px; line-height:1.6; }
   footer code{ color: var(--muted); }
@@ -373,8 +467,21 @@
   <div class="tab-panel" id="panel-settings">
 
     <div class="card">
+      <div class="switch-row">
+        <div>
+          <div class="switch-label">Edit Mode</div>
+          <div class="switch-desc">When off the dropdowns are hidden for a cleaner, read-only view.</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="editModeToggle">
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-title">Raid Difficulties</div>
-      <div class="card-sub">Set the difficulty shown on each raid card · e.g. Normal, Hard, HM, NiM — free text, saved into the export</div>
+      <div class="card-sub">Difficulty shown on each raid card · saved to Export</div>
       <div class="divider"></div>
       <div id="difficultySettingsWrap"></div>
       <datalist id="difficultySuggestions"></datalist>
@@ -462,12 +569,12 @@ const CLASS_LIST = [
 ];
 
 const ROLE_COLORS = {
-  warrior: 'var(--coral)',
-  martial: 'var(--teal)',
-  gunner: 'var(--amber)',
-  mage: 'var(--purple)',
-  assassin: 'var(--pink)',
-  specialist: 'var(--sky)'
+  warrior: 'rgba(255, 107, 92, 0.55)',
+  martial: 'rgba(63, 230, 196, 0.55)',
+  gunner: 'rgba(245, 185, 66, 0.55)',
+  mage: 'rgba(185, 139, 255, 0.55)',
+  assassin: 'rgba(255, 79, 163, 0.55)',
+  specialist: 'rgba(92, 200, 255, 0.55)'
 };
 
 const CLASS_META = {
@@ -519,7 +626,7 @@ function classIconHtml(className, variant){
   else if(variant === 'tile') sizeClass = ' tile';
 
   const meta = CLASS_META[className];
-  const fallbackBg = meta ? ROLE_COLORS[meta.role] : 'var(--muted-2)';
+  const fallbackBg = meta ? ROLE_COLORS[meta.role] : 'rgba(92, 90, 107, 0.4)';
   const fallbackText = meta ? meta.abbr : '?';
 
   if(!className){
@@ -918,12 +1025,21 @@ function slotHtml(raidId, party, pIdx, sIdx){
   return `
     <div class="slot ${c ? 'filled' : 'empty'}">
       <div class="slot-icon-wrap">${classIconLink}</div>
+
       <div class="slot-body">
         <select class="char-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${charOptions}</select>
         <div class="slot-bottom-row">
           <span class="slot-class-text">${c ? escapeAttr(c.class) : 'Class'}</span>
           <select class="player-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${playerOptions}</select>
         </div>
+      </div>
+
+      <div class="slot-view">
+        <div class="slot-view-main">
+          <span class="slot-name-display ${c ? '' : 'empty-text'}">${c ? escapeAttr(c.ign) : '—'}</span>
+          <span class="slot-class-display">${c ? escapeAttr(c.class) : 'Empty'}</span>
+        </div>
+        <span class="slot-player-display ${playerFilter ? '' : 'empty-text'}">${playerFilter ? escapeAttr(playerFilter) : ''}</span>
       </div>
     </div>`;
 }
@@ -934,16 +1050,10 @@ function raidCardHtml(raid, group, groupKey){
   const filled = parties.reduce((s,p) => s + p.filter(v => v!=null).length, 0);
 
   const partiesHtml = parties.map((party, pIdx) => {
-    const pLabel = group.partyLabels[pIdx] || `Party ${pIdx+1}`;
-    const pFilled = party.filter(v => v!=null).length;
     const slotsHtml = party.map((val, sIdx) => slotHtml(raid.id, party, pIdx, sIdx)).join('');
 
     return `
       <div class="party-block">
-        <div class="party-head">
-          <span class="pl">${pLabel}</span>
-          <span class="party-fill">${pFilled}/${party.length}</span>
-        </div>
         <div class="slot-grid">${slotsHtml}</div>
       </div>`;
   }).join('');
@@ -960,6 +1070,25 @@ function raidCardHtml(raid, group, groupKey){
 
 function renderAllRaidGroups(){
   Object.keys(RAID_GROUPS).forEach(key => renderRaidGroup(key));
+}
+
+/* ---------- Edit mode ---------- */
+let editMode = localStorage.getItem('editMode') === '1';
+
+function applyEditMode(){
+  document.body.classList.toggle('edit-mode', editMode);
+  const toggle = document.getElementById('editModeToggle');
+  if(toggle) toggle.checked = editMode;
+}
+
+function initEditModeToggle(){
+  const toggle = document.getElementById('editModeToggle');
+  applyEditMode();
+  toggle.addEventListener('change', () => {
+    editMode = toggle.checked;
+    localStorage.setItem('editMode', editMode ? '1' : '0');
+    applyEditMode();
+  });
 }
 
 /* ---------- Tabs ---------- */
@@ -1027,6 +1156,7 @@ async function init(){
   renderAllRaidGroups();
   renderDifficultySettings();
   initTabs();
+  initEditModeToggle();
 
   document.getElementById('btnAddChar').addEventListener('click', addCharacter);
   document.getElementById('charSearch').addEventListener('input', renderCharacterTable);
