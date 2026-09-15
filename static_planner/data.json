@@ -295,46 +295,67 @@
       "static": "Shizu"
     },
     {
-      "id": 73,
+      "id": 79,
       "ilvl": "1780",
-      "ign": "Vecknagi",
+      "ign": "Ironhaki",
+      "class": "Machinist",
+      "static": "Haki"
+    },
+    {
+      "id": 80,
+      "ilvl": "1770",
+      "ign": "Hakiiro",
       "class": "Glaivier",
-      "static": "Veck"
+      "static": "Haki"
     },
     {
-      "id": 74,
-      "ilvl": "1750",
-      "ign": "Spades",
-      "class": "Arcanist",
-      "static": "Veck"
+      "id": 81,
+      "ilvl": "1760",
+      "ign": "Wildhaki",
+      "class": "Wildsoul",
+      "static": "Haki"
     },
     {
-      "id": 75,
-      "ilvl": "1750",
-      "ign": "Ariochea",
-      "class": "Guardianknight",
-      "static": "Veck"
+      "id": 82,
+      "ilvl": "1760",
+      "ign": "Hakibringer",
+      "class": "Artillerist",
+      "static": "Haki"
     },
     {
-      "id": 76,
+      "id": 83,
       "ilvl": "1750",
-      "ign": "Veckyrie",
-      "class": "Valkyrie",
-      "static": "Veck"
+      "ign": "Shadowhaki",
+      "class": "Shadowhunter",
+      "static": "Haki"
     },
     {
-      "id": 77,
+      "id": 84,
       "ilvl": "1750",
-      "ign": "Jutsugami",
-      "class": "Striker",
-      "static": "Veck"
+      "ign": "Bigbringer",
+      "class": "Paladin",
+      "static": "Haki"
     },
     {
-      "id": 78,
-      "ilvl": "1750",
-      "ign": "Sandlot",
-      "class": "Gunlancer",
-      "static": "Veck"
+      "id": 85,
+      "ilvl": "1730",
+      "ign": "Gasps",
+      "class": "Bard",
+      "static": "nichi"
+    },
+    {
+      "id": 86,
+      "ilvl": "1730",
+      "ign": "megutwink",
+      "class": "Aeromancer",
+      "static": "megu"
+    },
+    {
+      "id": 87,
+      "ilvl": "1730",
+      "ign": "Solyx",
+      "class": "Souleater",
+      "static": "Erik"
     }
   ],
   "assignments": {
@@ -346,9 +367,9 @@
         56
       ],
       [
-        23,
-        46,
-        74,
+        86,
+        87,
+        79,
         30
       ]
     ],
@@ -362,7 +383,7 @@
       [
         19,
         48,
-        78,
+        84,
         26
       ]
     ],
@@ -376,7 +397,7 @@
       [
         25,
         43,
-        76,
+        83,
         22
       ]
     ],
@@ -390,8 +411,8 @@
       [
         20,
         47,
-        75,
-        29
+        80,
+        26
       ]
     ],
     "kazeros-5": [
@@ -402,9 +423,9 @@
         57
       ],
       [
-        21,
+        23,
         27,
-        77,
+        82,
         45
       ]
     ],
@@ -416,17 +437,17 @@
         59
       ],
       [
-        24,
-        28,
-        73,
-        44
+        21,
+        46,
+        81,
+        85
       ]
     ],
     "serca-1": [
       [
-        23,
+        24,
         46,
-        74,
+        79,
         30
       ]
     ],
@@ -434,15 +455,15 @@
       [
         19,
         48,
-        78,
-        26
+        84,
+        29
       ]
     ],
     "serca-3": [
       [
         25,
         43,
-        76,
+        83,
         22
       ]
     ],
@@ -450,31 +471,31 @@
       [
         20,
         47,
-        75,
-        29
+        80,
+        26
       ]
     ],
     "serca-5": [
       [
-        21,
-        27,
-        77,
+        23,
+        28,
+        82,
         45
       ]
     ],
     "serca-6": [
       [
-        24,
-        28,
-        73,
+        21,
+        27,
+        81,
         44
       ]
     ],
     "cathedral-1": [
       [
-        23,
+        24,
         46,
-        74,
+        79,
         30
       ]
     ],
@@ -482,15 +503,15 @@
       [
         19,
         48,
-        78,
-        26
+        84,
+        29
       ]
     ],
     "cathedral-3": [
       [
         25,
         43,
-        76,
+        83,
         22
       ]
     ],
@@ -498,23 +519,23 @@
       [
         20,
         47,
-        75,
-        29
+        80,
+        26
       ]
     ],
     "cathedral-5": [
       [
-        21,
-        27,
-        77,
+        23,
+        28,
+        82,
         45
       ]
     ],
     "cathedral-6": [
       [
-        24,
-        28,
-        73,
+        21,
+        27,
+        81,
         44
       ]
     ]
