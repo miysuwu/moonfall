@@ -5,336 +5,480 @@
       "ilvl": "1790",
       "ign": "Miysu",
       "class": "Deathblade",
-      "static": "megu"
+      "static": "megu",
+      "role": "dps",
+      "cp": "7502.12",
+      "party": "2"
     },
     {
       "id": 20,
       "ilvl": "1770",
       "ign": "Mochies",
       "class": "Wildsoul",
-      "static": "megu"
+      "static": "megu",
+      "role": "dps",
+      "cp": "5363.11",
+      "party": "2"
     },
     {
       "id": 21,
       "ilvl": "1770",
       "ign": "Teases",
       "class": "Deathblade",
-      "static": "megu"
+      "static": "megu",
+      "role": "dps",
+      "cp": "5673.43",
+      "party": "2"
     },
     {
       "id": 22,
       "ilvl": "1770",
       "ign": "Miynu",
       "class": "Artist",
-      "static": "megu"
+      "static": "megu",
+      "role": "sup",
+      "cp": "5090",
+      "party": "2"
     },
     {
       "id": 23,
       "ilvl": "1770",
       "ign": "Flirts",
       "class": "Deathblade",
-      "static": "megu"
+      "static": "megu",
+      "role": "dps",
+      "cp": "5652.28",
+      "party": "2"
     },
     {
       "id": 25,
       "ilvl": "1770",
       "ign": "Banshies",
       "class": "Aeromancer",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "dps",
+      "cp": "5689.02",
+      "party": "2"
     },
     {
       "id": 26,
       "ilvl": "1795",
       "ign": "Sighs",
       "class": "Artist",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "sup",
+      "cp": "7357",
+      "party": "2"
     },
     {
       "id": 28,
       "ilvl": "1770",
       "ign": "Stia",
       "class": "Wildsoul",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "dps",
+      "cp": "5547.42",
+      "party": "2"
     },
     {
       "id": 29,
       "ilvl": "1770",
       "ign": "Starrie",
       "class": "Artist",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "sup",
+      "cp": "5960.32",
+      "party": "2"
     },
     {
       "id": 30,
       "ilvl": "1770",
       "ign": "Cleanses",
       "class": "Artist",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "sup",
+      "cp": "5284.53",
+      "party": "2"
     },
     {
       "id": 43,
-      "ilvl": "1784",
+      "ilvl": "1784.17",
       "ign": "Lunaeix",
       "class": "Souleater",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "dps",
+      "cp": "6914.16",
+      "party": "2"
     },
     {
       "id": 45,
-      "ilvl": "1768",
+      "ilvl": "1768.33",
       "ign": "Matryarchx",
       "class": "Valkyrie",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "sup",
+      "cp": "4134.21",
+      "party": "2"
     },
     {
       "id": 46,
-      "ilvl": "1772",
+      "ilvl": "1772.5",
       "ign": "Banishx",
       "class": "Guardianknight",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "dps",
+      "cp": "5226.27",
+      "party": "2"
     },
     {
       "id": 47,
-      "ilvl": "1766",
+      "ilvl": "1766.67",
       "ign": "Anihilix",
       "class": "Scrapper",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "dps",
+      "cp": "4660.91",
+      "party": "2"
     },
     {
       "id": 48,
-      "ilvl": "1760",
+      "ilvl": "1761.67",
       "ign": "Astharothx",
       "class": "Shadowhunter",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "dps",
+      "cp": "4290.93",
+      "party": "2"
     },
     {
       "id": 49,
-      "ilvl": "1789",
+      "ilvl": "1789.17",
       "ign": "Frostfour",
       "class": "Breaker",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "dps",
+      "cp": "7359.99",
+      "party": "1"
     },
     {
       "id": 50,
       "ilvl": "1760",
       "ign": "Frostelight",
       "class": "Paladin",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "sup",
+      "cp": "3580.24",
+      "party": "1"
     },
     {
       "id": 51,
       "ilvl": "1770",
       "ign": "Frosthree",
       "class": "Breaker",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "dps",
+      "cp": "5520.51",
+      "party": "1"
     },
     {
       "id": 52,
-      "ilvl": "1769",
+      "ilvl": "1769.17",
       "ign": "Frostclone",
       "class": "Breaker",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "dps",
+      "cp": "5311.93",
+      "party": "1"
     },
     {
       "id": 53,
-      "ilvl": "1754",
+      "ilvl": "1754.17",
       "ign": "Frostwo",
       "class": "Breaker",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "dps",
+      "cp": "5418.04",
+      "party": "1"
     },
     {
       "id": 55,
       "ilvl": "1770",
       "ign": "Àish",
       "class": "Guardianknight",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "dps",
+      "cp": "4261.8",
+      "party": "1"
     },
     {
       "id": 56,
       "ilvl": "1770",
       "ign": "Æïsh",
       "class": "Valkyrie",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "sup",
+      "cp": "5073.97",
+      "party": "1"
     },
     {
       "id": 57,
-      "ilvl": "1785",
+      "ilvl": "1785.83",
       "ign": "Aïsh",
       "class": "Valkyrie",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "sup",
+      "cp": "7089.86",
+      "party": "1"
     },
     {
       "id": 58,
       "ilvl": "1770",
       "ign": "Âish",
       "class": "Souleater",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "dps",
+      "cp": "4281.24",
+      "party": "1"
     },
     {
       "id": 59,
       "ilvl": "1770",
       "ign": "Aishyaya",
       "class": "Artist",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "sup",
+      "cp": "3620.17",
+      "party": "1"
     },
     {
       "id": 60,
       "ilvl": "1755",
       "ign": "Aishyrie",
       "class": "Valkyrie",
-      "static": "Aish"
+      "static": "Aish",
+      "role": "sup",
+      "cp": "4652.11",
+      "party": "1"
     },
     {
       "id": 61,
-      "ilvl": "1785",
+      "ilvl": "1785.83",
       "ign": "Cheangiv",
       "class": "Artillerist",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "7632.99",
+      "party": "1"
     },
     {
       "id": 62,
-      "ilvl": "1770",
+      "ilvl": "1770.83",
       "ign": "Notcheangiv",
       "class": "Breaker",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "5261.69",
+      "party": "1"
     },
     {
       "id": 63,
-      "ilvl": "1770",
+      "ilvl": "1770.83",
       "ign": "Cheangartil",
       "class": "Artillerist",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "6329.14",
+      "party": "1"
     },
     {
       "id": 64,
       "ilvl": "1770",
       "ign": "Zenlong",
       "class": "Striker",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "5366.9",
+      "party": "1"
     },
     {
       "id": 65,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Cheangsharp",
       "class": "Sharpshooter",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "5453.2",
+      "party": "1"
     },
     {
       "id": 66,
       "ilvl": "1750",
       "ign": "Cheangmachine",
       "class": "Machinist",
-      "static": "Cheangiv"
+      "static": "Cheangiv",
+      "role": "dps",
+      "cp": "4428.11",
+      "party": "1"
     },
     {
       "id": 67,
-      "ilvl": "1787",
+      "ilvl": "1787.5",
       "ign": "Shizuuku",
       "class": "Scrapper",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "dps",
+      "cp": "6930.16",
+      "party": "1"
     },
     {
       "id": 68,
-      "ilvl": "1770",
+      "ilvl": "1772.5",
       "ign": "Rurinami",
       "class": "Glaivier",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "dps",
+      "cp": "4686.64",
+      "party": "1"
     },
     {
       "id": 69,
-      "ilvl": "1770",
+      "ilvl": "1771.67",
       "ign": "Biscince",
       "class": "Berserker",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "dps",
+      "cp": "4797.25",
+      "party": "1"
     },
     {
       "id": 70,
-      "ilvl": "1765",
+      "ilvl": "1765.83",
       "ign": "Shizuvera",
       "class": "Deathblade",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "dps",
+      "cp": "4401.69",
+      "party": "1"
     },
     {
       "id": 71,
-      "ilvl": "1768",
+      "ilvl": "1768.33",
       "ign": "Saifuyu",
       "class": "Bard",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "sup",
+      "cp": "4243.16",
+      "party": "1"
     },
     {
       "id": 72,
       "ilvl": "1770",
       "ign": "Anevera",
       "class": "Gunslinger",
-      "static": "Shizu"
+      "static": "Shizu",
+      "role": "dps",
+      "cp": "4548.05",
+      "party": "1"
     },
     {
       "id": 85,
       "ilvl": "1770",
       "ign": "Gasps",
       "class": "Bard",
-      "static": "nichi"
+      "static": "nichi",
+      "role": "sup",
+      "cp": "4564.05",
+      "party": "2"
     },
     {
       "id": 86,
       "ilvl": "1770",
       "ign": "Remove",
       "class": "Dimensionalist",
-      "static": "megu"
+      "static": "megu",
+      "role": "dps",
+      "cp": "5163.04",
+      "party": "2"
     },
     {
       "id": 87,
-      "ilvl": "1750",
+      "ilvl": "1753.33",
       "ign": "Solyx",
       "class": "Souleater",
-      "static": "Erik"
+      "static": "Erik",
+      "role": "dps",
+      "cp": "4470.17",
+      "party": "2"
     },
     {
       "id": 88,
-      "ilvl": "1740",
+      "ilvl": "1740.83",
       "ign": "Frostwink",
       "class": "Dimensionalist",
-      "static": "Frost"
+      "static": "Frost",
+      "role": "dps",
+      "cp": "3635.68",
+      "party": "1"
     },
     {
       "id": 89,
-      "ilvl": "1788",
+      "ilvl": "1788.33",
       "ign": "Xÿro",
       "class": "Breaker",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "7214.82",
+      "party": "2"
     },
     {
       "id": 90,
       "ilvl": "1770",
       "ign": "Dràgonhaze",
       "class": "Guardianknight",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "5108.95",
+      "party": "2"
     },
     {
       "id": 91,
       "ilvl": "1770",
       "ign": "Mÿsteries",
       "class": "Breaker",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "5956.73",
+      "party": "2"
     },
     {
       "id": 92,
-      "ilvl": "1750",
+      "ilvl": "1752.5",
       "ign": "Blàdehaze",
       "class": "Deathblade",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "4479.33",
+      "party": "2"
     },
     {
       "id": 93,
       "ilvl": "1750",
       "ign": "Aioneth",
       "class": "Dimensionalist",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "4545.53",
+      "party": "2"
     },
     {
       "id": 94,
       "ilvl": "1775",
       "ign": "Saberahmed",
       "class": "Breaker",
-      "static": "Malice"
+      "static": "Malice",
+      "role": "dps",
+      "cp": "6447.42",
+      "party": "2"
     }
   ],
   "assignments": {
@@ -396,7 +540,7 @@
     ],
     "belgardin-5": [
       [
-        53,
+        72,
         62,
         55,
         50
@@ -426,7 +570,7 @@
       [
         21,
         48,
-        null,
+        91,
         30
       ]
     ],
@@ -434,7 +578,7 @@
       [
         23,
         46,
-        null,
+        93,
         26
       ]
     ],
@@ -442,7 +586,7 @@
       [
         86,
         28,
-        null,
+        94,
         45
       ]
     ],
@@ -450,7 +594,7 @@
       [
         20,
         47,
-        null,
+        89,
         85
       ]
     ],
@@ -458,7 +602,7 @@
       [
         25,
         43,
-        null,
+        92,
         22
       ]
     ],
@@ -466,7 +610,7 @@
       [
         19,
         87,
-        null,
+        90,
         29
       ]
     ],
@@ -474,7 +618,7 @@
       [
         21,
         48,
-        null,
+        91,
         30
       ]
     ],
@@ -482,7 +626,7 @@
       [
         23,
         46,
-        null,
+        93,
         26
       ]
     ],
@@ -490,7 +634,7 @@
       [
         86,
         28,
-        null,
+        94,
         45
       ]
     ],
@@ -498,7 +642,7 @@
       [
         20,
         47,
-        null,
+        89,
         85
       ]
     ],
@@ -506,7 +650,7 @@
       [
         25,
         43,
-        null,
+        92,
         22
       ]
     ],
@@ -514,13 +658,13 @@
       [
         19,
         87,
-        null,
+        90,
         29
       ]
     ]
   },
   "raidDifficulty": {
-    "belgardin-1": "HM",
+    "belgardin-1": "NiM",
     "belgardin-2": "HM",
     "belgardin-3": "HM",
     "belgardin-4": "NM",
