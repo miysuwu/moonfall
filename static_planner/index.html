@@ -445,7 +445,7 @@
     <div class="tab-nav" id="tabNav">
       <button class="tab-btn active" data-tab="serca" data-accent="pink"><span class="dot"></span>Serca</button>
       <button class="tab-btn" data-tab="cathedral" data-accent="amber"><span class="dot"></span>Cathedral</button>
-      <button class="tab-btn" data-tab="kazeros" data-accent="teal"><span class="dot"></span>Kazeros</button>
+      <button class="tab-btn" data-tab="belgardin" data-accent="teal"><span class="dot"></span>Belgardin</button>
       <button class="tab-btn" data-tab="settings"><span class="dot"></span>Settings</button>
     </div>
   </div>
@@ -459,8 +459,8 @@
     <div id="raids-cathedral"></div>
   </div>
   
-  <div class="tab-panel" id="panel-kazeros">
-    <div id="raids-kazeros"></div>
+  <div class="tab-panel" id="panel-belgardin">
+    <div id="raids-belgardin"></div>
   </div>
 
   <!-- SETTINGS TAB -->
@@ -641,16 +641,16 @@ function classIconHtml(className, variant){
 }
 
 const RAID_GROUPS = {
-  kazeros: {
-    label: 'Kazeros',
+  belgardin: {
+    label: 'Belgardin',
     accent: 'teal',
     raids: [
-      { id: 'kazeros-1', name: 'Kazeros 1' },
-      { id: 'kazeros-2', name: 'Kazeros 2' },
-      { id: 'kazeros-3', name: 'Kazeros 3' },
-      { id: 'kazeros-4', name: 'Kazeros 4' },
-      { id: 'kazeros-5', name: 'Kazeros 5' },
-      { id: 'kazeros-6', name: 'Kazeros 6' }
+      { id: 'belgardin-1', name: 'Belgardin 1' },
+      { id: 'belgardin-2', name: 'Belgardin 2' },
+      { id: 'belgardin-3', name: 'Belgardin 3' },
+      { id: 'belgardin-4', name: 'Belgardin 4' },
+      { id: 'belgardin-5', name: 'Belgardin 5' },
+      { id: 'belgardin-6', name: 'Belgardin 6' }
     ],
     partyLabels: ['Party 1','Party 2']
   },
@@ -686,12 +686,6 @@ const RAID_GROUPS = {
 // was baked into the name) to the new stable raid ids, so existing data.json
 // files keep their party assignments after this update.
 const LEGACY_RAID_ID_MAP = {
-  'Kazeros HM 1': 'kazeros-1',
-  'Kazeros HM 2': 'kazeros-2',
-  'Kazeros HM 3': 'kazeros-3',
-  'Kazeros HM 4': 'kazeros-4',
-  'Kazeros HM 5': 'kazeros-5',
-  'Kazeros HM 6': 'kazeros-6',
   'Serca 1 HM': 'serca-1',
   'Serca 2 NiM': 'serca-2',
   'Serca 3 NiM': 'serca-3',
@@ -709,15 +703,15 @@ const LEGACY_RAID_ID_MAP = {
 // Default difficulty per raid id — matches what used to be hard-coded into
 // the raid name, so nothing visually changes until the user edits it.
 const DEFAULT_RAID_DIFFICULTY = {
-  'kazeros-1': 'HM', 'kazeros-2': 'HM', 'kazeros-3': 'HM',
-  'kazeros-4': 'HM', 'kazeros-5': 'HM', 'kazeros-6': 'HM',
+  'belgardin-1': 'NM', 'belgardin-2': 'NM', 'belgardin-3': 'NM',
+  'belgardin-4': 'NM', 'belgardin-5': 'NM', 'belgardin-6': 'NM',
   'serca-1': 'HM', 'serca-2': 'NiM', 'serca-3': 'NiM',
   'serca-4': 'NiM', 'serca-5': 'HM', 'serca-6': 'HM',
   'cathedral-1': 'Lv. 3', 'cathedral-2': 'Lv. 3', 'cathedral-3': 'Lv. 3',
   'cathedral-4': 'Lv. 3', 'cathedral-5': 'Lv. 3', 'cathedral-6': 'Lv. 3'
 };
 
-const DIFFICULTY_SUGGESTIONS = ['Normal', 'Hard', 'HM', 'NiM', 'Lv. 1', 'Lv. 2', 'Lv. 3'];
+const DIFFICULTY_SUGGESTIONS = ['NM', 'HM', 'NiM', 'Normal', 'Hard', 'Lv. 1', 'Lv. 2', 'Lv. 3'];
 
 let characters = [];
 let assignments = {};
