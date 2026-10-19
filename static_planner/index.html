@@ -316,6 +316,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .slot-ilvl{ font-weight: 700; color: var(--text, inherit); margin-right: 4px; }
+  .slot-ilvl.low{ color: var(--danger); }
+  .slot.ilvl-low{ box-shadow: inset 0 0 0 1px var(--danger); }
+  .slot.ilvl-low .slot-class-text,
+  .slot.ilvl-low .slot-class-display{ color: var(--danger); }
   .slot-body select.player-select{
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -711,6 +716,34 @@ const DEFAULT_RAID_DIFFICULTY = {
   'cathedral-4': 'Lv. 3', 'cathedral-5': 'Lv. 3', 'cathedral-6': 'Lv. 3'
 };
 
+// Minimum item level per raid group and difficulty. A raid whose group or
+// difficulty is not listed here is not checked.
+const MIN_ILVL = {
+  belgardin: { 'NM': 1750, 'HM': 1770, 'NIM': 1780 },
+  serca:     { 'NM': 1710, 'HM': 1730, 'NIM': 1740 },
+  cathedral: { 'LV1': 1700, 'LV2': 1720, 'LV3': 1750 }
+};
+
+function parseIlvl(value){
+  const n = parseFloat(String(value == null ? '' : value).replace(/[,\s]/g, '').replace(/[^0-9.]/g, ''));
+  return Number.isFinite(n) ? n : null;
+}
+
+function normalizeDifficulty(d){
+  const k = String(d || '').trim().toUpperCase().replace(/[\s.]/g, '');
+  if(k === 'NM' || k === 'NORMAL') return 'NM';
+  if(k === 'HM' || k === 'HARD') return 'HM';
+  if(k === 'NIM' || k === 'NIGHTMARE') return 'NIM';
+  return k;
+}
+
+function requiredIlvl(groupKey, raidId){
+  const table = MIN_ILVL[groupKey];
+  if(!table) return null;
+  const v = table[normalizeDifficulty(raidDifficulty[raidId])];
+  return v == null ? null : v;
+}
+
 const DIFFICULTY_SUGGESTIONS = ['NM', 'HM', 'NiM', 'Normal', 'Hard', 'Lv. 1', 'Lv. 2', 'Lv. 3'];
 
 let characters = [];
@@ -993,7 +1026,7 @@ function renderRaidGroup(groupKey){
   });
 }
 
-function slotHtml(raidId, party, pIdx, sIdx){
+function slotHtml(raidId, party, pIdx, sIdx, groupKey){
   const val = party[sIdx];
   const key = `${raidId}__${pIdx}__${sIdx}`;
   const c = val != null ? characters.find(x => x.id === val) : null;
@@ -1012,19 +1045,28 @@ function slotHtml(raidId, party, pIdx, sIdx){
     ? `https://lostark.bible/character/CE/${encodeURIComponent(c.ign)}`
     : '';
 
+  const ilvlText = c ? String(c.ilvl || '').trim() : '';
+  const ilvlNum = c ? parseIlvl(c.ilvl) : null;
+  const need = requiredIlvl(groupKey, raidId);
+  const tooLow = !!(c && need != null && ilvlNum != null && ilvlNum < need);
+  const ilvlTitle = tooLow ? ` title="Item level too low: ${ilvlNum} &lt; ${need} required"` : '';
+  const ilvlHtml = ilvlText
+    ? `<span class="slot-ilvl${tooLow ? ' low' : ''}"${ilvlTitle}>${tooLow ? '⚠ ' : ''}${escapeAttr(ilvlText)}</span>`
+    : '';
+
   const classIcon = classIconHtml(c ? c.class : null, 'tile');
   const classIconLink = armoryUrl
     ? `<a href="${armoryUrl}" target="_blank" rel="noopener noreferrer" title="Open ${escapeAttr(c.ign)} on Lost Ark Bible" style="display:inline-flex; text-decoration:none; cursor:pointer;">${classIcon}</a>`
     : classIcon;
 
   return `
-    <div class="slot ${c ? 'filled' : 'empty'}">
+    <div class="slot ${c ? 'filled' : 'empty'}${tooLow ? ' ilvl-low' : ''}">
       <div class="slot-icon-wrap">${classIconLink}</div>
 
       <div class="slot-body">
         <select class="char-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${charOptions}</select>
         <div class="slot-bottom-row">
-          <span class="slot-class-text">${c ? escapeAttr(c.class) : 'Class'}</span>
+          <span class="slot-class-text">${ilvlHtml}${c ? escapeAttr(c.class) : 'Class'}</span>
           <select class="player-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${playerOptions}</select>
         </div>
       </div>
@@ -1032,7 +1074,7 @@ function slotHtml(raidId, party, pIdx, sIdx){
       <div class="slot-view">
         <div class="slot-view-main">
           <span class="slot-name-display ${c ? '' : 'empty-text'}">${c ? escapeAttr(c.ign) : '—'}</span>
-          <span class="slot-class-display">${c ? escapeAttr(c.class) : 'Empty'}</span>
+          <span class="slot-class-display">${ilvlHtml}${c ? escapeAttr(c.class) : 'Empty'}</span>
         </div>
         <span class="slot-player-display ${playerFilter ? '' : 'empty-text'}">${playerFilter ? escapeAttr(playerFilter) : ''}</span>
       </div>
@@ -1045,7 +1087,7 @@ function raidCardHtml(raid, group, groupKey){
   const filled = parties.reduce((s,p) => s + p.filter(v => v!=null).length, 0);
 
   const partiesHtml = parties.map((party, pIdx) => {
-    const slotsHtml = party.map((val, sIdx) => slotHtml(raid.id, party, pIdx, sIdx)).join('');
+    const slotsHtml = party.map((val, sIdx) => slotHtml(raid.id, party, pIdx, sIdx, groupKey)).join('');
 
     return `
       <div class="party-block">
