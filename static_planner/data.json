@@ -2,14 +2,14 @@
   "characters": [
     {
       "id": 19,
-      "ilvl": "1785",
+      "ilvl": "1790",
       "ign": "Miysu",
       "class": "Deathblade",
       "static": "megu"
     },
     {
       "id": 20,
-      "ilvl": "1765",
+      "ilvl": "1770",
       "ign": "Mochies",
       "class": "Wildsoul",
       "static": "megu"
@@ -23,23 +23,16 @@
     },
     {
       "id": 22,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Miynu",
       "class": "Artist",
       "static": "megu"
     },
     {
       "id": 23,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Flirts",
       "class": "Deathblade",
-      "static": "megu"
-    },
-    {
-      "id": 24,
-      "ilvl": "1750",
-      "ign": "Size",
-      "class": "Aeromancer",
       "static": "megu"
     },
     {
@@ -51,189 +44,168 @@
     },
     {
       "id": 26,
-      "ilvl": "1790",
+      "ilvl": "1795",
       "ign": "Sighs",
       "class": "Artist",
       "static": "nichi"
     },
     {
-      "id": 27,
-      "ilvl": "1760",
-      "ign": "Bebie",
-      "class": "Aeromancer",
-      "static": "nichi"
-    },
-    {
       "id": 28,
-      "ilvl": "1755",
+      "ilvl": "1770",
       "ign": "Stia",
       "class": "Wildsoul",
       "static": "nichi"
     },
     {
       "id": 29,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Starrie",
       "class": "Artist",
       "static": "nichi"
     },
     {
       "id": 30,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Cleanses",
       "class": "Artist",
       "static": "nichi"
     },
     {
       "id": 43,
-      "ilvl": "1740",
+      "ilvl": "1784",
       "ign": "Lunaeix",
       "class": "Souleater",
       "static": "Erik"
     },
     {
-      "id": 44,
-      "ilvl": "1755",
-      "ign": "Softiex",
-      "class": "Bard",
-      "static": "Erik"
-    },
-    {
       "id": 45,
-      "ilvl": "1755",
+      "ilvl": "1768",
       "ign": "Matryarchx",
       "class": "Valkyrie",
       "static": "Erik"
     },
     {
       "id": 46,
-      "ilvl": "1760",
+      "ilvl": "1772",
       "ign": "Banishx",
       "class": "Guardianknight",
       "static": "Erik"
     },
     {
       "id": 47,
-      "ilvl": "1750",
+      "ilvl": "1766",
       "ign": "Anihilix",
       "class": "Scrapper",
       "static": "Erik"
     },
     {
       "id": 48,
-      "ilvl": "1750",
+      "ilvl": "1760",
       "ign": "Astharothx",
       "class": "Shadowhunter",
       "static": "Erik"
     },
     {
       "id": 49,
-      "ilvl": "1785",
+      "ilvl": "1789",
       "ign": "Frostfour",
       "class": "Breaker",
       "static": "Frost"
     },
     {
       "id": 50,
-      "ilvl": "1750",
+      "ilvl": "1760",
       "ign": "Frostelight",
       "class": "Paladin",
       "static": "Frost"
     },
     {
       "id": 51,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Frosthree",
       "class": "Breaker",
       "static": "Frost"
     },
     {
       "id": 52,
-      "ilvl": "1750",
+      "ilvl": "1769",
       "ign": "Frostclone",
       "class": "Breaker",
       "static": "Frost"
     },
     {
       "id": 53,
-      "ilvl": "1750",
+      "ilvl": "1754",
       "ign": "Frostwo",
       "class": "Breaker",
       "static": "Frost"
     },
     {
-      "id": 54,
-      "ilvl": "1735",
-      "ign": "Frostuno",
-      "class": "Breaker",
-      "static": "Frost"
-    },
-    {
       "id": 55,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Àish",
       "class": "Guardianknight",
       "static": "Aish"
     },
     {
       "id": 56,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Æïsh",
       "class": "Valkyrie",
       "static": "Aish"
     },
     {
       "id": 57,
-      "ilvl": "1780",
+      "ilvl": "1785",
       "ign": "Aïsh",
       "class": "Valkyrie",
       "static": "Aish"
     },
     {
       "id": 58,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Âish",
       "class": "Souleater",
       "static": "Aish"
     },
     {
       "id": 59,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Aishyaya",
       "class": "Artist",
       "static": "Aish"
     },
     {
       "id": 60,
-      "ilvl": "1735",
+      "ilvl": "1755",
       "ign": "Aishyrie",
       "class": "Valkyrie",
       "static": "Aish"
     },
     {
       "id": 61,
-      "ilvl": "1780",
+      "ilvl": "1785",
       "ign": "Cheangiv",
       "class": "Artillerist",
       "static": "Cheangiv"
     },
     {
       "id": 62,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Notcheangiv",
       "class": "Breaker",
       "static": "Cheangiv"
     },
     {
       "id": 63,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Cheangartil",
       "class": "Artillerist",
       "static": "Cheangiv"
     },
     {
       "id": 64,
-      "ilvl": "1760",
+      "ilvl": "1770",
       "ign": "Zenlong",
       "class": "Striker",
       "static": "Cheangiv"
@@ -247,214 +219,214 @@
     },
     {
       "id": 66,
-      "ilvl": "1740",
+      "ilvl": "1750",
       "ign": "Cheangmachine",
       "class": "Machinist",
       "static": "Cheangiv"
     },
     {
       "id": 67,
-      "ilvl": "1775",
+      "ilvl": "1787",
       "ign": "Shizuuku",
       "class": "Scrapper",
       "static": "Shizu"
     },
     {
       "id": 68,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Rurinami",
       "class": "Glaivier",
       "static": "Shizu"
     },
     {
       "id": 69,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Biscince",
       "class": "Berserker",
       "static": "Shizu"
     },
     {
       "id": 70,
-      "ilvl": "1750",
+      "ilvl": "1765",
       "ign": "Shizuvera",
       "class": "Deathblade",
       "static": "Shizu"
     },
     {
       "id": 71,
-      "ilvl": "1750",
+      "ilvl": "1768",
       "ign": "Saifuyu",
       "class": "Bard",
       "static": "Shizu"
     },
     {
       "id": 72,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Anevera",
       "class": "Gunslinger",
       "static": "Shizu"
     },
     {
-      "id": 79,
-      "ilvl": "1780",
-      "ign": "Ironhaki",
-      "class": "Machinist",
-      "static": "Haki"
-    },
-    {
-      "id": 80,
-      "ilvl": "1770",
-      "ign": "Hakiiro",
-      "class": "Glaivier",
-      "static": "Haki"
-    },
-    {
-      "id": 81,
-      "ilvl": "1760",
-      "ign": "Wildhaki",
-      "class": "Wildsoul",
-      "static": "Haki"
-    },
-    {
-      "id": 82,
-      "ilvl": "1760",
-      "ign": "Hakibringer",
-      "class": "Artillerist",
-      "static": "Haki"
-    },
-    {
-      "id": 83,
-      "ilvl": "1750",
-      "ign": "Shadowhaki",
-      "class": "Shadowhunter",
-      "static": "Haki"
-    },
-    {
-      "id": 84,
-      "ilvl": "1750",
-      "ign": "Bigbringer",
-      "class": "Paladin",
-      "static": "Haki"
-    },
-    {
       "id": 85,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Gasps",
       "class": "Bard",
       "static": "nichi"
     },
     {
       "id": 86,
-      "ilvl": "1750",
+      "ilvl": "1770",
       "ign": "Remove",
       "class": "Dimensionalist",
       "static": "megu"
     },
     {
       "id": 87,
-      "ilvl": "1730",
+      "ilvl": "1750",
       "ign": "Solyx",
       "class": "Souleater",
       "static": "Erik"
     },
     {
       "id": 88,
-      "ilvl": "1730",
+      "ilvl": "1740",
       "ign": "Frostwink",
       "class": "Dimensionalist",
       "static": "Frost"
+    },
+    {
+      "id": 89,
+      "ilvl": "1788",
+      "ign": "Xÿro",
+      "class": "Breaker",
+      "static": "Malice"
+    },
+    {
+      "id": 90,
+      "ilvl": "1770",
+      "ign": "Dràgonhaze",
+      "class": "Guardianknight",
+      "static": "Malice"
+    },
+    {
+      "id": 91,
+      "ilvl": "1770",
+      "ign": "Mÿsteries",
+      "class": "Breaker",
+      "static": "Malice"
+    },
+    {
+      "id": 92,
+      "ilvl": "1750",
+      "ign": "Blàdehaze",
+      "class": "Deathblade",
+      "static": "Malice"
+    },
+    {
+      "id": 93,
+      "ilvl": "1750",
+      "ign": "Aioneth",
+      "class": "Dimensionalist",
+      "static": "Malice"
+    },
+    {
+      "id": 94,
+      "ilvl": "1775",
+      "ign": "Saberahmed",
+      "class": "Breaker",
+      "static": "Malice"
     }
   ],
   "assignments": {
-    "kazeros-1": [
+    "belgardin-1": [
       [
         49,
-        70,
-        65,
+        61,
+        67,
+        57
+      ],
+      [
+        19,
+        43,
+        89,
+        26
+      ]
+    ],
+    "belgardin-2": [
+      [
+        51,
+        63,
+        68,
+        59
+      ],
+      [
+        23,
+        25,
+        90,
+        45
+      ]
+    ],
+    "belgardin-3": [
+      [
+        52,
+        64,
+        69,
         56
       ],
       [
         21,
-        48,
-        79,
-        30
+        46,
+        91,
+        29
       ]
     ],
-    "kazeros-2": [
+    "belgardin-4": [
       [
-        72,
-        62,
+        53,
+        65,
         58,
+        71
+      ],
+      [
+        28,
+        48,
+        93,
+        22
+      ]
+    ],
+    "belgardin-5": [
+      [
+        53,
+        62,
+        55,
         50
       ],
       [
-        23,
-        46,
-        84,
-        26
+        20,
+        87,
+        92,
+        85
       ]
     ],
-    "kazeros-3": [
+    "belgardin-6": [
       [
-        53,
-        63,
-        68,
+        88,
+        66,
+        70,
         60
       ],
       [
         86,
-        28,
-        82,
-        45
-      ]
-    ],
-    "kazeros-4": [
-      [
-        51,
-        55,
-        61,
-        71
-      ],
-      [
-        20,
         47,
-        83,
-        29
-      ]
-    ],
-    "kazeros-5": [
-      [
-        52,
-        69,
-        64,
-        57
-      ],
-      [
-        25,
-        43,
-        80,
-        22
-      ]
-    ],
-    "kazeros-6": [
-      [
-        88,
-        67,
-        66,
-        59
-      ],
-      [
-        19,
-        87,
-        81,
-        29
+        94,
+        30
       ]
     ],
     "serca-1": [
       [
         21,
         48,
-        79,
+        null,
         30
       ]
     ],
@@ -462,7 +434,7 @@
       [
         23,
         46,
-        84,
+        null,
         26
       ]
     ],
@@ -470,7 +442,7 @@
       [
         86,
         28,
-        82,
+        null,
         45
       ]
     ],
@@ -478,7 +450,7 @@
       [
         20,
         47,
-        83,
+        null,
         85
       ]
     ],
@@ -486,7 +458,7 @@
       [
         25,
         43,
-        80,
+        null,
         22
       ]
     ],
@@ -494,7 +466,7 @@
       [
         19,
         87,
-        81,
+        null,
         29
       ]
     ],
@@ -502,7 +474,7 @@
       [
         21,
         48,
-        79,
+        null,
         30
       ]
     ],
@@ -510,7 +482,7 @@
       [
         23,
         46,
-        84,
+        null,
         26
       ]
     ],
@@ -518,7 +490,7 @@
       [
         86,
         28,
-        82,
+        null,
         45
       ]
     ],
@@ -526,7 +498,7 @@
       [
         20,
         47,
-        83,
+        null,
         85
       ]
     ],
@@ -534,7 +506,7 @@
       [
         25,
         43,
-        80,
+        null,
         22
       ]
     ],
@@ -542,18 +514,18 @@
       [
         19,
         87,
-        81,
+        null,
         29
       ]
     ]
   },
   "raidDifficulty": {
-    "kazeros-1": "HM",
-    "kazeros-2": "HM",
-    "kazeros-3": "HM",
-    "kazeros-4": "HM",
-    "kazeros-5": "HM",
-    "kazeros-6": "HM",
+    "belgardin-1": "HM",
+    "belgardin-2": "HM",
+    "belgardin-3": "HM",
+    "belgardin-4": "NM",
+    "belgardin-5": "NM",
+    "belgardin-6": "NM",
     "serca-1": "NiM",
     "serca-2": "NiM",
     "serca-3": "NiM",
