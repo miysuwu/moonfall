@@ -202,9 +202,15 @@
   .field-with-icon select{ flex:1; }
 
   /* --- Characters tab --- */
-  .add-form{ display:grid; grid-template-columns: 90px 1fr 1fr 1fr auto; gap: 10px; align-items:end; }
+  .add-form{ display:grid; grid-template-columns: 90px 110px 1fr 1fr 1fr 120px 120px auto; gap: 10px; align-items:end; }
   @media (max-width: 820px){ .add-form{ grid-template-columns: 1fr 1fr; } }
 
+  .auto-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .paste-area{ width:100%; min-height:150px; resize:vertical; font-family: inherit; }
+  .paste-result{ margin-top:10px; }
+  .auto-row select{ width:auto; min-width:180px; }
+  .auto-left{ margin-top:8px; display:flex; flex-direction:column; gap:6px; max-height:260px; overflow:auto; }
+  .auto-left-meta{ color: var(--muted-2); }
   .char-table-wrap{ overflow-x:auto; margin-top:18px; }
   table.char-table{ width:100%; border-collapse:collapse; font-size:13px; }
   table.char-table th{
@@ -318,6 +324,11 @@
   }
   .slot-ilvl{ font-weight: 700; color: var(--text, inherit); margin-right: 4px; }
   .slot-ilvl.low{ color: var(--danger); }
+  .raid-cp{ font-size: 11px; color: var(--muted); margin: 2px 0 2px; display:flex; flex-wrap:wrap; gap: 2px 12px; }
+  .raid-cp b{ color: var(--text); font-weight: 700; }
+  .slot-cp{ font-weight: 600; margin-right: 4px; }
+  .slot-cp.dps{ color: #ff6b6b; }
+  .slot-cp.sup{ color: #4ade80; }
   .slot.ilvl-low{ box-shadow: inset 0 0 0 1px var(--danger); }
   .slot.ilvl-low .slot-class-text,
   .slot.ilvl-low .slot-class-display{ color: var(--danger); }
@@ -493,6 +504,22 @@
     </div>
 
     <div class="card">
+      <div class="card-title">Auto-create Groups</div>
+      <div class="card-sub">Fills the <b>empty</b> slots of the chosen group with 3 DPS + 1 Support per party. Characters you already placed on the raid pages stay where they are, so pin the ones you want first. Serca and Cathedral only use characters set to <b>Party 2</b>. A class never appears twice in the same party. The minimum ilvl follows each raid's difficulty (NM / HM / NiM). NiM has priority over HM, HM over NM. If a group cannot be completed, it still gets every eligible character that is left. With <b>Balance combat power</b> on, characters placed by this run are swapped between the parties of the same difficulty (NiM, HM and NM each on their own) until their combat power is as even as possible; priority and all other rules stay untouched.</div>
+      <div class="divider"></div>
+      <div class="auto-row">
+        <select id="autoGroupSelect"></select>
+        <button class="btn btn-pink" id="btnAutoGroups">Auto-create groups</button>
+        <button class="btn btn-danger" id="btnClearGroup">Clear group</button>
+        <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
+          <input type="checkbox" id="autoBalanceCp" style="width:auto;">
+          <span>Balance combat power between groups</span>
+        </label>
+      </div>
+      <div class="card-sub" id="autoResult" style="margin:10px 0 0;"></div>
+    </div>
+
+    <div class="card">
       <div class="card-title">Add Character</div>
       <div class="card-sub">Enter item level, character name, class and player name</div>
       <div class="divider"></div>
@@ -500,6 +527,10 @@
         <div>
           <label>Ilvl</label>
           <input type="text" id="f_ilvl" placeholder="1740+">
+        </div>
+        <div>
+          <label>Combat Power</label>
+          <input type="text" id="f_cp" placeholder="e.g. 5400.5">
         </div>
         <div>
           <label>IGN</label>
@@ -517,9 +548,36 @@
           <input type="text" id="f_static" placeholder="e.g. Player name">
         </div>
         <div>
+          <label>Role</label>
+          <select id="f_role">
+            <option value="dps">DPS</option>
+            <option value="sup">Support</option>
+          </select>
+        </div>
+        <div>
+          <label>Party</label>
+          <select id="f_party">
+            <option value="">Any</option>
+            <option value="1">Party 1</option>
+            <option value="2">Party 2</option>
+          </select>
+        </div>
+        <div>
           <button class="btn btn-pink" id="btnAddChar">+ Add</button>
         </div>
       </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Update Ilvl &amp; Combat Power from Paste</div>
+      <div class="card-sub">Paste the stats list (name + ilvl, followed by a line with ≈ combat power). "Last updated …" lines are ignored. Characters are matched by IGN; unknown names are reported and not added.</div>
+      <div class="divider"></div>
+      <textarea class="paste-area" id="pasteInput" placeholder="Miysu 1790&#10;≈7502.12&#10;&#10;Last updated 42 minutes ago&#10;Miynu 1770&#10;≈5090"></textarea>
+      <div class="auto-row" style="margin-top:10px;">
+        <button class="btn btn-pink" id="btnPasteUpdate">Update characters</button>
+        <button class="btn" id="btnPasteClear">Clear text</button>
+      </div>
+      <div class="card-sub paste-result" id="pasteResult" style="margin-bottom:0;"></div>
     </div>
 
     <div class="card">
@@ -541,9 +599,12 @@
           <thead>
             <tr>
               <th>Ilvl</th>
+              <th>Combat Power</th>
               <th>IGN</th>
               <th>Class</th>
               <th>Player</th>
+              <th>Role</th>
+              <th>Party</th>
               <th></th>
             </tr>
           </thead>
@@ -770,8 +831,22 @@ function initEmptyAssignments(){
 }
 
 /* ---------- Data loading ---------- */
+const DEFAULT_SUPPORT_CLASSES = ['Bard', 'Paladin', 'Artist'];
+
+// Older data.json files have no role/party yet: guess the role from the class
+// (editable afterwards) and leave the party on "Any".
+function normalizeCharacter(c){
+  if(c.role !== 'dps' && c.role !== 'sup'){
+    c.role = DEFAULT_SUPPORT_CLASSES.includes(c.class) ? 'sup' : 'dps';
+  }
+  c.cp = c.cp == null ? '' : String(c.cp);
+  const p = String(c.party == null ? '' : c.party);
+  c.party = (p === '1' || p === '2') ? p : '';
+  return c;
+}
+
 function loadFromDataObject(data){
-  characters = Array.isArray(data.characters) ? data.characters : [];
+  characters = Array.isArray(data.characters) ? data.characters.map(normalizeCharacter) : [];
   nextId = characters.length ? Math.max(1, ...characters.map(c => c.id || 0)) + 1 : 1;
   initEmptyAssignments();
 
@@ -901,6 +976,7 @@ function renderCharacterTable(){
   body.innerHTML = sorted.map(c => `
     <tr data-id="${c.id}">
       <td><input type="text" value="${escapeAttr(c.ilvl)}" data-field="ilvl" style="width:70px;"></td>
+      <td><input type="text" value="${escapeAttr(c.cp)}" data-field="cp" style="width:95px;"></td>
       <td><input type="text" value="${escapeAttr(c.ign)}" data-field="ign" style="width:140px;"></td>
       <td>
         <div class="field-with-icon">
@@ -909,6 +985,19 @@ function renderCharacterTable(){
         </div>
       </td>
       <td><input type="text" value="${escapeAttr(c.static)}" data-field="static" style="width:110px;"></td>
+      <td>
+        <select data-field="role" style="width:100px;">
+          <option value="dps" ${c.role !== 'sup' ? 'selected' : ''}>DPS</option>
+          <option value="sup" ${c.role === 'sup' ? 'selected' : ''}>Support</option>
+        </select>
+      </td>
+      <td>
+        <select data-field="party" style="width:95px;">
+          <option value="" ${!c.party ? 'selected' : ''}>Any</option>
+          <option value="1" ${c.party === '1' ? 'selected' : ''}>Party 1</option>
+          <option value="2" ${c.party === '2' ? 'selected' : ''}>Party 2</option>
+        </select>
+      </td>
       <td class="row-actions">
         <button class="btn btn-small btn-danger" data-action="delete">Delete</button>
       </td>
@@ -933,20 +1022,109 @@ function renderCharacterTable(){
   });
 }
 
+/* ---------- Paste update (ilvl + combat power) ---------- */
+// "7,502.12" / "7502,12" / "7.502,12" -> number (NaN if not a number)
+function parseDecimal(str){
+  let t = String(str).replace(/\s/g, '');
+  const lastDot = t.lastIndexOf('.'), lastComma = t.lastIndexOf(',');
+  if(lastDot >= 0 && lastComma >= 0){
+    t = lastDot > lastComma ? t.replace(/,/g, '') : t.replace(/\./g, '').replace(',', '.');
+  } else if(lastComma >= 0){
+    t = /,\d{1,2}$/.test(t) ? t.replace(',', '.') : t.replace(/,/g, '');
+  }
+  return Number(t);
+}
+
+// Text format: "<name> <ilvl>" line, followed by a "≈<combat power>" line.
+// Blank lines and "Last updated …" lines are ignored.
+function parseCharacterStats(text){
+  const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const out = [];
+  let cur = null;
+  for(const line of lines){
+    if(/^last updated/i.test(line)) continue;
+
+    const cpLine = line.match(/^[≈~]?\s*(\d[\d.,]*)$/);
+    if(cpLine){
+      if(cur && cur.cp == null){
+        const v = parseDecimal(cpLine[1]);
+        if(Number.isFinite(v)) cur.cp = v;
+      }
+      continue;
+    }
+
+    const m = line.match(/^(.+?)\s+(\d[\d.,]*)(?:\s*[≈~]\s*(\d[\d.,]*))?$/);
+    if(m){
+      const ilvl = parseDecimal(m[2]);
+      const cp = m[3] != null ? parseDecimal(m[3]) : null;
+      cur = { name: m[1].trim(), ilvl: Number.isFinite(ilvl) ? ilvl : null, cp: Number.isFinite(cp) ? cp : null };
+      out.push(cur);
+    }
+  }
+  return out;
+}
+
+function updateFromPaste(){
+  const input = document.getElementById('pasteInput');
+  const out = document.getElementById('pasteResult');
+  const entries = parseCharacterStats(input.value);
+
+  if(!entries.length){
+    out.textContent = 'No characters found in the pasted text. Expected lines like "Name 1790" followed by "≈7502.12".';
+    return;
+  }
+
+  const plain = n => n.toLowerCase();
+  const fold = n => n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+  let updated = 0, ilvlChanged = 0, cpChanged = 0;
+  const notFound = [];
+
+  entries.forEach(e => {
+    let matches = characters.filter(c => plain(c.ign) === plain(e.name));
+    if(!matches.length) matches = characters.filter(c => fold(c.ign) === fold(e.name));
+    if(!matches.length){ notFound.push(e.name); return; }
+
+    matches.forEach(c => {
+      let changed = false;
+      if(e.ilvl != null && String(e.ilvl) !== String(c.ilvl)){ c.ilvl = String(e.ilvl); ilvlChanged++; changed = true; }
+      if(e.cp != null && String(e.cp) !== String(c.cp)){ c.cp = String(e.cp); cpChanged++; changed = true; }
+      if(changed) updated++;
+    });
+  });
+
+  renderCharacterTable();
+  renderAllRaidGroups();
+  saveState();
+
+  let html = `${entries.length - notFound.length}/${entries.length} characters found · ${updated} changed (${ilvlChanged} ilvl, ${cpChanged} combat power).`;
+  if(notFound.length){
+    html += `<br><b>Not found (${notFound.length}):</b> ${notFound.map(escapeAttr).join(', ')}`;
+  } else {
+    input.value = '';
+  }
+  out.innerHTML = html;
+  showToast(`${updated} character${updated === 1 ? '' : 's'} updated`);
+}
+
 function addCharacter(){
   const ilvl = document.getElementById('f_ilvl').value.trim();
+  const cp = document.getElementById('f_cp').value.trim();
   const ign = document.getElementById('f_ign').value.trim();
   const cls = document.getElementById('f_class').value;
   const stat = document.getElementById('f_static').value.trim();
+  const role = document.getElementById('f_role').value === 'sup' ? 'sup' : 'dps';
+  const party = document.getElementById('f_party').value;
 
   if(!ign){
     showToast('Please enter an IGN');
     return;
   }
 
-  characters.push({ id: uid(), ilvl, ign, class: cls, static: stat });
+  characters.push({ id: uid(), ilvl, cp, ign, class: cls, static: stat, role, party });
 
   document.getElementById('f_ilvl').value = '';
+  document.getElementById('f_cp').value = '';
   document.getElementById('f_ign').value = '';
   document.getElementById('f_static').value = '';
 
@@ -968,6 +1146,511 @@ function deleteCharacter(id){
   renderCharacterTable();
   renderAllRaidGroups();
   saveState();
+}
+
+/* ---------- Auto-create groups ---------- */
+// Rules: 3 DPS + 1 Support per party; a character is used at most once per
+// group; one character per player in each raid; characters must meet the
+// raid's minimum ilvl (from its difficulty); "Party 1/2" characters only go
+// into that party of two-party raids ("Any" fits both); no class appears
+// twice within the same party.
+//
+// Only EMPTY slots are filled. Characters you already placed stay exactly
+// where they are (their ilvl is not re-checked) and count towards the rules
+// above, so you can pin characters first and let the button do the rest.
+//
+// Step 1 searches for a complete solution (backtracking) for as many full
+// raids as possible, in priority order NiM > HM > NM. A plain greedy fill can paint itself
+// into a corner: e.g. if party 2 only consists of 4 players, every party needs
+// exactly one character of each of them, so using a player's only strong
+// character in the wrong raid leaves a later raid unfillable.
+// Step 2 fills what is left over greedily, complete parties only.
+// Raid groups where auto-create may ONLY use characters of one specific party
+// (character "Party" setting). "Any" characters are not used there either.
+const AUTO_ONLY_PARTY = { serca: '2', cathedral: '2' };
+
+function partyAllowed(c, groupKey, group, pIdx){
+  const only = AUTO_ONLY_PARTY[groupKey];
+  if(only) return c.party === only;
+  if(group.partyLabels.length > 1) return c.party === '' || c.party === String(pIdx + 1);
+  return true;
+}
+
+function meetsIlvl(c, need){
+  if(need == null) return true;
+  const n = parseIlvl(c.ilvl);
+  return n != null && n >= need;
+}
+
+// Which empty positions of a party get a Support / a DPS.
+// A party that already holds a Support only needs DPS.
+function partyEmptySlots(party, byId){
+  const empties = [0, 1, 2, 3].filter(i => party[i] == null);
+  if(!empties.length) return [];
+  const hasSup = party.some(id => id != null && byId.get(id) && byId.get(id).role === 'sup');
+  const supPos = hasSup ? null : (empties.includes(3) ? 3 : empties[empties.length - 1]);
+  let di = 0;
+  return empties.map(pos => (pos === supPos)
+    ? { pos, kind: 'sup', idx: 0 }
+    : { pos, kind: 'dps', idx: di++ });
+}
+
+// Try to fill every empty slot of the given raids. raidInfos: [{ raid, need,
+// party: [[ids|null x4] per party], players: Set of players already in the raid }].
+// Returns { raidId: [[ids] per party] } or null if impossible / out of time.
+function solveRaidSet(group, raidInfos, deadline, ctx){
+  const twoParty = group.partyLabels.length > 1;
+  const slots = [];
+  raidInfos.forEach((ri, r) => {
+    group.partyLabels.forEach((_, q) => {
+      partyEmptySlots(ri.party[q], ctx.byId).forEach(e => {
+        slots.push({ r, q, kind: e.kind, pos: e.pos, idx: e.idx, need: ri.need, id: null });
+      });
+    });
+  });
+
+  const sorted = characters.slice().sort((a, b) => a.id - b.id);
+  slots.forEach(sl => {
+    const tag = String(sl.q + 1);
+    sl.pool = sorted.filter(c =>
+      !ctx.locked.has(c.id) &&
+      (sl.kind === 'sup') === (c.role === 'sup') &&
+      meetsIlvl(c, sl.need) &&
+      partyAllowed(c, ctx.groupKey, group, sl.q)
+    );
+  });
+
+  // Quick impossibility check: can every slot get a distinct character at all?
+  const owner = new Map();
+  const tryMatch = (sl, seen) => {
+    for(const c of sl.pool){
+      if(seen.has(c.id)) continue;
+      seen.add(c.id);
+      if(!owner.has(c.id) || tryMatch(owner.get(c.id), seen)){ owner.set(c.id, sl); return true; }
+    }
+    return false;
+  };
+  for(const sl of slots){ if(!tryMatch(sl, new Set())) return null; }
+
+  const usedChar = new Set(ctx.locked);
+  const raidPlayers = raidInfos.map(ri => new Set(ri.players));
+  const partyClasses = raidInfos.map(ri => ri.party.map(p =>
+    new Set(p.filter(id => id != null).map(id => ctx.byId.get(id).class).filter(Boolean))));
+  let nodes = 0, aborted = false;
+  const NODE_LIMIT = 30000;
+
+  const candidates = sl => {
+    let lo = -Infinity, hi = Infinity;
+    if(sl.kind === 'dps'){            // DPS slots of a party are interchangeable: keep them ordered
+      for(const t of slots){
+        if(t !== sl && t.r === sl.r && t.q === sl.q && t.kind === 'dps' && t.id != null){
+          if(t.idx < sl.idx) lo = Math.max(lo, t.id); else hi = Math.min(hi, t.id);
+        }
+      }
+    }
+    return sl.pool.filter(c =>
+      !usedChar.has(c.id) && c.id > lo && c.id < hi &&
+      !(c.static && raidPlayers[sl.r].has(c.static)) &&
+      !(c.class && partyClasses[sl.r][sl.q].has(c.class))
+    );
+  };
+
+  const dfs = () => {
+    if(++nodes > NODE_LIMIT || (nodes % 128 === 0 && Date.now() > deadline)){ aborted = true; return false; }
+    let best = null, bestC = null;
+    for(const sl of slots){
+      if(sl.id != null) continue;
+      const c = candidates(sl);
+      if(c.length === 0) return false;                       // dead end
+      if(!best || c.length < bestC.length){ best = sl; bestC = c; }   // most constrained slot first
+    }
+    if(!best) return true;
+
+    const tag = String(best.q + 1);
+    bestC.sort((a, b) => {
+      const pa = (twoParty && a.party === tag) ? 0 : 1;
+      const pb = (twoParty && b.party === tag) ? 0 : 1;
+      if(pa !== pb) return pa - pb;
+      return (parseIlvl(a.ilvl) || 0) - (parseIlvl(b.ilvl) || 0) || a.id - b.id;
+    });
+
+    for(const c of bestC){
+      best.id = c.id; usedChar.add(c.id);
+      if(c.static) raidPlayers[best.r].add(c.static);
+      if(c.class) partyClasses[best.r][best.q].add(c.class);
+      if(dfs()) return true;
+      best.id = null; usedChar.delete(c.id);
+      if(c.static) raidPlayers[best.r].delete(c.static);
+      if(c.class) partyClasses[best.r][best.q].delete(c.class);
+      if(aborted) return false;
+    }
+    return false;
+  };
+
+  if(!dfs()) return null;
+
+  const result = {};
+  raidInfos.forEach((ri, r) => {
+    result[ri.raid.id] = ri.party.map((p, q) => {
+      const out = p.slice();
+      slots.forEach(sl => { if(sl.r === r && sl.q === q) out[sl.pos] = sl.id; });
+      return out;
+    });
+  });
+  return result;
+}
+
+// Raids come in priority order (NiM > HM > NM, i.e. highest ilvl requirement
+// first). A raid is only kept if it can be completed together with every
+// higher-priority raid kept so far, so a harder raid is never given up for
+// an easier one.
+function findBestRaidSet(group, raidInfos, deadline, ctx){
+  const kept = [];
+  let best = null;
+  for(const ri of raidInfos){
+    if(Date.now() > deadline) break;
+    const sol = solveRaidSet(group, kept.concat([ri]), deadline, ctx);
+    if(sol){ kept.push(ri); best = sol; }
+  }
+  return best;
+}
+
+// Evens out the combat power of complete parties by swapping characters that
+// this run placed. Swaps only happen between parties of the same difficulty
+// (same ilvl requirement), between characters of the same role, and only when
+// every rule still holds afterwards (party setting, one character per player
+// in a raid, no class twice in a party). The goal is to minimise the sum of
+// squared party totals, i.e. the variance between the parties.
+function balanceCombatPower(groupKey, group, byId, placed){
+  // Characters without combat power count as the role average
+  const known = { dps: [], sup: [] };
+  characters.forEach(c => {
+    const v = parseFloat(c.cp);
+    if(Number.isFinite(v) && v > 0) known[c.role === 'sup' ? 'sup' : 'dps'].push(v);
+  });
+  const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+  const fallback = { dps: mean(known.dps), sup: mean(known.sup) };
+  const estimated = new Set();
+  const cpOf = c => {
+    const v = parseFloat(c.cp);
+    if(Number.isFinite(v) && v > 0) return v;
+    estimated.add(c.id);
+    return fallback[c.role === 'sup' ? 'sup' : 'dps'];
+  };
+
+  // Complete parties, grouped by difficulty tier
+  const tiers = new Map();
+  group.raids.forEach(raid => {
+    const need = requiredIlvl(groupKey, raid.id);
+    const key = need == null ? 'none' : String(need);
+    assignments[raid.id].forEach((ids, q) => {
+      if(!ids.every(v => v != null)) return;
+      if(!tiers.has(key)) tiers.set(key, { label: raidDifficulty[raid.id] || '', need: need || 0, parties: [] });
+      tiers.get(key).parties.push({ raid, q, ids });
+    });
+  });
+
+  const raidPlayers = raid => {
+    const set = new Set();
+    assignments[raid.id].forEach(p => p.forEach(id => {
+      const c = id != null ? byId.get(id) : null;
+      if(c && c.static) set.add(c.static);
+    }));
+    return set;
+  };
+  const sumOf = p => p.ids.reduce((t, id) => t + cpOf(byId.get(id)), 0);
+
+  const swapOk = (pi, x, pj, y) => {
+    const A = byId.get(pi.ids[x]), B = byId.get(pj.ids[y]);
+    if(A.role !== B.role) return false;
+    if(!partyAllowed(B, groupKey, group, pi.q) || !partyAllowed(A, groupKey, group, pj.q)) return false;
+
+    // no class twice in a party
+    const classesI = pi.ids.filter((_, k) => k !== x).map(id => byId.get(id).class);
+    const classesJ = pj.ids.filter((_, k) => k !== y).map(id => byId.get(id).class);
+    if(B.class && classesI.includes(B.class)) return false;
+    if(A.class && classesJ.includes(A.class)) return false;
+
+    // one character per player in each raid (swapping inside one raid keeps its players)
+    if(pi.raid.id !== pj.raid.id){
+      const playersI = raidPlayers(pi.raid), playersJ = raidPlayers(pj.raid);
+      if(B.static && B.static !== A.static && playersI.has(B.static)) return false;
+      if(A.static && A.static !== B.static && playersJ.has(A.static)) return false;
+    }
+    return true;
+  };
+
+  const summary = [];
+  tiers.forEach(tier => {
+    const ps = tier.parties;
+    if(ps.length >= 2){
+      for(let guard = 0; guard < 1000; guard++){
+        const sums = ps.map(sumOf);
+        let best = null, bestDelta = -1e-9;
+        for(let i = 0; i < ps.length; i++){
+          for(let j = i + 1; j < ps.length; j++){
+            for(let x = 0; x < 4; x++){
+              if(!placed.has(ps[i].ids[x])) continue;
+              for(let y = 0; y < 4; y++){
+                if(!placed.has(ps[j].ids[y])) continue;
+                const a = cpOf(byId.get(ps[i].ids[x])), b = cpOf(byId.get(ps[j].ids[y]));
+                const si = sums[i] - a + b, sj = sums[j] - b + a;
+                const delta = si * si + sj * sj - sums[i] * sums[i] - sums[j] * sums[j];
+                if(delta < bestDelta && swapOk(ps[i], x, ps[j], y)){ bestDelta = delta; best = { i, x, j, y }; }
+              }
+            }
+          }
+        }
+        if(!best) break;
+        const { i, x, j, y } = best;
+        const idA = ps[i].ids[x], idB = ps[j].ids[y];
+        ps[i].ids[x] = idB; ps[j].ids[y] = idA;
+        assignments[ps[i].raid.id][ps[i].q][x] = idB;
+        assignments[ps[j].raid.id][ps[j].q][y] = idA;
+        delete slotPlayerFilter[`${ps[i].raid.id}__${ps[i].q}__${x}`];
+        delete slotPlayerFilter[`${ps[j].raid.id}__${ps[j].q}__${y}`];
+      }
+    }
+    const sums = ps.map(sumOf);
+    summary.push({ label: tier.label, need: tier.need, parties: ps.length, min: Math.min(...sums), max: Math.max(...sums) });
+  });
+
+  return { summary, estimated: estimated.size };
+}
+
+function autoCreateGroups(groupKey, opts){
+  opts = opts || {};
+  const group = RAID_GROUPS[groupKey];
+  if(!group) return null;
+
+  const byId = new Map(characters.map(c => [c.id, c]));
+  const twoParty = group.partyLabels.length > 1;
+
+  // Keep what is already placed (ignore ids of characters that no longer exist)
+  group.raids.forEach(r => {
+    assignments[r.id] = group.partyLabels.map((_, q) => {
+      const old = (assignments[r.id] && assignments[r.id][q]) || [];
+      return [0, 1, 2, 3].map(i => (old[i] != null && byId.has(old[i])) ? old[i] : null);
+    });
+  });
+
+  const locked = new Set();
+  group.raids.forEach(r => assignments[r.id].forEach(p => p.forEach(id => { if(id != null) locked.add(id); })));
+  const ctx = { byId, locked, groupKey };
+
+  const playersOf = raid => {
+    const set = new Set();
+    assignments[raid.id].forEach(p => p.forEach(id => {
+      const c = id != null ? byId.get(id) : null;
+      if(c && c.static) set.add(c.static);
+    }));
+    return set;
+  };
+  const hasEmpty = raid => assignments[raid.id].some(p => p.some(v => v == null));
+
+  // Priority: NiM > HM > NM (= highest ilvl requirement first)
+  const order = group.raids
+    .map((raid, idx) => ({ raid, idx, need: requiredIlvl(groupKey, raid.id) }))
+    .sort((a, b) => ((b.need || 0) - (a.need || 0)) || (a.idx - b.idx));
+
+  const used = new Set(locked);
+  const touched = new Set();   // raid ids where slots were filled by this run
+  const placed = new Set();    // character ids placed by this run (pinned ones are never moved)
+  const markFilled = (raidId, pIdx, sIdx) => {
+    delete slotPlayerFilter[`${raidId}__${pIdx}__${sIdx}`];
+    touched.add(raidId);
+    placed.add(assignments[raidId][pIdx][sIdx]);
+  };
+
+  // Step 1: as many completely filled raids as possible
+  const solved = new Set();
+  const todo = order.filter(o => hasEmpty(o.raid));
+  const exact = findBestRaidSet(group, todo.map(o => ({
+    raid: o.raid,
+    need: o.need,
+    party: assignments[o.raid.id].map(p => p.slice()),
+    players: playersOf(o.raid)
+  })), Date.now() + 2500, ctx);
+
+  if(exact){
+    Object.keys(exact).forEach(raidId => {
+      exact[raidId].forEach((party, pIdx) => party.forEach((id, sIdx) => {
+        if(assignments[raidId][pIdx][sIdx] == null){
+          assignments[raidId][pIdx][sIdx] = id;
+          used.add(id);
+          markFilled(raidId, pIdx, sIdx);
+        }
+      }));
+      solved.add(raidId);
+    });
+  }
+
+  // Step 2: greedy fill of the remaining raids, complete parties only.
+  // Step 3 (allowPartial): whatever still cannot be completed gets every
+  // eligible character that is left, so those groups are at least partly filled.
+  const greedyPass = allowPartial => todo.forEach(({ raid, need }) => {
+    if(solved.has(raid.id)) return;
+    const playersInRaid = playersOf(raid);
+
+    group.partyLabels.forEach((label, pIdx) => {
+      const party = assignments[raid.id][pIdx];
+      const empties = partyEmptySlots(party, byId);
+      if(!empties.length) return;
+
+      const tag = String(pIdx + 1);
+      const tmpUsed = new Set();
+      const tmpPlayers = new Set();
+      const tmpClasses = new Set(party.filter(id => id != null).map(id => byId.get(id).class).filter(Boolean));
+      const available = c => !used.has(c.id) && !tmpUsed.has(c.id) && meetsIlvl(c, need);
+
+      const pick = role => {
+        const cands = characters.filter(c =>
+          available(c) &&
+          c.role === role &&
+          !(c.static && (playersInRaid.has(c.static) || tmpPlayers.has(c.static))) &&
+          !(c.class && tmpClasses.has(c.class)) &&
+          partyAllowed(c, groupKey, group, pIdx)
+        );
+        if(!cands.length) return null;
+        const remaining = c => c.static ? characters.filter(x => x.static === c.static && available(x)).length : 1;
+        cands.sort((a, b) => {
+          const pa = (twoParty && a.party === tag) ? 0 : 1;
+          const pb = (twoParty && b.party === tag) ? 0 : 1;
+          if(pa !== pb) return pa - pb;
+          const ra = remaining(a), rb = remaining(b);
+          if(ra !== rb) return rb - ra;
+          return (parseIlvl(a.ilvl) || 0) - (parseIlvl(b.ilvl) || 0) || a.id - b.id;
+        });
+        const chosen = cands[0];
+        tmpUsed.add(chosen.id);
+        if(chosen.static) tmpPlayers.add(chosen.static);
+        if(chosen.class) tmpClasses.add(chosen.class);
+        return chosen;
+      };
+
+      // Support first (scarcer), then the DPS
+      const picks = [];
+      const ordered = empties.slice().sort((a, b) => (a.kind === 'sup' ? -1 : 0) - (b.kind === 'sup' ? -1 : 0));
+      for(const e of ordered){
+        const c = pick(e.kind);
+        if(!c){
+          if(allowPartial) continue;                     // fill what is possible
+          return;                                        // party cannot be completed: commit nothing
+        }
+        picks.push({ e, c });
+      }
+      picks.forEach(({ e, c }) => {
+        party[e.pos] = c.id;
+        used.add(c.id);
+        markFilled(raid.id, pIdx, e.pos);
+      });
+      tmpPlayers.forEach(p => playersInRaid.add(p));
+    });
+  });
+
+  greedyPass(false);
+  greedyPass(true);
+
+  let cpInfo = null;
+  if(opts.balance) cpInfo = balanceCombatPower(groupKey, group, byId, placed);
+
+  // Statistics from the final state
+  let fullRaids = 0, partialRaids = 0, fullParties = 0, emptySlots = 0;
+  group.raids.forEach(r => {
+    const full = assignments[r.id].filter(p => p.every(v => v != null)).length;
+    fullParties += full;
+    if(full === group.partyLabels.length) fullRaids++;
+    else if(full > 0) partialRaids++;
+    assignments[r.id].forEach(p => p.forEach(v => { if(v == null) emptySlots++; }));
+  });
+  const inGroup = new Set();
+  group.raids.forEach(r => assignments[r.id].forEach(p => p.forEach(id => { if(id != null) inGroup.add(id); })));
+  const left = characters.filter(c => !inGroup.has(c.id));
+  const leftDps = left.filter(c => c.role !== 'sup').length;
+  const leftSup = left.filter(c => c.role === 'sup').length;
+
+  const needs = group.raids.map(r => requiredIlvl(groupKey, r.id));
+  const lowestNeed = needs.every(n => n != null) ? Math.min(...needs) : null;
+  const leftover = left.map(c => {
+    let reason;
+    if(!group.partyLabels.some((_, q) => partyAllowed(c, groupKey, group, q))){
+      reason = AUTO_ONLY_PARTY[groupKey] ? `Not Party ${AUTO_ONLY_PARTY[groupKey]}` : 'Party not allowed';
+    } else if(lowestNeed != null && !meetsIlvl(c, lowestNeed)){
+      reason = `ilvl too low (min. ${lowestNeed})`;
+    } else {
+      reason = 'No free slot / rule conflict';
+    }
+    return { name: c.ign, class: c.class, role: c.role, ilvl: c.ilvl, player: c.static, reason };
+  });
+
+  renderAllRaidGroups();
+  saveState();
+
+  return {
+    label: group.label, total: group.raids.length,
+    fullRaids, partialRaids, fullParties, emptySlots,
+    leftDps, leftSup, leftover, kept: locked.size, filledRaids: touched.size, cpInfo
+  };
+}
+
+function clearGroupAssignments(){
+  const key = document.getElementById('autoGroupSelect').value;
+  const group = RAID_GROUPS[key];
+  if(!group) return;
+  if(!confirm(`Remove ALL ${group.label} assignments?`)) return;
+  group.raids.forEach(r => {
+    assignments[r.id] = group.partyLabels.map(() => [null, null, null, null]);
+    Object.keys(slotPlayerFilter).forEach(k => { if(k.startsWith(`${r.id}__`)) delete slotPlayerFilter[k]; });
+  });
+  renderAllRaidGroups();
+  saveState();
+  document.getElementById('autoResult').textContent = `${group.label}: all assignments cleared.`;
+  showToast(`${group.label} cleared`);
+}
+
+function runAutoCreate(){
+  const sel = document.getElementById('autoGroupSelect');
+  const result = autoCreateGroups(sel.value, { balance: document.getElementById('autoBalanceCp').checked });
+  const out = document.getElementById('autoResult');
+  if(!result){ return; }
+
+  let text = `${result.label}: ${result.fullRaids}/${result.total} raids full`;
+  if(result.partialRaids) text += `, ${result.partialRaids} partly filled`;
+  if(result.kept) text += `. ${result.kept} manually placed character${result.kept === 1 ? '' : 's'} kept`;
+  if(result.emptySlots) text += `. ${result.emptySlots} slot${result.emptySlots === 1 ? '' : 's'} still empty`;
+  text += `. Left over (unassigned): ${result.leftDps} DPS, ${result.leftSup} Support.`;
+  let html = escapeAttr(text);
+  if(result.cpInfo){
+    const parts = result.cpInfo.summary
+      .sort((a, b) => b.need - a.need)
+      .map(t => `${escapeAttr(t.label || '?')}: ${Math.round(t.min).toLocaleString('en-US')}–${Math.round(t.max).toLocaleString('en-US')} (${t.parties} part${t.parties === 1 ? 'y' : 'ies'})`);
+    html += `<div style="margin-top:6px;"><b>Combat power per party:</b> ${parts.join(' · ') || 'no complete parties to balance'}`;
+    if(result.cpInfo.estimated) html += `<br>${result.cpInfo.estimated} character${result.cpInfo.estimated === 1 ? ' has' : 's have'} no combat power and were counted with the role average.`;
+    html += '</div>';
+  }
+  if(result.leftover.length){
+    const groups = {};
+    result.leftover.forEach(l => { (groups[l.reason] = groups[l.reason] || []).push(l); });
+    html += '<div class="auto-left">';
+    Object.keys(groups).sort().forEach(reason => {
+      const list = groups[reason]
+        .sort((a, b) => (a.player || '').localeCompare(b.player || '') || a.name.localeCompare(b.name))
+        .map(l => `${escapeAttr(l.name)} <span class="auto-left-meta">(${escapeAttr(l.class)}${l.role === 'sup' ? ', Sup' : ''}, ${escapeAttr(String(l.ilvl || '?'))}${l.player ? ', ' + escapeAttr(l.player) : ''})</span>`)
+        .join(', ');
+      html += `<div><b>${escapeAttr(reason)} (${groups[reason].length}):</b> ${list}</div>`;
+    });
+    html += '</div>';
+  }
+  out.innerHTML = html;
+  showToast(`${result.label}: ${result.fullRaids}/${result.total} raids full`);
+}
+
+function initAutoCreate(){
+  const sel = document.getElementById('autoGroupSelect');
+  sel.innerHTML = Object.keys(RAID_GROUPS).map(k => `<option value="${k}">${escapeAttr(RAID_GROUPS[k].label)}</option>`).join('');
+  sel.value = 'belgardin';
+  document.getElementById('btnAutoGroups').addEventListener('click', runAutoCreate);
+  document.getElementById('btnClearGroup').addEventListener('click', clearGroupAssignments);
 }
 
 /* ---------- Raid rendering ---------- */
@@ -1047,11 +1730,18 @@ function slotHtml(raidId, party, pIdx, sIdx, groupKey){
 
   const ilvlText = c ? String(c.ilvl || '').trim() : '';
   const ilvlNum = c ? parseIlvl(c.ilvl) : null;
+  // Plain numbers are shown rounded down (1771.67 -> 1771); other text like "1740+" stays as typed
+  const ilvlShown = /^\d[\d,]*(\.\d+)?$/.test(ilvlText) ? String(Math.floor(parseIlvl(ilvlText))) : ilvlText;
   const need = requiredIlvl(groupKey, raidId);
   const tooLow = !!(c && need != null && ilvlNum != null && ilvlNum < need);
-  const ilvlTitle = tooLow ? ` title="Item level too low: ${ilvlNum} &lt; ${need} required"` : '';
+  const ilvlTitle = tooLow ? ` title="Item level too low: ${Math.floor(ilvlNum)} &lt; ${need} required"` : '';
   const ilvlHtml = ilvlText
-    ? `<span class="slot-ilvl${tooLow ? ' low' : ''}"${ilvlTitle}>${tooLow ? '⚠ ' : ''}${escapeAttr(ilvlText)}</span>`
+    ? `<span class="slot-ilvl${tooLow ? ' low' : ''}"${ilvlTitle}>${tooLow ? '⚠ ' : ''}${escapeAttr(ilvlShown)}</span>`
+    : '';
+
+  const cpNum = c ? parseFloat(c.cp) : NaN;
+  const cpHtml = (c && Number.isFinite(cpNum) && cpNum > 0)
+    ? `<span class="slot-cp ${c.role === 'sup' ? 'sup' : 'dps'}" title="Combat Power ${escapeAttr(String(c.cp))}">${Math.floor(cpNum)}</span>`
     : '';
 
   const classIcon = classIconHtml(c ? c.class : null, 'tile');
@@ -1066,7 +1756,7 @@ function slotHtml(raidId, party, pIdx, sIdx, groupKey){
       <div class="slot-body">
         <select class="char-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${charOptions}</select>
         <div class="slot-bottom-row">
-          <span class="slot-class-text">${ilvlHtml}${c ? escapeAttr(c.class) : 'Class'}</span>
+          <span class="slot-class-text">${ilvlHtml}${cpHtml}${c ? escapeAttr(c.class) : 'Class'}</span>
           <select class="player-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${playerOptions}</select>
         </div>
       </div>
@@ -1074,11 +1764,32 @@ function slotHtml(raidId, party, pIdx, sIdx, groupKey){
       <div class="slot-view">
         <div class="slot-view-main">
           <span class="slot-name-display ${c ? '' : 'empty-text'}">${c ? escapeAttr(c.ign) : '—'}</span>
-          <span class="slot-class-display">${ilvlHtml}${c ? escapeAttr(c.class) : 'Empty'}</span>
+          <span class="slot-class-display">${ilvlHtml}${cpHtml}${c ? escapeAttr(c.class) : 'Empty'}</span>
         </div>
         <span class="slot-player-display ${playerFilter ? '' : 'empty-text'}">${playerFilter ? escapeAttr(playerFilter) : ''}</span>
       </div>
     </div>`;
+}
+
+// Average combat power (rounded down) of the characters in the given slots that have one
+function avgCombatPower(ids){
+  const vals = ids
+    .map(id => id != null ? characters.find(x => x.id === id) : null)
+    .map(c => c ? parseFloat(c.cp) : NaN)
+    .filter(v => Number.isFinite(v) && v > 0);
+  if(!vals.length) return null;
+  return Math.floor(vals.reduce((t, v) => t + v, 0) / vals.length);
+}
+
+function raidCpHtml(parties){
+  const fmt = v => v == null ? '–' : String(v);
+  const perParty = parties.map(p => avgCombatPower(p));
+  const total = avgCombatPower(parties.flat());
+  if(total == null) return '';
+  const items = parties.length > 1
+    ? [...perParty.map((v, i) => `Party ${i + 1} <b>${fmt(v)}</b>`), `Total <b>${fmt(total)}</b>`]
+    : [`<b>${fmt(total)}</b>`];
+  return `<div class="raid-cp"><span>Ø Combat Power</span>${items.map(t => `<span>${t}</span>`).join('')}</div>`;
 }
 
 function raidCardHtml(raid, group, groupKey){
@@ -1101,6 +1812,7 @@ function raidCardHtml(raid, group, groupKey){
         <span>${escapeAttr(raidDisplayName(raid))}</span>
         <span class="rate ${group.accent}">${filled}/${totalSlots} filled</span>
       </div>
+      ${raidCpHtml(parties)}
       ${partiesHtml}
     </div>`;
 }
@@ -1194,8 +1906,14 @@ async function init(){
   renderDifficultySettings();
   initTabs();
   initEditModeToggle();
+  initAutoCreate();
 
   document.getElementById('btnAddChar').addEventListener('click', addCharacter);
+  document.getElementById('btnPasteUpdate').addEventListener('click', updateFromPaste);
+  document.getElementById('btnPasteClear').addEventListener('click', () => {
+    document.getElementById('pasteInput').value = '';
+    document.getElementById('pasteResult').textContent = '';
+  });
   document.getElementById('charSearch').addEventListener('input', renderCharacterTable);
   document.getElementById('btnExport').addEventListener('click', exportData);
   document.getElementById('btnImportTrigger').addEventListener('click', () => {
