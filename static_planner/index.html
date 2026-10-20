@@ -322,6 +322,25 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .slot-flags{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; flex-shrink:0; }
+  .slot-pin{ background:none; border:none; padding:0; cursor:pointer; font-size:12px; line-height:1; opacity:.3; filter:grayscale(1); }
+  .slot-pin:hover{ opacity:.85; }
+  .slot-pin.on{ opacity:1; filter:none; }
+  .slot-warn{ color: var(--amber); cursor: help; font-size:13px; line-height:1; }
+  .slot.pinned{ border-color: var(--violet); }
+  /* drag & drop of characters between slots (edit mode only) */
+  body.edit-mode .slot[draggable="true"]{ cursor: grab; }
+  .slot.dragging{ opacity: .4; }
+  .slot.drop-ok{ outline: 2px dashed var(--violet); outline-offset: -2px; background: rgba(109, 63, 209, 0.18); }
+  /* pins are only shown in edit mode (they still apply in view mode) */
+  body:not(.edit-mode) .slot-pin{ display: none; }
+  body:not(.edit-mode) .slot-flags.only-pin{ display: none; }
+  body:not(.edit-mode) .slot.pinned{ border-color: var(--border); }
+  .slot select:disabled{ opacity:.7; cursor:not-allowed; }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  table.char-table th.sortable{ cursor:pointer; user-select:none; }
+  table.char-table th.sortable:hover{ color: var(--text); }
+  .sort-ind{ color: var(--violet); }
   .slot-ilvl{ font-weight: 700; color: var(--text, inherit); margin-right: 4px; }
   .slot-ilvl.low{ color: var(--danger); }
   .raid-cp{ font-size: 11px; color: var(--muted); margin: 2px 0 2px; display:flex; flex-wrap:wrap; gap: 2px 12px; }
@@ -505,11 +524,12 @@
 
     <div class="card">
       <div class="card-title">Auto-create Groups</div>
-      <div class="card-sub">Fills the <b>empty</b> slots of the chosen group with 3 DPS + 1 Support per party. Characters you already placed on the raid pages stay where they are, so pin the ones you want first. Serca and Cathedral only use characters set to <b>Party 2</b>. A class never appears twice in the same party. The minimum ilvl follows each raid's difficulty (NM / HM / NiM). NiM has priority over HM, HM over NM. If a group cannot be completed, it still gets every eligible character that is left. With <b>Balance combat power</b> on, characters placed by this run are swapped between the parties of the same difficulty (NiM, HM and NM each on their own) until their combat power is as even as possible; priority and all other rules stay untouched.</div>
+      <div class="card-sub">Re-creates every slot of the chosen group that is <b>not pinned</b> (📌) with 3 DPS + 1 Support per party. Pin the characters you want to keep on the raid pages first. Each click gives a slightly different variation, and <b>Undo</b> brings the previous state back. Serca and Cathedral only use characters set to <b>Party 2</b>. A class never appears twice in the same party. The minimum ilvl follows each raid's difficulty (NM / HM / NiM). NiM has priority over HM, HM over NM. If a group cannot be completed, it still gets every eligible character that is left. With <b>Balance combat power</b> on, characters placed by this run are swapped between the parties of the same difficulty (NiM, HM and NM each on their own) until their combat power is as even as possible; priority and all other rules stay untouched.</div>
       <div class="divider"></div>
       <div class="auto-row">
         <select id="autoGroupSelect"></select>
         <button class="btn btn-pink" id="btnAutoGroups">Auto-create groups</button>
+        <button class="btn" id="btnUndoAuto" disabled>↶ Undo</button>
         <button class="btn btn-danger" id="btnClearGroup">Clear group</button>
         <label style="display:flex; align-items:center; gap:8px; margin:0; cursor:pointer;">
           <input type="checkbox" id="autoBalanceCp" style="width:auto;">
@@ -598,13 +618,13 @@
         <table class="char-table" id="charTable">
           <thead>
             <tr>
-              <th>Ilvl</th>
-              <th>Combat Power</th>
-              <th>IGN</th>
-              <th>Class</th>
-              <th>Player</th>
-              <th>Role</th>
-              <th>Party</th>
+              <th class="sortable" data-sort="ilvl">Ilvl <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="cp">Combat Power <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="ign">IGN <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="class">Class <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="static">Player <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="role">Role <span class="sort-ind"></span></th>
+              <th class="sortable" data-sort="party">Party <span class="sort-ind"></span></th>
               <th></th>
             </tr>
           </thead>
@@ -616,7 +636,7 @@
   </div>
 
   <footer>
-    <code>@meguyu · miysu-chan</code> · Data is loaded from <code>data.json</code> in Git repository. <code>Export JSON</code> downloads the current state. · <code>Import JSON</code> changes this browser session only.
+    <div>Made by miysu | @meguyu ・Not affiliated with Smilegate or Amazon Games. Game data and icons © Smilegate RPG.</div>
   </footer>
 
 </div>
@@ -811,6 +831,8 @@ let characters = [];
 let assignments = {};
 let raidDifficulty = { ...DEFAULT_RAID_DIFFICULTY };
 let slotPlayerFilter = {};
+let pins = new Set();          // pinned slots: keys like "belgardin-1__0__2"
+let undoSnapshot = null;       // one-step undo for Auto-create / Clear group
 let nextId = 1;
 
 function uid(){ return nextId++; }
@@ -823,6 +845,7 @@ function raidDisplayName(raid){
 function initEmptyAssignments(){
   assignments = {};
   slotPlayerFilter = {};
+  pins = new Set();
   Object.values(RAID_GROUPS).forEach(g => {
     g.raids.forEach(raid => {
       assignments[raid.id] = g.partyLabels.map(() => [null,null,null,null]);
@@ -863,6 +886,19 @@ function loadFromDataObject(data){
       if(targetId && assignments[targetId]) assignments[targetId] = data.assignments[key];
     });
   }
+
+  // Pinned slots (only keep pins that still point at a filled slot)
+  pins = new Set();
+  if(Array.isArray(data.pins)){
+    data.pins.forEach(k => {
+      const m = String(k).match(/^(.+)__(\d+)__(\d+)$/);
+      if(!m) return;
+      const party = assignments[m[1]] && assignments[m[1]][+m[2]];
+      if(party && party[+m[3]] != null) pins.add(String(k));
+    });
+  }
+  undoSnapshot = null;
+  if(typeof updateUndoButton === 'function') updateUndoButton();
 }
 
 async function loadRemoteData(){
@@ -956,7 +992,55 @@ function getFilteredCharacters(){
   );
 }
 
+// Table sorting: click a header to sort (numbers: high first), click again to reverse, a third time to reset.
+let charSort = { key: null, dir: 1 };
+
+function defaultCharCompare(a, b){
+  if(a.static !== b.static) return a.static.localeCompare(b.static);
+  return a.ign.localeCompare(b.ign);
+}
+
+function charComparator(a, b){
+  if(!charSort.key) return defaultCharCompare(a, b);
+  const k = charSort.key;
+  let r = 0;
+  if(k === 'ilvl' || k === 'cp'){
+    const va = k === 'ilvl' ? parseIlvl(a.ilvl) : parseFloat(a.cp);
+    const vb = k === 'ilvl' ? parseIlvl(b.ilvl) : parseFloat(b.cp);
+    const na = Number.isFinite(va) ? va : -Infinity;
+    const nb = Number.isFinite(vb) ? vb : -Infinity;
+    r = na === nb ? 0 : (na < nb ? -1 : 1);
+  } else if(k === 'role'){
+    r = (a.role === 'sup' ? 1 : 0) - (b.role === 'sup' ? 1 : 0);
+  } else {
+    r = String(a[k] || '').localeCompare(String(b[k] || ''));
+  }
+  return (r * charSort.dir) || defaultCharCompare(a, b);
+}
+
+function updateSortIndicators(){
+  document.querySelectorAll('#charTable th[data-sort]').forEach(th => {
+    const ind = th.querySelector('.sort-ind');
+    if(!ind) return;
+    ind.textContent = th.dataset.sort === charSort.key ? (charSort.dir === 1 ? '▲' : '▼') : '';
+  });
+}
+
+function initCharSort(){
+  document.querySelectorAll('#charTable th[data-sort]').forEach(th => {
+    th.addEventListener('click', () => {
+      const k = th.dataset.sort;
+      const first = (k === 'ilvl' || k === 'cp') ? -1 : 1;
+      if(charSort.key !== k) charSort = { key: k, dir: first };
+      else if(charSort.dir === first) charSort = { key: k, dir: -first };
+      else charSort = { key: null, dir: 1 };
+      renderCharacterTable();
+    });
+  });
+}
+
 function renderCharacterTable(){
+  updateSortIndicators();
   const body = document.getElementById('charTableBody');
   const list = getFilteredCharacters();
   document.getElementById('charCount').textContent = characters.length;
@@ -968,10 +1052,7 @@ function renderCharacterTable(){
   }
   document.getElementById('charEmptyState').style.display = 'none';
 
-  const sorted = [...list].sort((a,b) => {
-    if(a.static !== b.static) return a.static.localeCompare(b.static);
-    return a.ign.localeCompare(b.ign);
-  });
+  const sorted = [...list].sort(charComparator);
 
   body.innerHTML = sorted.map(c => `
     <tr data-id="${c.id}">
@@ -1137,9 +1218,12 @@ function addCharacter(){
 function deleteCharacter(id){
   characters = characters.filter(c => c.id !== id);
   Object.keys(assignments).forEach(raidName => {
-    assignments[raidName].forEach(party => {
+    assignments[raidName].forEach((party, pIdx) => {
       for(let i=0;i<party.length;i++){
-        if(party[i] === id) party[i] = null;
+        if(party[i] === id){
+          party[i] = null;
+          pins.delete(`${raidName}__${pIdx}__${i}`);
+        }
       }
     });
   });
@@ -1155,9 +1239,10 @@ function deleteCharacter(id){
 // into that party of two-party raids ("Any" fits both); no class appears
 // twice within the same party.
 //
-// Only EMPTY slots are filled. Characters you already placed stay exactly
-// where they are (their ilvl is not re-checked) and count towards the rules
-// above, so you can pin characters first and let the button do the rest.
+// Pinned slots (📌) stay exactly as they are (their ilvl is not re-checked) and
+// count towards the rules above. Every other slot is re-created, with random
+// tie-breaks so repeated clicks give different variations. Undo restores the
+// previous state.
 //
 // Step 1 searches for a complete solution (backtracking) for as many full
 // raids as possible, in priority order NiM > HM > NM. A plain greedy fill can paint itself
@@ -1237,7 +1322,7 @@ function solveRaidSet(group, raidInfos, deadline, ctx){
   const partyClasses = raidInfos.map(ri => ri.party.map(p =>
     new Set(p.filter(id => id != null).map(id => ctx.byId.get(id).class).filter(Boolean))));
   let nodes = 0, aborted = false;
-  const NODE_LIMIT = 30000;
+  const NODE_LIMIT = ctx.nodeLimit || 30000;
 
   const candidates = sl => {
     let lo = -Infinity, hi = Infinity;
@@ -1271,7 +1356,8 @@ function solveRaidSet(group, raidInfos, deadline, ctx){
       const pa = (twoParty && a.party === tag) ? 0 : 1;
       const pb = (twoParty && b.party === tag) ? 0 : 1;
       if(pa !== pb) return pa - pb;
-      return (parseIlvl(a.ilvl) || 0) - (parseIlvl(b.ilvl) || 0) || a.id - b.id;
+      if(ctx.det) return (parseIlvl(a.ilvl) || 0) - (parseIlvl(b.ilvl) || 0) || a.id - b.id;
+      return ctx.rnd.get(a.id) - ctx.rnd.get(b.id);
     });
 
     for(const c of bestC){
@@ -1307,9 +1393,24 @@ function solveRaidSet(group, raidInfos, deadline, ctx){
 function findBestRaidSet(group, raidInfos, deadline, ctx){
   const kept = [];
   let best = null;
+  // A few quick randomized attempts (gives variation between clicks); if they
+  // all fail, one thorough deterministic attempt makes sure a solution that
+  // exists is still found.
+  const attempts = [
+    { det: false, nodeLimit: 4000 },
+    { det: false, nodeLimit: 4000 },
+    { det: false, nodeLimit: 4000 },
+    { det: true,  nodeLimit: 30000 }
+  ];
   for(const ri of raidInfos){
     if(Date.now() > deadline) break;
-    const sol = solveRaidSet(group, kept.concat([ri]), deadline, ctx);
+    let sol = null;
+    for(const a of attempts){
+      if(Date.now() > deadline) break;
+      const rnd = new Map(characters.map(c => [c.id, Math.random()]));
+      sol = solveRaidSet(group, kept.concat([ri]), deadline, Object.assign({}, ctx, { det: a.det, nodeLimit: a.nodeLimit, rnd }));
+      if(sol) break;
+    }
     if(sol){ kept.push(ri); best = sol; }
   }
   return best;
@@ -1426,17 +1527,27 @@ function autoCreateGroups(groupKey, opts){
   const byId = new Map(characters.map(c => [c.id, c]));
   const twoParty = group.partyLabels.length > 1;
 
-  // Keep what is already placed (ignore ids of characters that no longer exist)
+  takeUndoSnapshot(`Auto-create ${group.label}`);
+
+  // Only pinned slots survive; every other slot is re-rolled
   group.raids.forEach(r => {
     assignments[r.id] = group.partyLabels.map((_, q) => {
       const old = (assignments[r.id] && assignments[r.id][q]) || [];
-      return [0, 1, 2, 3].map(i => (old[i] != null && byId.has(old[i])) ? old[i] : null);
+      return [0, 1, 2, 3].map(i => {
+        const key = `${r.id}__${q}__${i}`;
+        if(pins.has(key) && old[i] != null && byId.has(old[i])) return old[i];
+        pins.delete(key);
+        delete slotPlayerFilter[key];
+        return null;
+      });
     });
   });
 
   const locked = new Set();
   group.raids.forEach(r => assignments[r.id].forEach(p => p.forEach(id => { if(id != null) locked.add(id); })));
-  const ctx = { byId, locked, groupKey };
+  // Random tie-breaks: every click gives a slightly different (but equally valid) result
+  const rnd = new Map(characters.map(c => [c.id, Math.random()]));
+  const ctx = { byId, locked, groupKey, rnd };
 
   const playersOf = raid => {
     const set = new Set();
@@ -1519,7 +1630,7 @@ function autoCreateGroups(groupKey, opts){
           if(pa !== pb) return pa - pb;
           const ra = remaining(a), rb = remaining(b);
           if(ra !== rb) return rb - ra;
-          return (parseIlvl(a.ilvl) || 0) - (parseIlvl(b.ilvl) || 0) || a.id - b.id;
+          return rnd.get(a.id) - rnd.get(b.id);
         });
         const chosen = cands[0];
         tmpUsed.add(chosen.id);
@@ -1593,18 +1704,58 @@ function autoCreateGroups(groupKey, opts){
   };
 }
 
+function takeUndoSnapshot(label){
+  undoSnapshot = {
+    label,
+    assignments: JSON.parse(JSON.stringify(assignments)),
+    filter: { ...slotPlayerFilter },
+    pins: [...pins]
+  };
+  updateUndoButton();
+}
+
+function updateUndoButton(){
+  const b = document.getElementById('btnUndoAuto');
+  if(!b) return;
+  b.disabled = !undoSnapshot;
+  b.title = undoSnapshot ? `Undo: ${undoSnapshot.label}` : 'Nothing to undo';
+}
+
+function undoLast(){
+  if(!undoSnapshot) return;
+  const ids = new Set(characters.map(c => c.id));
+  const restored = undoSnapshot.assignments;
+  Object.keys(restored).forEach(r => restored[r].forEach(p => p.forEach((v, i) => { if(v != null && !ids.has(v)) p[i] = null; })));
+  assignments = restored;
+  slotPlayerFilter = undoSnapshot.filter;
+  pins = new Set(undoSnapshot.pins.filter(k => {
+    const m = k.match(/^(.+)__(\d+)__(\d+)$/);
+    return m && assignments[m[1]] && assignments[m[1]][+m[2]] && assignments[m[1]][+m[2]][+m[3]] != null;
+  }));
+  const label = undoSnapshot.label;
+  undoSnapshot = null;
+  renderAllRaidGroups();
+  updateUndoButton();
+  document.getElementById('autoResult').textContent = `Undone: ${label}.`;
+  showToast('Undone');
+}
+
 function clearGroupAssignments(){
   const key = document.getElementById('autoGroupSelect').value;
   const group = RAID_GROUPS[key];
   if(!group) return;
-  if(!confirm(`Remove ALL ${group.label} assignments?`)) return;
+  const pinnedCount = group.raids.reduce((n, r) => n + assignments[r.id].reduce((m, p, q) => m + p.filter((v, i) => v != null && pins.has(`${r.id}__${q}__${i}`)).length, 0), 0);
+  if(!confirm(`Remove all ${group.label} assignments${pinnedCount ? ` (${pinnedCount} pinned slot${pinnedCount === 1 ? '' : 's'} stay)` : ''}?`)) return;
+  takeUndoSnapshot(`Clear ${group.label}`);
   group.raids.forEach(r => {
-    assignments[r.id] = group.partyLabels.map(() => [null, null, null, null]);
-    Object.keys(slotPlayerFilter).forEach(k => { if(k.startsWith(`${r.id}__`)) delete slotPlayerFilter[k]; });
+    assignments[r.id] = assignments[r.id].map((party, q) => party.map((v, i) => pins.has(`${r.id}__${q}__${i}`) ? v : null));
+    Object.keys(slotPlayerFilter).forEach(k => {
+      if(k.startsWith(`${r.id}__`) && !pins.has(k)) delete slotPlayerFilter[k];
+    });
   });
   renderAllRaidGroups();
   saveState();
-  document.getElementById('autoResult').textContent = `${group.label}: all assignments cleared.`;
+  document.getElementById('autoResult').textContent = `${group.label}: all unpinned assignments cleared.`;
   showToast(`${group.label} cleared`);
 }
 
@@ -1616,7 +1767,7 @@ function runAutoCreate(){
 
   let text = `${result.label}: ${result.fullRaids}/${result.total} raids full`;
   if(result.partialRaids) text += `, ${result.partialRaids} partly filled`;
-  if(result.kept) text += `. ${result.kept} manually placed character${result.kept === 1 ? '' : 's'} kept`;
+  if(result.kept) text += `. ${result.kept} pinned character${result.kept === 1 ? '' : 's'} kept`;
   if(result.emptySlots) text += `. ${result.emptySlots} slot${result.emptySlots === 1 ? '' : 's'} still empty`;
   text += `. Left over (unassigned): ${result.leftDps} DPS, ${result.leftSup} Support.`;
   let html = escapeAttr(text);
@@ -1651,15 +1802,89 @@ function initAutoCreate(){
   sel.value = 'belgardin';
   document.getElementById('btnAutoGroups').addEventListener('click', runAutoCreate);
   document.getElementById('btnClearGroup').addEventListener('click', clearGroupAssignments);
+  document.getElementById('btnUndoAuto').addEventListener('click', undoLast);
+  updateUndoButton();
 }
 
 /* ---------- Raid rendering ---------- */
+let currentWarnings = { slots: new Map(), raids: new Map() };
+
+// Rule violations of the current assignments (shown as ⚠ with the reason on hover)
+function computeWarnings(groupKey){
+  const group = RAID_GROUPS[groupKey];
+  const byId = new Map(characters.map(c => [c.id, c]));
+  const slots = new Map(), raids = new Map();
+  const add = (m, k, msg) => {
+    if(!m.has(k)) m.set(k, []);
+    if(!m.get(k).includes(msg)) m.get(k).push(msg);
+  };
+
+  // the same character in several raids of this group
+  const where = new Map();
+  group.raids.forEach(raid => (assignments[raid.id] || []).forEach((party, p) => party.forEach((id, s) => {
+    if(id == null || !byId.has(id)) return;
+    if(!where.has(id)) where.set(id, []);
+    where.get(id).push({ raid, p, s });
+  })));
+  where.forEach((list, id) => {
+    if(list.length < 2) return;
+    const c = byId.get(id);
+    list.forEach(w => {
+      const others = list.filter(o => o !== w).map(o => o.raid.name).join(', ');
+      add(slots, `${w.raid.id}__${w.p}__${w.s}`, `${c.ign} is also placed in ${others} (a character can only run once per raid group)`);
+    });
+  });
+
+  group.raids.forEach(raid => {
+    const parties = assignments[raid.id] || [];
+
+    // the same player twice in one raid
+    const byPlayer = new Map();
+    parties.forEach((party, p) => party.forEach((id, s) => {
+      const c = id != null ? byId.get(id) : null;
+      if(!c || !c.static) return;
+      if(!byPlayer.has(c.static)) byPlayer.set(c.static, []);
+      byPlayer.get(c.static).push({ p, s, c });
+    }));
+    byPlayer.forEach((list, player) => {
+      if(list.length < 2) return;
+      const names = list.map(x => x.c.ign).join(', ');
+      list.forEach(x => add(slots, `${raid.id}__${x.p}__${x.s}`, `Player "${player}" is in this raid ${list.length}× (${names})`));
+    });
+
+    parties.forEach((party, p) => {
+      // the same class twice in one party
+      const byClass = new Map();
+      party.forEach((id, s) => {
+        const c = id != null ? byId.get(id) : null;
+        if(!c || !c.class) return;
+        if(!byClass.has(c.class)) byClass.set(c.class, []);
+        byClass.get(c.class).push(s);
+      });
+      byClass.forEach((list, cls) => {
+        if(list.length > 1) list.forEach(s => add(slots, `${raid.id}__${p}__${s}`, `${cls} appears twice in this party`));
+      });
+
+      // composition of a full party: exactly 1 Support
+      if(party.every(id => id != null && byId.has(id))){
+        const sups = party.filter(id => byId.get(id).role === 'sup').length;
+        if(sups !== 1){
+          add(raids, raid.id, `${group.partyLabels[p]}: ${sups === 0 ? 'no Support' : sups + ' Supports'} (needs exactly 1)`);
+        }
+      }
+    });
+  });
+
+  return { slots, raids };
+}
+
 function uniquePlayers(){
   return [...new Set(characters.map(c => c.static).filter(Boolean))].sort((a,b) => a.localeCompare(b));
 }
 
 function renderRaidGroup(groupKey){
   const group = RAID_GROUPS[groupKey];
+  currentWarnings = computeWarnings(groupKey);
   const container = document.getElementById(`raids-${groupKey}`);
   const raids = group.raids;
   const mid = Math.ceil(raids.length / 2);
@@ -1691,6 +1916,14 @@ function renderRaidGroup(groupKey){
     });
   });
 
+  container.querySelectorAll('.slot-pin').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const k = btn.dataset.pin;
+      if(pins.has(k)) pins.delete(k); else pins.add(k);
+      renderRaidGroup(groupKey);
+    });
+  });
+
   container.querySelectorAll('.char-select').forEach(sel => {
     sel.addEventListener('change', () => {
       const raidName = sel.dataset.raid;
@@ -1705,6 +1938,99 @@ function renderRaidGroup(groupKey){
       }
       renderRaidGroup(groupKey);
       saveState();
+    });
+  });
+
+  wireDragAndDrop(container, groupKey);
+  applyDraggable();
+}
+
+/* ---------- Drag & drop between slots (edit mode only) ---------- */
+// Drag a character onto an empty slot to move it, or onto another character to
+// swap them. Works across the raids and parties of one raid group. Pinned
+// slots can neither be dragged nor dropped on. Rule violations are not blocked,
+// they show up as ⚠ warnings like after a manual change.
+let dragSourceKey = null;
+
+function parseSlotKey(k){
+  const m = String(k).match(/^(.+)__(\d+)__(\d+)$/);
+  return m ? { raid: m[1], p: +m[2], s: +m[3] } : null;
+}
+
+function dropOnSlot(fromKey, toKey, groupKey){
+  if(fromKey === toKey) return false;
+  const a = parseSlotKey(fromKey), b = parseSlotKey(toKey);
+  if(!a || !b) return false;
+  const group = RAID_GROUPS[groupKey];
+  if(!group.raids.some(r => r.id === a.raid) || !group.raids.some(r => r.id === b.raid)) return false;
+  if(pins.has(fromKey) || pins.has(toKey)) return false;
+
+  const src = assignments[a.raid] && assignments[a.raid][a.p];
+  const dst = assignments[b.raid] && assignments[b.raid][b.p];
+  if(!src || !dst) return false;
+
+  const A = src[a.s], B = dst[b.s];
+  if(A == null) return false;                       // nothing to drag
+
+  dst[b.s] = A;
+  src[a.s] = B;                                     // B is null when moving to an empty slot
+  delete slotPlayerFilter[fromKey];                 // player dropdowns follow the new characters
+  delete slotPlayerFilter[toKey];
+
+  renderRaidGroup(groupKey);
+  saveState();
+  return true;
+}
+
+// Slots are only draggable while edit mode is on (so normal clicks and text selection stay untouched)
+function applyDraggable(){
+  const editing = document.body.classList.contains('edit-mode');
+  document.querySelectorAll('.slot[data-key]').forEach(slot => {
+    const can = editing && slot.dataset.filled === '1' && slot.dataset.pinned !== '1';
+    slot.draggable = can;
+  });
+}
+
+function wireDragAndDrop(container, groupKey){
+  // the armory link and class icon would otherwise start their own (URL / image) drag
+  container.querySelectorAll('.slot a, .slot img').forEach(el => el.setAttribute('draggable', 'false'));
+
+  container.querySelectorAll('.slot[data-key]').forEach(slot => {
+    const key = slot.dataset.key;
+
+    slot.addEventListener('dragstart', e => {
+      const editing = document.body.classList.contains('edit-mode');
+      if(!editing || slot.dataset.filled !== '1' || slot.dataset.pinned === '1'){ e.preventDefault(); return; }
+      dragSourceKey = key;
+      if(e.dataTransfer){
+        e.dataTransfer.effectAllowed = 'move';
+        try{ e.dataTransfer.setData('text/plain', key); }catch(_){ /* some browsers refuse */ }
+      }
+      setTimeout(() => slot.classList.add('dragging'), 0);
+    });
+
+    slot.addEventListener('dragend', () => {
+      dragSourceKey = null;
+      container.querySelectorAll('.slot.dragging, .slot.drop-ok').forEach(el => el.classList.remove('dragging', 'drop-ok'));
+    });
+
+    slot.addEventListener('dragover', e => {
+      if(!dragSourceKey || dragSourceKey === key || slot.dataset.pinned === '1') return;   // not a valid target
+      e.preventDefault();
+      if(e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      slot.classList.add('drop-ok');
+    });
+
+    slot.addEventListener('dragleave', e => {
+      if(!slot.contains(e.relatedTarget)) slot.classList.remove('drop-ok');
+    });
+
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('drop-ok');
+      const from = dragSourceKey;
+      dragSourceKey = null;
+      if(from) dropOnSlot(from, key, groupKey);
     });
   });
 }
@@ -1744,20 +2070,29 @@ function slotHtml(raidId, party, pIdx, sIdx, groupKey){
     ? `<span class="slot-cp ${c.role === 'sup' ? 'sup' : 'dps'}" title="Combat Power ${escapeAttr(String(c.cp))}">${Math.floor(cpNum)}</span>`
     : '';
 
+  const pinned = !!(c && pins.has(key));
+  const dis = pinned ? ' disabled' : '';
+  const warns = currentWarnings.slots.get(key) || [];
+  const warnHtml = warns.length ? `<span class="slot-warn" title="${escapeAttr(warns.join('\n'))}">⚠</span>` : '';
+  const pinHtml = c
+    ? `<button type="button" class="slot-pin${pinned ? ' on' : ''}" data-pin="${key}" title="${pinned ? 'Pinned: Auto-create and Clear leave this slot alone. Click to unpin.' : 'Pin this character to the slot'}">📌</button>`
+    : '';
+  const flagsHtml = (warnHtml || pinHtml) ? `<div class="slot-flags${warnHtml ? '' : ' only-pin'}">${warnHtml}${pinHtml}</div>` : '';
+
   const classIcon = classIconHtml(c ? c.class : null, 'tile');
   const classIconLink = armoryUrl
     ? `<a href="${armoryUrl}" target="_blank" rel="noopener noreferrer" title="Open ${escapeAttr(c.ign)} on Lost Ark Bible" style="display:inline-flex; text-decoration:none; cursor:pointer;">${classIcon}</a>`
     : classIcon;
 
   return `
-    <div class="slot ${c ? 'filled' : 'empty'}${tooLow ? ' ilvl-low' : ''}">
+    <div class="slot ${c ? 'filled' : 'empty'}${tooLow ? ' ilvl-low' : ''}${pinned ? ' pinned' : ''}" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}" data-filled="${c ? 1 : 0}" data-pinned="${pinned ? 1 : 0}">
       <div class="slot-icon-wrap">${classIconLink}</div>
 
       <div class="slot-body">
-        <select class="char-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${charOptions}</select>
+        <select class="char-select"${dis} data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${charOptions}</select>
         <div class="slot-bottom-row">
           <span class="slot-class-text">${ilvlHtml}${cpHtml}${c ? escapeAttr(c.class) : 'Class'}</span>
-          <select class="player-select" data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${playerOptions}</select>
+          <select class="player-select"${dis} data-key="${key}" data-raid="${escapeAttr(raidId)}" data-party="${pIdx}" data-slot="${sIdx}">${playerOptions}</select>
         </div>
       </div>
 
@@ -1768,6 +2103,7 @@ function slotHtml(raidId, party, pIdx, sIdx, groupKey){
         </div>
         <span class="slot-player-display ${playerFilter ? '' : 'empty-text'}">${playerFilter ? escapeAttr(playerFilter) : ''}</span>
       </div>
+      ${flagsHtml}
     </div>`;
 }
 
@@ -1781,15 +2117,23 @@ function avgCombatPower(ids){
   return Math.floor(vals.reduce((t, v) => t + v, 0) / vals.length);
 }
 
-function raidCpHtml(parties){
+function raidInfoHtml(groupKey, raid, parties){
   const fmt = v => v == null ? '–' : String(v);
-  const perParty = parties.map(p => avgCombatPower(p));
+  const items = [];
+  const need = requiredIlvl(groupKey, raid.id);
+  if(need != null) items.push(`<span>Min. ilvl <b>${need}</b></span>`);
+
   const total = avgCombatPower(parties.flat());
-  if(total == null) return '';
-  const items = parties.length > 1
-    ? [...perParty.map((v, i) => `Party ${i + 1} <b>${fmt(v)}</b>`), `Total <b>${fmt(total)}</b>`]
-    : [`<b>${fmt(total)}</b>`];
-  return `<div class="raid-cp"><span>Ø Combat Power</span>${items.map(t => `<span>${t}</span>`).join('')}</div>`;
+  if(total != null){
+    items.push('<span>Ø Combat Power</span>');
+    if(parties.length > 1){
+      parties.forEach((p, i) => items.push(`<span>Party ${i + 1} <b>${fmt(avgCombatPower(p))}</b></span>`));
+      items.push(`<span>Total <b>${fmt(total)}</b></span>`);
+    } else {
+      items.push(`<span><b>${fmt(total)}</b></span>`);
+    }
+  }
+  return items.length ? `<div class="raid-cp">${items.join('')}</div>` : '';
 }
 
 function raidCardHtml(raid, group, groupKey){
@@ -1809,10 +2153,10 @@ function raidCardHtml(raid, group, groupKey){
   return `
     <div class="card raid-card">
       <div class="card-title">
-        <span>${escapeAttr(raidDisplayName(raid))}</span>
+        <span>${escapeAttr(raidDisplayName(raid))}${(currentWarnings.raids.get(raid.id) || []).length ? ` <span class="slot-warn" title="${escapeAttr(currentWarnings.raids.get(raid.id).join('\n'))}">⚠</span>` : ''}</span>
         <span class="rate ${group.accent}">${filled}/${totalSlots} filled</span>
       </div>
-      ${raidCpHtml(parties)}
+      ${raidInfoHtml(groupKey, raid, parties)}
       ${partiesHtml}
     </div>`;
 }
@@ -1828,6 +2172,7 @@ function applyEditMode(){
   document.body.classList.toggle('edit-mode', editMode);
   const toggle = document.getElementById('editModeToggle');
   if(toggle) toggle.checked = editMode;
+  applyDraggable();
 }
 
 function initEditModeToggle(){
@@ -1854,7 +2199,7 @@ function initTabs(){
 
 /* ---------- Export / Import ---------- */
 function exportData(){
-  const data = { characters, assignments, raidDifficulty };
+  const data = { characters, assignments, raidDifficulty, pins: [...pins] };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1897,6 +2242,7 @@ async function init(){
     await loadRemoteData();
   }catch(err){
     console.error(err);
+    initEmptyAssignments();   // start with empty raids so the page still works
     showToast('Could not load data.json');
     document.getElementById('charEmptyState').textContent = 'Could not load data.json. Check that it exists next to this HTML file.';
   }
@@ -1907,6 +2253,8 @@ async function init(){
   initTabs();
   initEditModeToggle();
   initAutoCreate();
+  initCharSort();
+  renderCharacterTable();
 
   document.getElementById('btnAddChar').addEventListener('click', addCharacter);
   document.getElementById('btnPasteUpdate').addEventListener('click', updateFromPaste);
@@ -1927,6 +2275,8 @@ async function init(){
     if(confirm('Really delete all characters and assignments?')){
       characters = [];
       initEmptyAssignments();
+      undoSnapshot = null;
+      updateUndoButton();
       renderCharacterTable();
       renderAllRaidGroups();
       saveState();
