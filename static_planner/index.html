@@ -206,6 +206,7 @@
   @media (max-width: 820px){ .add-form{ grid-template-columns: 1fr 1fr; } }
 
   .auto-row{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .group-tools{ display:flex; gap:8px; justify-content:flex-end; margin: 0 0 12px; }
   .paste-area{ width:100%; min-height:150px; resize:vertical; font-family: inherit; }
   .paste-result{ margin-top:10px; }
   .auto-row select{ width:auto; min-width:180px; }
@@ -486,15 +487,47 @@
   </div>
 
   <!-- RAID TABS -->
-    <div class="tab-panel active" id="panel-serca">
+  <div class="tab-panel active" id="panel-serca">
+    <div class="group-party-switch" style="display:flex;align-items:center;gap:8px;margin:0 0 16px;">
+      <span style="color:var(--muted);font-size:13px;font-weight:700;">Party</span>
+      <button class="tab-btn" data-party-switch="serca" data-party="1">Party 1</button>
+      <button class="tab-btn active" data-party-switch="serca" data-party="2">Party 2</button>
+    </div>
+    <div class="group-tools" data-group-tools="serca-party1" style="display:none">
+      <button class="btn btn-small" data-export-image="serca-party1" title="Save all Serca Party 1 raids as one PNG image">📷 Download image</button>
+      <button class="btn btn-small" data-copy-image="serca-party1" title="Copy all Serca Party 1 raids as an image to the clipboard">Copy image</button>
+    </div>
+    <div id="raids-serca-party1" style="display:none"></div>
+    <div class="group-tools" data-group-tools="serca">
+      <button class="btn btn-small" data-export-image="serca" title="Save all Serca Party 2 raids as one PNG image">📷 Download image</button>
+      <button class="btn btn-small" data-copy-image="serca" title="Copy all Serca Party 2 raids as an image to the clipboard">Copy image</button>
+    </div>
     <div id="raids-serca"></div>
   </div>
 
   <div class="tab-panel" id="panel-cathedral">
+    <div class="group-party-switch" style="display:flex;align-items:center;gap:8px;margin:0 0 16px;">
+      <span style="color:var(--muted);font-size:13px;font-weight:700;">Party</span>
+      <button class="tab-btn" data-party-switch="cathedral" data-party="1">Party 1</button>
+      <button class="tab-btn active" data-party-switch="cathedral" data-party="2">Party 2</button>
+    </div>
+    <div class="group-tools" data-group-tools="cathedral-party1" style="display:none">
+      <button class="btn btn-small" data-export-image="cathedral-party1" title="Save all Cathedral Party 1 raids as one PNG image">📷 Download image</button>
+      <button class="btn btn-small" data-copy-image="cathedral-party1" title="Copy all Cathedral Party 1 raids as an image to the clipboard">Copy image</button>
+    </div>
+    <div id="raids-cathedral-party1" style="display:none"></div>
+    <div class="group-tools" data-group-tools="cathedral">
+      <button class="btn btn-small" data-export-image="cathedral" title="Save all Cathedral Party 2 raids as one PNG image">📷 Download image</button>
+      <button class="btn btn-small" data-copy-image="cathedral" title="Copy all Cathedral Party 2 raids as an image to the clipboard">Copy image</button>
+    </div>
     <div id="raids-cathedral"></div>
   </div>
-  
+
   <div class="tab-panel" id="panel-belgardin">
+    <div class="group-tools">
+      <button class="btn btn-small" data-export-image="belgardin" title="Save all Belgardin raids as one PNG image">📷 Download image</button>
+      <button class="btn btn-small" data-copy-image="belgardin" title="Copy all Belgardin raids as an image to the clipboard">Copy image</button>
+    </div>
     <div id="raids-belgardin"></div>
   </div>
 
@@ -524,7 +557,7 @@
 
     <div class="card">
       <div class="card-title">Auto-create Groups</div>
-      <div class="card-sub">Re-creates every slot of the chosen group that is <b>not pinned</b> (📌) with 3 DPS + 1 Support per party. Pin the characters you want to keep on the raid pages first. Each click gives a slightly different variation, and <b>Undo</b> brings the previous state back. Serca and Cathedral only use characters set to <b>Party 2</b>. A class never appears twice in the same party. The minimum ilvl follows each raid's difficulty (NM / HM / NiM). NiM has priority over HM, HM over NM. If a group cannot be completed, it still gets every eligible character that is left. With <b>Balance combat power</b> on, characters placed by this run are swapped between the parties of the same difficulty (NiM, HM and NM each on their own) until their combat power is as even as possible; priority and all other rules stay untouched.</div>
+      <div class="card-sub">Re-creates every slot of the chosen group that is <b>not pinned</b> (📌) with 3 DPS + 1 Support per party. Pin the characters you want to keep on the raid pages first. Each click gives a slightly different variation, and <b>Undo</b> brings the previous state back. Serca and Cathedral can be switched between Party 1 and Party 2; auto-create uses only characters assigned to the selected group. A class never appears twice in the same party. The minimum ilvl follows each raid's difficulty (NM / HM / NiM). NiM has priority over HM, HM over NM. If a group cannot be completed, it still gets every eligible character that is left. With <b>Balance combat power</b> on, characters placed by this run are swapped between the parties of the same difficulty (NiM, HM and NM each on their own) until their combat power is as even as possible; priority and all other rules stay untouched.</div>
       <div class="divider"></div>
       <div class="auto-row">
         <select id="autoGroupSelect"></select>
@@ -765,6 +798,32 @@ const RAID_GROUPS = {
       { id: 'cathedral-6', name: 'Cathedral 6' }
     ],
     partyLabels: ['Party']
+  },
+  'serca-party1': {
+    label: 'Serca · Party 1',
+    accent: 'pink',
+    raids: [
+      { id: 'serca-party1-1', name: 'Serca 1' },
+      { id: 'serca-party1-2', name: 'Serca 2' },
+      { id: 'serca-party1-3', name: 'Serca 3' },
+      { id: 'serca-party1-4', name: 'Serca 4' },
+      { id: 'serca-party1-5', name: 'Serca 5' },
+      { id: 'serca-party1-6', name: 'Serca 6' }
+    ],
+    partyLabels: ['Party 1']
+  },
+  'cathedral-party1': {
+    label: 'Cathedral · Party 1',
+    accent: 'amber',
+    raids: [
+      { id: 'cathedral-party1-1', name: 'Cathedral 1' },
+      { id: 'cathedral-party1-2', name: 'Cathedral 2' },
+      { id: 'cathedral-party1-3', name: 'Cathedral 3' },
+      { id: 'cathedral-party1-4', name: 'Cathedral 4' },
+      { id: 'cathedral-party1-5', name: 'Cathedral 5' },
+      { id: 'cathedral-party1-6', name: 'Cathedral 6' }
+    ],
+    partyLabels: ['Party 1']
   }
 };
 
@@ -794,7 +853,11 @@ const DEFAULT_RAID_DIFFICULTY = {
   'serca-1': 'HM', 'serca-2': 'NiM', 'serca-3': 'NiM',
   'serca-4': 'NiM', 'serca-5': 'HM', 'serca-6': 'HM',
   'cathedral-1': 'Lv. 3', 'cathedral-2': 'Lv. 3', 'cathedral-3': 'Lv. 3',
-  'cathedral-4': 'Lv. 3', 'cathedral-5': 'Lv. 3', 'cathedral-6': 'Lv. 3'
+  'cathedral-4': 'Lv. 3', 'cathedral-5': 'Lv. 3', 'cathedral-6': 'Lv. 3',
+  'serca-party1-1': 'HM', 'serca-party1-2': 'NiM', 'serca-party1-3': 'NiM',
+  'serca-party1-4': 'NiM', 'serca-party1-5': 'HM', 'serca-party1-6': 'HM',
+  'cathedral-party1-1': 'Lv. 3', 'cathedral-party1-2': 'Lv. 3', 'cathedral-party1-3': 'Lv. 3',
+  'cathedral-party1-4': 'Lv. 3', 'cathedral-party1-5': 'Lv. 3', 'cathedral-party1-6': 'Lv. 3'
 };
 
 // Minimum item level per raid group and difficulty. A raid whose group or
@@ -802,7 +865,9 @@ const DEFAULT_RAID_DIFFICULTY = {
 const MIN_ILVL = {
   belgardin: { 'NM': 1750, 'HM': 1770, 'NIM': 1780 },
   serca:     { 'NM': 1710, 'HM': 1730, 'NIM': 1740 },
-  cathedral: { 'LV1': 1700, 'LV2': 1720, 'LV3': 1750 }
+  cathedral: { 'LV1': 1700, 'LV2': 1720, 'LV3': 1750 },
+  'serca-party1': { 'NM': 1710, 'HM': 1730, 'NIM': 1740 },
+  'cathedral-party1': { 'LV1': 1700, 'LV2': 1720, 'LV3': 1750 }
 };
 
 function parseIlvl(value){
@@ -1252,7 +1317,7 @@ function deleteCharacter(id){
 // Step 2 fills what is left over greedily, complete parties only.
 // Raid groups where auto-create may ONLY use characters of one specific party
 // (character "Party" setting). "Any" characters are not used there either.
-const AUTO_ONLY_PARTY = { serca: '2', cathedral: '2' };
+const AUTO_ONLY_PARTY = { serca: '2', cathedral: '2', 'serca-party1': '1', 'cathedral-party1': '1' };
 
 function partyAllowed(c, groupKey, group, pIdx){
   const only = AUTO_ONLY_PARTY[groupKey];
@@ -2187,14 +2252,296 @@ function initEditModeToggle(){
 
 /* ---------- Tabs ---------- */
 function initTabs(){
-  document.querySelectorAll('.tab-btn').forEach(btn => {
+  document.querySelectorAll('#tabNav .tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#tabNav .tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
     });
   });
+  document.querySelectorAll('[data-party-switch]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const base = btn.dataset.partySwitch;
+      const party1 = btn.dataset.party === '1';
+      document.querySelectorAll(`[data-party-switch="${base}"]`).forEach(b => b.classList.toggle('active', b === btn));
+      const keys = [base, `${base}-party1`];
+      keys.forEach(key => {
+        const show = party1 ? key.endsWith('-party1') : !key.endsWith('-party1');
+        const raids = document.getElementById(`raids-${key}`);
+        const tools = document.querySelector(`[data-group-tools="${key}"]`);
+        if(raids) raids.style.display = show ? '' : 'none';
+        if(tools) tools.style.display = show ? '' : 'none';
+      });
+    });
+  });
+}
+
+/* ---------- Image export of a whole raid group ---------- */
+// Draws all raids of a group (e.g. Belgardin 1-6) onto one canvas and saves or
+// copies it as a PNG. Written with plain canvas calls, so no extra library is needed.
+const ACCENT_COLORS = { pink: '#ff4fa3', amber: '#f5b942', teal: '#3fe6c4' };
+const IMG_FONT = '"Inter", "Segoe UI", system-ui, -apple-system, Arial, sans-serif';
+
+function imgRoundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function imgFitText(ctx, text, maxWidth){
+  if(ctx.measureText(text).width <= maxWidth) return text;
+  let t = String(text);
+  while(t.length > 1 && ctx.measureText(t + '…').width > maxWidth) t = t.slice(0, -1);
+  return t + '…';
+}
+
+// Draws coloured text pieces one after another; returns the end x
+function imgSegments(ctx, x, y, size, segs){
+  segs.forEach(sg => {
+    ctx.font = `${sg.bold ? 700 : 500} ${size}px ${IMG_FONT}`;
+    ctx.fillStyle = sg.color;
+    ctx.fillText(sg.text, x, y);
+    x += ctx.measureText(sg.text).width;
+  });
+  return x;
+}
+
+function loadClassIcon(className){
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = `${ICON_DIR}${encodeURIComponent(className)}.png`;
+  });
+}
+
+function renderGroupCanvas(groupKey, icons){
+  const group = RAID_GROUPS[groupKey];
+  const byId = new Map(characters.map(c => [c.id, c]));
+  const accent = ACCENT_COLORS[group.accent] || '#b98bff';
+  const C = { text: '#e6e4ee', body: '#c4c2ce', muted: '#8b8a9b', muted2: '#5c5b6b', panel: '#131319', border: '#262530', dps: '#ff6b6b', sup: '#4ade80', danger: '#ff5c5c' };
+
+  const S = 2;                                   // sharper image
+  const PAD = 28, GAP = 18, IP = 16, ROW_H = 42, ROW_STEP = 46, PW = 300, PGAP = 16;
+  const TITLE_H = 74, FOOT_H = 44;
+  const parties = group.partyLabels.length;
+  const cardW = IP * 2 + parties * PW + (parties - 1) * PGAP;
+  const LABEL_H = parties > 1 ? 22 : 0;                       // room for the "PARTY 1" label
+  const cardH = IP + 24 + 20 + 12 + LABEL_H + (4 * ROW_STEP - (ROW_STEP - ROW_H)) + IP;
+
+  const n = group.raids.length;
+  const cols = n > 1 ? 2 : 1;
+  const perCol = Math.ceil(n / cols);
+  const W = PAD * 2 + cols * cardW + (cols - 1) * GAP;
+  const H = PAD + TITLE_H + perCol * cardH + (perCol - 1) * GAP + FOOT_H;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W * S;
+  canvas.height = H * S;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(S, S);
+  ctx.textBaseline = 'alphabetic';
+
+  // background
+  ctx.fillStyle = '#0a0a10';
+  ctx.fillRect(0, 0, W, H);
+  const glow = ctx.createRadialGradient(W / 2, H * 0.03, 0, W / 2, H * 0.03, Math.max(W, H) * 0.65);
+  glow.addColorStop(0, '#1c1228');
+  glow.addColorStop(1, 'rgba(10,10,16,0)');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, W, H);
+
+  // title
+  ctx.textAlign = 'left';
+  ctx.font = `800 30px ${IMG_FONT}`;
+  ctx.fillStyle = accent;
+  ctx.fillText(group.label, PAD, PAD + 30);
+  ctx.textAlign = 'right';
+  ctx.font = `600 13px ${IMG_FONT}`;
+  ctx.fillStyle = C.muted;
+  ctx.fillText(new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }), W - PAD, PAD + 28);
+  ctx.textAlign = 'left';
+
+  group.raids.forEach((raid, idx) => {
+    const col = Math.floor(idx / perCol), row = idx % perCol;
+    const x = PAD + col * (cardW + GAP);
+    const y = PAD + TITLE_H + row * (cardH + GAP);
+    const raidParties = assignments[raid.id] || [];
+    const need = requiredIlvl(groupKey, raid.id);
+    const diff = (raidDifficulty[raid.id] || '').trim();
+
+    // card
+    imgRoundRect(ctx, x, y, cardW, cardH, 12);
+    ctx.fillStyle = C.panel; ctx.fill();
+    ctx.strokeStyle = C.border; ctx.lineWidth = 1; ctx.stroke();
+
+    // title line
+    const endX = imgSegments(ctx, x + IP, y + IP + 17, 17, [{ text: raid.name, color: C.text, bold: true }]);
+    if(diff) imgSegments(ctx, endX, y + IP + 17, 17, [{ text: '  ·  ', color: C.muted2, bold: true }, { text: diff, color: accent, bold: true }]);
+
+    // info line: min ilvl + average combat power
+    const segs = [];
+    if(need != null) segs.push({ text: 'Min. ilvl ', color: C.muted }, { text: String(need), color: C.text, bold: true });
+    const total = avgCombatPower(raidParties.flat());
+    if(total != null){
+      if(segs.length) segs.push({ text: '     ', color: C.muted });
+      segs.push({ text: 'Ø Combat Power  ', color: C.muted });
+      if(raidParties.length > 1){
+        raidParties.forEach((p, i) => {
+          const v = avgCombatPower(p);
+          segs.push({ text: `P${i + 1} `, color: C.muted }, { text: v == null ? '–' : String(v), color: C.text, bold: true }, { text: '   ', color: C.muted });
+        });
+        segs.push({ text: 'Total ', color: C.muted }, { text: String(total), color: C.text, bold: true });
+      } else {
+        segs.push({ text: String(total), color: C.text, bold: true });
+      }
+    }
+    if(segs.length) imgSegments(ctx, x + IP, y + IP + 24 + 14, 12, segs);
+
+    // parties
+    const topY = y + IP + 24 + 20 + 12;
+    raidParties.forEach((party, pIdx) => {
+      const px = x + IP + pIdx * (PW + PGAP);
+      if(parties > 1){
+        ctx.font = `800 10px ${IMG_FONT}`;
+        ctx.fillStyle = C.muted;
+        ctx.fillText(group.partyLabels[pIdx].toUpperCase(), px, topY + 11);
+      }
+      party.forEach((id, sIdx) => {
+        const ry = topY + LABEL_H + sIdx * ROW_STEP;
+        const c = id != null ? byId.get(id) : null;
+
+        imgRoundRect(ctx, px, ry, PW, ROW_H, 8);
+        ctx.fillStyle = c ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.015)';
+        ctx.fill();
+        ctx.strokeStyle = c ? C.border : '#1c1b24';
+        ctx.stroke();
+
+        if(!c){
+          ctx.font = `600 14px ${IMG_FONT}`;
+          ctx.fillStyle = C.muted2;
+          ctx.fillText('—', px + 46, ry + 26);
+          return;
+        }
+
+        // class icon (or coloured abbreviation if the icon is missing)
+        const ix = px + 6, iy = ry + 6, isz = 30;
+        const icon = icons.get(c.class);
+        imgRoundRect(ctx, ix, iy, isz, isz, 7);
+        if(icon){
+          ctx.save();
+          ctx.clip();
+          ctx.drawImage(icon, ix, iy, isz, isz);
+          ctx.restore();
+        } else {
+          const meta = CLASS_META[c.class];
+          ctx.fillStyle = meta ? ROLE_COLORS[meta.role] : 'rgba(92, 90, 107, 0.4)';
+          ctx.fill();
+          ctx.font = `800 11px ${IMG_FONT}`;
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText(meta ? meta.abbr : '?', ix + isz / 2, iy + isz / 2 + 4);
+          ctx.textAlign = 'left';
+        }
+
+        // player on the right
+        let nameMax = PW - 46 - 10;
+        if(c.static){
+          ctx.font = `600 12px ${IMG_FONT}`;
+          const pl = imgFitText(ctx, c.static, 90);
+          ctx.fillStyle = C.muted;
+          ctx.textAlign = 'right';
+          ctx.fillText(pl, px + PW - 10, ry + 17);
+          ctx.textAlign = 'left';
+          nameMax = PW - 46 - 10 - ctx.measureText(pl).width - 8;
+        }
+
+        // name
+        ctx.font = `700 14px ${IMG_FONT}`;
+        ctx.fillStyle = C.text;
+        ctx.fillText(imgFitText(ctx, c.ign, nameMax), px + 46, ry + 17);
+
+        // ilvl · combat power · class
+        const ilvlRaw = String(c.ilvl || '').trim();
+        const ilvlShown = /^\d[\d,]*(\.\d+)?$/.test(ilvlRaw) ? String(Math.floor(parseIlvl(ilvlRaw))) : ilvlRaw;
+        const ilvlNum = parseIlvl(c.ilvl);
+        const tooLow = need != null && ilvlNum != null && ilvlNum < need;
+        const cpNum = parseFloat(c.cp);
+        const line = [];
+        if(ilvlShown) line.push({ text: ilvlShown + '  ', color: tooLow ? C.danger : C.body, bold: true });
+        if(Number.isFinite(cpNum) && cpNum > 0) line.push({ text: Math.floor(cpNum) + '  ', color: c.role === 'sup' ? C.sup : C.dps, bold: true });
+        line.push({ text: c.class || '', color: C.muted });
+        imgSegments(ctx, px + 46, ry + 34, 12, line);
+      });
+    });
+  });
+
+  // footer
+  ctx.textAlign = 'center';
+  ctx.font = `500 11px ${IMG_FONT}`;
+  ctx.fillStyle = C.muted2;
+  ctx.fillText('Made by miysu | @meguyu ・Not affiliated with Smilegate or Amazon Games. Game data and icons © Smilegate RPG.', W / 2, H - 20);
+  ctx.textAlign = 'left';
+
+  return canvas;
+}
+
+async function groupImageBlob(groupKey){
+  if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(_){ /* ignore */ } }
+  const group = RAID_GROUPS[groupKey];
+  const byId = new Map(characters.map(c => [c.id, c]));
+  const names = new Set();
+  group.raids.forEach(r => (assignments[r.id] || []).forEach(p => p.forEach(id => {
+    const c = id != null ? byId.get(id) : null;
+    if(c && c.class) names.add(c.class);
+  })));
+  const loaded = await Promise.all([...names].map(async n => [n, await loadClassIcon(n)]));
+  const icons = new Map(loaded.filter(([, img]) => img));
+
+  let canvas = renderGroupCanvas(groupKey, icons);
+  let withoutIcons = false;
+  try{
+    canvas.getContext('2d').getImageData(0, 0, 1, 1);        // throws if the icons tainted the canvas (e.g. file://)
+  }catch(_){
+    canvas = renderGroupCanvas(groupKey, new Map());
+    withoutIcons = true;
+  }
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/png');
+  });
+  return { blob, withoutIcons };
+}
+
+async function exportGroupImage(groupKey, mode){
+  const group = RAID_GROUPS[groupKey];
+  try{
+    if(mode === 'copy'){
+      // handing over a promise keeps the click's permission to write to the clipboard
+      const blobPromise = groupImageBlob(groupKey).then(r => r.blob);
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blobPromise })]);
+      showToast(`${group.label} image copied`);
+      return;
+    }
+    showToast('Creating image…');
+    const { blob, withoutIcons } = await groupImageBlob(groupKey);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${groupKey}-${new Date().toISOString().slice(0, 10)}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    showToast(withoutIcons ? 'Image saved (class icons left out: blocked by the browser)' : `${group.label} image saved`);
+  }catch(err){
+    console.error(err);
+    showToast(mode === 'copy' ? 'Copy failed. Use "Download image" instead' : 'Image export failed');
+  }
 }
 
 /* ---------- Export / Import ---------- */
@@ -2255,6 +2602,14 @@ async function init(){
   initAutoCreate();
   initCharSort();
   renderCharacterTable();
+
+  document.querySelectorAll('[data-export-image]').forEach(b => {
+    b.addEventListener('click', () => exportGroupImage(b.dataset.exportImage, 'download'));
+  });
+  document.querySelectorAll('[data-copy-image]').forEach(b => {
+    if(!(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write)){ b.style.display = 'none'; return; }
+    b.addEventListener('click', () => exportGroupImage(b.dataset.copyImage, 'copy'));
+  });
 
   document.getElementById('btnAddChar').addEventListener('click', addCharacter);
   document.getElementById('btnPasteUpdate').addEventListener('click', updateFromPaste);
