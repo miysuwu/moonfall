@@ -7,7 +7,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "7502.12",
+      "cp": "7738.42",
       "party": "2"
     },
     {
@@ -17,7 +17,7 @@
       "class": "Wildsoul",
       "static": "megu",
       "role": "dps",
-      "cp": "5363.11",
+      "cp": "5526.96",
       "party": "2"
     },
     {
@@ -27,7 +27,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "5673.43",
+      "cp": "5852.13",
       "party": "2"
     },
     {
@@ -37,7 +37,7 @@
       "class": "Artist",
       "static": "megu",
       "role": "sup",
-      "cp": "5090",
+      "cp": "5255.11",
       "party": "2"
     },
     {
@@ -47,7 +47,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "5652.28",
+      "cp": "5925.23",
       "party": "2"
     },
     {
@@ -167,7 +167,7 @@
       "class": "Paladin",
       "static": "Frost",
       "role": "sup",
-      "cp": "3580.24",
+      "cp": "3591.5",
       "party": "1"
     },
     {
@@ -182,12 +182,12 @@
     },
     {
       "id": 52,
-      "ilvl": "1769.17",
+      "ilvl": "1770.83",
       "ign": "Frostclone",
       "class": "Breaker",
       "static": "Frost",
       "role": "dps",
-      "cp": "5311.93",
+      "cp": "5387.28",
       "party": "1"
     },
     {
@@ -207,7 +207,7 @@
       "class": "Guardianknight",
       "static": "Aish",
       "role": "dps",
-      "cp": "4261.8",
+      "cp": "4433.63",
       "party": "1"
     },
     {
@@ -217,7 +217,7 @@
       "class": "Valkyrie",
       "static": "Aish",
       "role": "sup",
-      "cp": "5073.97",
+      "cp": "5103.77",
       "party": "1"
     },
     {
@@ -237,7 +237,7 @@
       "class": "Souleater",
       "static": "Aish",
       "role": "dps",
-      "cp": "4281.24",
+      "cp": "4467.99",
       "party": "1"
     },
     {
@@ -257,7 +257,7 @@
       "class": "Valkyrie",
       "static": "Aish",
       "role": "sup",
-      "cp": "4652.11",
+      "cp": "4664.49",
       "party": "1"
     },
     {
@@ -277,7 +277,7 @@
       "class": "Breaker",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5261.69",
+      "cp": "5467.7",
       "party": "1"
     },
     {
@@ -297,7 +297,7 @@
       "class": "Striker",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5366.9",
+      "cp": "5626.48",
       "party": "1"
     },
     {
@@ -307,7 +307,7 @@
       "class": "Sharpshooter",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5453.2",
+      "cp": "5606.27",
       "party": "1"
     },
     {
@@ -317,7 +317,7 @@
       "class": "Machinist",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "4428.11",
+      "cp": "4507.1",
       "party": "1"
     },
     {
@@ -357,7 +357,7 @@
       "class": "Deathblade",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4401.69",
+      "cp": "4531.45",
       "party": "1"
     },
     {
@@ -377,7 +377,7 @@
       "class": "Gunslinger",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4548.05",
+      "cp": "4602.81",
       "party": "1"
     },
     {
@@ -412,12 +412,12 @@
     },
     {
       "id": 88,
-      "ilvl": "1740.83",
+      "ilvl": "1750.83",
       "ign": "Frostwink",
       "class": "Dimensionalist",
       "static": "Frost",
       "role": "dps",
-      "cp": "3635.68",
+      "cp": "3980.37",
       "party": "1"
     },
     {
@@ -661,6 +661,102 @@
         90,
         29
       ]
+    ],
+    "serca-party1-1": [
+      [
+        49,
+        64,
+        68,
+        60
+      ]
+    ],
+    "serca-party1-2": [
+      [
+        53,
+        55,
+        61,
+        71
+      ]
+    ],
+    "serca-party1-3": [
+      [
+        52,
+        65,
+        72,
+        57
+      ]
+    ],
+    "serca-party1-4": [
+      [
+        58,
+        62,
+        67,
+        50
+      ]
+    ],
+    "serca-party1-5": [
+      [
+        51,
+        63,
+        69,
+        56
+      ]
+    ],
+    "serca-party1-6": [
+      [
+        88,
+        66,
+        70,
+        59
+      ]
+    ],
+    "cathedral-party1-1": [
+      [
+        49,
+        64,
+        68,
+        60
+      ]
+    ],
+    "cathedral-party1-2": [
+      [
+        53,
+        55,
+        61,
+        71
+      ]
+    ],
+    "cathedral-party1-3": [
+      [
+        52,
+        65,
+        72,
+        57
+      ]
+    ],
+    "cathedral-party1-4": [
+      [
+        58,
+        62,
+        67,
+        50
+      ]
+    ],
+    "cathedral-party1-5": [
+      [
+        51,
+        63,
+        69,
+        56
+      ]
+    ],
+    "cathedral-party1-6": [
+      [
+        88,
+        66,
+        70,
+        59
+      ]
     ]
   },
   "raidDifficulty": {
@@ -681,6 +777,24 @@
     "cathedral-3": "Lv. 3",
     "cathedral-4": "Lv. 3",
     "cathedral-5": "Lv. 3",
-    "cathedral-6": "Lv. 3"
-  }
+    "cathedral-6": "Lv. 3",
+    "serca-party1-1": "NiM",
+    "serca-party1-2": "NiM",
+    "serca-party1-3": "NiM",
+    "serca-party1-4": "NiM",
+    "serca-party1-5": "NiM",
+    "serca-party1-6": "HM",
+    "cathedral-party1-1": "Lv. 3",
+    "cathedral-party1-2": "Lv. 3",
+    "cathedral-party1-3": "Lv. 3",
+    "cathedral-party1-4": "Lv. 3",
+    "cathedral-party1-5": "Lv. 3",
+    "cathedral-party1-6": "Lv. 3"
+  },
+  "pins": [
+    "serca-party1-6__0__2",
+    "serca-party1-6__0__0",
+    "serca-party1-6__0__1",
+    "serca-party1-6__0__3"
+  ]
 }
