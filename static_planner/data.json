@@ -7,7 +7,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "7738.42",
+      "cp": "8324.07",
       "party": "2"
     },
     {
@@ -17,17 +17,17 @@
       "class": "Wildsoul",
       "static": "megu",
       "role": "dps",
-      "cp": "5526.96",
+      "cp": "5665.38",
       "party": "2"
     },
     {
       "id": 21,
-      "ilvl": "1770",
+      "ilvl": "1772.5",
       "ign": "Teases",
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "5852.13",
+      "cp": "6456.72",
       "party": "2"
     },
     {
@@ -37,7 +37,7 @@
       "class": "Artist",
       "static": "megu",
       "role": "sup",
-      "cp": "5255.11",
+      "cp": "5386.65",
       "party": "2"
     },
     {
@@ -47,7 +47,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "5925.23",
+      "cp": "6237.87",
       "party": "2"
     },
     {
@@ -57,7 +57,7 @@
       "class": "Aeromancer",
       "static": "nichi",
       "role": "dps",
-      "cp": "5689.02",
+      "cp": "6096.02",
       "party": "2"
     },
     {
@@ -67,7 +67,7 @@
       "class": "Artist",
       "static": "nichi",
       "role": "sup",
-      "cp": "7357",
+      "cp": "8028.79",
       "party": "2"
     },
     {
@@ -77,7 +77,7 @@
       "class": "Wildsoul",
       "static": "nichi",
       "role": "dps",
-      "cp": "5547.42",
+      "cp": "5861.84",
       "party": "2"
     },
     {
@@ -87,7 +87,7 @@
       "class": "Artist",
       "static": "nichi",
       "role": "sup",
-      "cp": "5960.32",
+      "cp": "6401.02",
       "party": "2"
     },
     {
@@ -97,7 +97,7 @@
       "class": "Artist",
       "static": "nichi",
       "role": "sup",
-      "cp": "5284.53",
+      "cp": "5663.16",
       "party": "2"
     },
     {
@@ -107,47 +107,47 @@
       "class": "Souleater",
       "static": "Erik",
       "role": "dps",
-      "cp": "6914.16",
+      "cp": "7380.3",
       "party": "2"
     },
     {
       "id": 45,
-      "ilvl": "1768.33",
+      "ilvl": "1770",
       "ign": "Matryarchx",
       "class": "Valkyrie",
       "static": "Erik",
       "role": "sup",
-      "cp": "4134.21",
+      "cp": "4725.63",
       "party": "2"
     },
     {
       "id": 46,
-      "ilvl": "1772.5",
+      "ilvl": "1773.33",
       "ign": "Banishx",
       "class": "Guardianknight",
       "static": "Erik",
       "role": "dps",
-      "cp": "5226.27",
+      "cp": "5630.98",
       "party": "2"
     },
     {
       "id": 47,
-      "ilvl": "1766.67",
+      "ilvl": "1770",
       "ign": "Anihilix",
       "class": "Scrapper",
       "static": "Erik",
       "role": "dps",
-      "cp": "4660.91",
+      "cp": "4841.97",
       "party": "2"
     },
     {
       "id": 48,
-      "ilvl": "1761.67",
+      "ilvl": "1769.17",
       "ign": "Astharothx",
       "class": "Shadowhunter",
       "static": "Erik",
       "role": "dps",
-      "cp": "4290.93",
+      "cp": "4552.8",
       "party": "2"
     },
     {
@@ -387,7 +387,7 @@
       "class": "Bard",
       "static": "nichi",
       "role": "sup",
-      "cp": "4564.05",
+      "cp": "4830.86",
       "party": "2"
     },
     {
@@ -397,17 +397,17 @@
       "class": "Dimensionalist",
       "static": "megu",
       "role": "dps",
-      "cp": "5163.04",
+      "cp": "5429.61",
       "party": "2"
     },
     {
       "id": 87,
-      "ilvl": "1753.33",
+      "ilvl": "1755.83",
       "ign": "Solyx",
       "class": "Souleater",
       "static": "Erik",
       "role": "dps",
-      "cp": "4470.17",
+      "cp": "4799.65",
       "party": "2"
     },
     {
@@ -422,12 +422,12 @@
     },
     {
       "id": 89,
-      "ilvl": "1788.33",
+      "ilvl": "1789.17",
       "ign": "Xÿro",
       "class": "Breaker",
       "static": "Malice",
       "role": "dps",
-      "cp": "7214.82",
+      "cp": "7800.54",
       "party": "2"
     },
     {
@@ -437,7 +437,7 @@
       "class": "Guardianknight",
       "static": "Malice",
       "role": "dps",
-      "cp": "5108.95",
+      "cp": "5472.07",
       "party": "2"
     },
     {
@@ -447,17 +447,17 @@
       "class": "Breaker",
       "static": "Malice",
       "role": "dps",
-      "cp": "5956.73",
+      "cp": "6490.87",
       "party": "2"
     },
     {
       "id": 92,
-      "ilvl": "1752.5",
+      "ilvl": "1753.33",
       "ign": "Blàdehaze",
       "class": "Deathblade",
       "static": "Malice",
       "role": "dps",
-      "cp": "4479.33",
+      "cp": "4509.59",
       "party": "2"
     },
     {
@@ -467,7 +467,7 @@
       "class": "Dimensionalist",
       "static": "Malice",
       "role": "dps",
-      "cp": "4545.53",
+      "cp": "4645.91",
       "party": "2"
     },
     {
@@ -477,7 +477,7 @@
       "class": "Breaker",
       "static": "Malice",
       "role": "dps",
-      "cp": "6447.42",
+      "cp": "6572.92",
       "party": "2"
     }
   ],
@@ -568,17 +568,17 @@
     ],
     "serca-1": [
       [
-        21,
-        48,
-        91,
+        23,
+        87,
+        89,
         30
       ]
     ],
     "serca-2": [
       [
-        23,
+        21,
         46,
-        93,
+        91,
         26
       ]
     ],
@@ -586,7 +586,7 @@
       [
         86,
         28,
-        94,
+        92,
         45
       ]
     ],
@@ -594,7 +594,7 @@
       [
         20,
         47,
-        89,
+        90,
         85
       ]
     ],
@@ -602,31 +602,31 @@
       [
         25,
         43,
-        92,
+        93,
         22
       ]
     ],
     "serca-6": [
       [
         19,
-        87,
-        90,
+        48,
+        94,
         29
       ]
     ],
     "cathedral-1": [
       [
-        21,
-        48,
-        91,
+        23,
+        87,
+        89,
         30
       ]
     ],
     "cathedral-2": [
       [
-        23,
+        21,
         46,
-        93,
+        91,
         26
       ]
     ],
@@ -634,7 +634,7 @@
       [
         86,
         28,
-        94,
+        92,
         45
       ]
     ],
@@ -642,7 +642,7 @@
       [
         20,
         47,
-        89,
+        90,
         85
       ]
     ],
@@ -650,15 +650,15 @@
       [
         25,
         43,
-        92,
+        93,
         22
       ]
     ],
     "cathedral-6": [
       [
         19,
-        87,
-        90,
+        48,
+        94,
         29
       ]
     ],
