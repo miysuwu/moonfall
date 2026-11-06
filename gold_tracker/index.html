@@ -388,7 +388,7 @@
   .summary-legend .open b{ color: var(--muted); }
 
   .char-grid{
-    display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(max(200px, calc((100% - 5 * 12px) / 6)), 1fr)); gap: 12px;   /* max 6 cards per row */
     margin-bottom: 22px;
   }
   .char-card{
@@ -418,7 +418,13 @@
   .card-body{ display:grid; }
   .card-body .face{ grid-area:1 / 1; display:flex; flex-direction:column; gap:12px; min-width:0; }
   .card-body .face.off{ visibility:hidden; pointer-events:none; }
-  .card-body .face.back .task-row{ flex:1; }
+  .card-body{ position:relative; }
+  .card-body .face.back{ position:absolute; inset:0; gap:6px; }   /* back face never adds height: the raids side sizes the card */
+  .card-body .face.back .task-row{ flex:1; min-height:0; padding:3px 10px; }
+  .card-body .face.back .task-main{ gap:2px; }
+  .card-body .face.back .task-name{ line-height:1.1; font-size:12px; }
+  .card-body .face.back .task-icons{ gap:4px; flex-wrap:nowrap; }
+  .card-body .face.back .task-icons img{ width:16px; height:16px; }
   .task-row{ background: rgba(13, 13, 19, 0.25); border:1px solid var(--border-soft); border-radius:10px; padding:14px 12px; min-height:58px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; user-select:none; -webkit-user-select:none; transition: border-color .15s ease, background .15s ease; }
   .task-row:hover{ border-color: var(--border); }
   .task-main{ display:flex; flex-direction:column; gap:7px; min-width:0; }
@@ -511,6 +517,13 @@
   .check-btn.on .box svg{ opacity:1; }
   .check-btn.partial{ color: var(--text); border-color: var(--teal-soft); background: rgba(63,230,196,0.04); }
   .check-btn.partial .box{ border-color: var(--teal); }
+  .chest-btn{ width:24px; height:24px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:0; background:none; border-radius:6px; color: var(--muted); cursor:pointer; transition: opacity .15s ease, transform .15s ease, color .15s ease; }
+  .chest-btn.open{ color: var(--amber); }
+  .chest-btn svg{ width:20px; height:20px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .chest-btn:hover{ opacity:.75; transform: translateY(-1px); }
+  .chest-btn.pop{ animation: chestPop .5s cubic-bezier(.2, 1.5, .4, 1); }
+  @keyframes chestPop{ 0%{ transform: scale(0) rotate(-25deg); opacity:0; } 60%{ transform: scale(1.3) rotate(8deg); opacity:1; } 100%{ transform: scale(1) rotate(0); } }
+  @media (prefers-reduced-motion: reduce){ .chest-btn.pop{ animation:none; } }
   .check-btn.box-btn.on{ color: var(--text); border-color: var(--coral-soft); background: rgba(255,107,92,0.08); }
   .check-btn.box-btn.on .box{ background: var(--coral-soft); border-color: var(--coral); color: var(--coral); }
   .check-btn:hover{ border-color: var(--muted-2); }
@@ -1672,6 +1685,7 @@ function renderHome(){
   addBreakdown(total, totalEarned);
   addBreakdown(total, totalPending);
   renderSummary(totalEarned, totalPending);
+  chestPopReady = true;
 
   attachHomeListeners();
 }
@@ -1715,7 +1729,7 @@ function cpHtml(c){
 
 function charCardHtml(c){
   const raidIds = (c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl);
-  const flipped = flippedCards.has(c.id);
+  const flipped = isFlipped(c);
   const bd = charBreakdown(c, true);
   const earned = breakdownTotal(bd.earned);
   return `
@@ -1743,9 +1757,23 @@ function goldValueHtmlSmall(v){
   return `<img class="gold-icon" src="${GOLD_ICON_SRC}" alt="gold">${formatGold(v)}`;
 }
 
+// line icon, drawn in currentColor: grey normally, yellow once the chest is opened
+const CHEST_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20V10.5C3.5 7.2 6 5 9 5h6c3 0 5.5 2.2 5.5 5.5V20z"/><path d="M3.5 12h17M8 5.2V20M16 5.2V20"/><rect x="10.2" y="10.2" width="3.6" height="4" rx=".8" fill="var(--bg, #0d0d13)"/></svg>';
+let chestPopReady = false;            // false during the first render, so nothing pops on page load
+const chestSeen = new Set();          // chests that already popped up
+
+function chestHtml(c, rid, r, s, allCleared){
+  const key = c.id + ':' + rid;
+  if(!(r.chest && allCleared)){ chestSeen.delete(key); return ''; }
+  const pop = chestPopReady && !chestSeen.has(key);
+  chestSeen.add(key);
+  const title = s.box ? 'Chest opened — click to undo' : `Open chest (costs ${formatGold(r.chest)})`;
+  return `<span class="chest-btn ${s.box ? 'open' : ''} ${pop ? 'pop' : ''}" data-action="toggle-box" data-char="${c.id}" data-raid="${rid}" role="button" tabindex="0" aria-pressed="${s.box ? 'true' : 'false'}" title="${title}">${CHEST_SVG}</span>`;
+}
+
 function raidSlotHtml(c, rid, idx){
   if(!rid || !raidById[rid]){
-    return `<div class="raid-slot empty-slot" data-char="${c.id}" data-slot="${idx}"><div class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</div></div>`;
+    return `<div class="raid-slot empty-slot" data-char="${c.id}" data-slot="${idx}"><div class="raid-slot-top"><span class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</span></div><div class="raid-slot-bottom" aria-hidden="true" style="visibility:hidden;"><span class="raid-slot-gold">&nbsp;</span><div class="raid-slot-actions"><span class="check-btn"><span class="box"><svg viewBox="0 0 16 16" fill="none"></svg></span>Clear</span></div></div></div>`;   // invisible filler so an empty slot is as tall as a filled one
   }
   const r = raidById[rid];
   const s = getSlotState(c.id, rid);
@@ -1767,10 +1795,7 @@ function raidSlotHtml(c, rid, idx){
     <div class="raid-slot-bottom">
       <span class="raid-slot-gold">${c.goldEarner ? goldValueHtmlSmall(displayGold) : '<span style="color:var(--muted-2); font-size:11px; font-weight:700;">no gold</span>'}</span>
       <div class="raid-slot-actions">
-        ${r.chest && allCleared ? `<span class="check-btn compact box-btn ${s.box ? 'on' : ''}" data-action="toggle-box" data-char="${c.id}" data-raid="${rid}" title="Open box">
-          <span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          
-        </span>` : ''}
+        ${chestHtml(c, rid, r, s, allCleared)}
         <span class="check-btn ${allCleared ? 'on' : ''} ${partial ? 'partial' : ''}" data-role="clear-indicator" style="grid-column:2;">
           <span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           Clear
@@ -2291,6 +2316,7 @@ function attachHomeListeners(){
       toggleClear();
     });
     el.addEventListener('keydown', (e) => {
+      if(e.target.closest('[data-action="toggle-box"]')) return;   // the chest handles its own keys
       if(e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         toggleClear();
@@ -2299,6 +2325,7 @@ function attachHomeListeners(){
   });
 
   document.querySelectorAll('[data-action="toggle-box"]').forEach(el => {
+    el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); e.stopPropagation(); el.click(); } });
     el.addEventListener('click', () => {
       if(el.classList.contains('disabled')) return;
       const charId = parseInt(el.dataset.char, 10);
@@ -2359,13 +2386,20 @@ const GOLD_EARNER_LIMIT = 6;
 const WEEKLY_TASKS = [
   { key:'guild',    label:'Guild Shop',  icons:['Cube Ticket.webp', 'Destiny Crystallized Destruction Stone.png'] },
   { key:'growth',   label:'Growth Shop', icons:['Destiny Crystallized Destruction Stone.png', 'Superior Abidos Fusion Material.png', 'Agony Thorn.webp', 'Graced Shard.webp'] },
-  { key:'paradise', label:'Paradise',    icons:['Hell Key.webp', 'Elysian Ticket.png', 'Banner.webp'] }
+  { key:'paradise', label:'Paradise',    icons:['Hell Key.webp', 'Elysian Ticket.png', 'Banner.webp'] },
+  { key:'hourglass', label:"Haal's Hourglass", icons:['DMG Gem.webp', 'CD Gem.webp', "Lava's Breath.webp", "Glacier's Breath.webp", 'RelicBook.webp'] }
 ];
 // icons are loaded from ICON_DIR (same folder as the class icons)
 function taskIconsHtml(k){
   return k.icons.map(f => `<img src="${ICON_DIR}${encodeURIComponent(f)}" alt="" title="${escapeAttr(f.replace(/\.[a-z]+$/i, ''))}" draggable="false" onerror="this.style.display='none'">`).join('');
 }
 const flippedCards = new Set();   // UI only: every card starts on the raids side after a reload
+// a character with no raid selected, or that isn't a gold earner, shows the weekly tasks side by default; clicking the bars flips it to the raids side
+function isFlipped(c){
+  const noRaids = Array.isArray(c.raidIds) && c.raidIds.length === 3 && c.raidIds.every(r => !r);
+  const defaultBack = noRaids || !c.goldEarner;
+  return defaultBack ? !flippedCards.has(c.id) : flippedCards.has(c.id);
+}
 function getTasks(c){ if(!c.tasks || typeof c.tasks !== 'object') c.tasks = {}; return c.tasks; }
 
 function tasksPanelHtml(c){
@@ -2376,7 +2410,7 @@ function tasksPanelHtml(c){
 function taskDotsHtml(c){
   const t = getTasks(c);
   const status = WEEKLY_TASKS.map(k => `${k.label} ${t[k.key] ? '✓' : '✗'}`).join(' · ');
-  const hint = flippedCards.has(c.id) ? 'click to flip back to the raids' : 'click to flip to the weekly tasks';
+  const hint = isFlipped(c) ? 'click to flip back to the raids' : 'click to flip to the weekly tasks';
   return `<button type="button" class="task-dots" data-flip="${c.id}" title="${status} — ${hint}">${WEEKLY_TASKS.map(k => `<i class="${t[k.key] ? 'ok' : ''}"></i>`).join('')}</button>`;
 }
 
