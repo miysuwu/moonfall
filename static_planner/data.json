@@ -7,7 +7,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "8324.07",
+      "cp": "8494.49",
       "party": "2"
     },
     {
@@ -17,7 +17,7 @@
       "class": "Wildsoul",
       "static": "megu",
       "role": "dps",
-      "cp": "5665.38",
+      "cp": "5684.36",
       "party": "2"
     },
     {
@@ -27,7 +27,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "6456.72",
+      "cp": "6457.47",
       "party": "2"
     },
     {
@@ -37,7 +37,7 @@
       "class": "Artist",
       "static": "megu",
       "role": "sup",
-      "cp": "5386.65",
+      "cp": "5452.29",
       "party": "2"
     },
     {
@@ -47,7 +47,7 @@
       "class": "Deathblade",
       "static": "megu",
       "role": "dps",
-      "cp": "6237.87",
+      "cp": "6259.4",
       "party": "2"
     },
     {
@@ -57,7 +57,7 @@
       "class": "Aeromancer",
       "static": "nichi",
       "role": "dps",
-      "cp": "6096.02",
+      "cp": "6097.5",
       "party": "2"
     },
     {
@@ -67,7 +67,7 @@
       "class": "Artist",
       "static": "nichi",
       "role": "sup",
-      "cp": "8028.79",
+      "cp": "8116.11",
       "party": "2"
     },
     {
@@ -107,7 +107,7 @@
       "class": "Souleater",
       "static": "Erik",
       "role": "dps",
-      "cp": "7380.3",
+      "cp": "7407.74",
       "party": "2"
     },
     {
@@ -117,7 +117,7 @@
       "class": "Valkyrie",
       "static": "Erik",
       "role": "sup",
-      "cp": "4725.63",
+      "cp": "4298.93",
       "party": "2"
     },
     {
@@ -142,12 +142,12 @@
     },
     {
       "id": 48,
-      "ilvl": "1769.17",
+      "ilvl": "1770",
       "ign": "Astharothx",
       "class": "Shadowhunter",
       "static": "Erik",
       "role": "dps",
-      "cp": "4552.8",
+      "cp": "4579.27",
       "party": "2"
     },
     {
@@ -157,7 +157,7 @@
       "class": "Breaker",
       "static": "Frost",
       "role": "dps",
-      "cp": "7359.99",
+      "cp": "7985",
       "party": "1"
     },
     {
@@ -167,7 +167,7 @@
       "class": "Paladin",
       "static": "Frost",
       "role": "sup",
-      "cp": "3591.5",
+      "cp": "3606.55",
       "party": "1"
     },
     {
@@ -177,7 +177,7 @@
       "class": "Breaker",
       "static": "Frost",
       "role": "dps",
-      "cp": "5520.51",
+      "cp": "5879.52",
       "party": "1"
     },
     {
@@ -187,7 +187,7 @@
       "class": "Breaker",
       "static": "Frost",
       "role": "dps",
-      "cp": "5387.28",
+      "cp": "5596.15",
       "party": "1"
     },
     {
@@ -197,7 +197,7 @@
       "class": "Breaker",
       "static": "Frost",
       "role": "dps",
-      "cp": "5418.04",
+      "cp": "5542.01",
       "party": "1"
     },
     {
@@ -207,7 +207,7 @@
       "class": "Guardianknight",
       "static": "Aish",
       "role": "dps",
-      "cp": "4433.63",
+      "cp": "4553.1",
       "party": "1"
     },
     {
@@ -217,17 +217,17 @@
       "class": "Valkyrie",
       "static": "Aish",
       "role": "sup",
-      "cp": "5103.77",
+      "cp": "5403.27",
       "party": "1"
     },
     {
       "id": 57,
-      "ilvl": "1785.83",
+      "ilvl": "1787.5",
       "ign": "Aïsh",
       "class": "Valkyrie",
       "static": "Aish",
       "role": "sup",
-      "cp": "7089.86",
+      "cp": "7775.68",
       "party": "1"
     },
     {
@@ -237,7 +237,7 @@
       "class": "Souleater",
       "static": "Aish",
       "role": "dps",
-      "cp": "4467.99",
+      "cp": "4618.36",
       "party": "1"
     },
     {
@@ -247,27 +247,27 @@
       "class": "Artist",
       "static": "Aish",
       "role": "sup",
-      "cp": "3620.17",
+      "cp": "3801.12",
       "party": "1"
     },
     {
       "id": 60,
-      "ilvl": "1755",
+      "ilvl": "1761.67",
       "ign": "Aishyrie",
       "class": "Valkyrie",
       "static": "Aish",
       "role": "sup",
-      "cp": "4664.49",
+      "cp": "4939.5",
       "party": "1"
     },
     {
       "id": 61,
-      "ilvl": "1785.83",
+      "ilvl": "1787.5",
       "ign": "Cheangiv",
       "class": "Artillerist",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "7632.99",
+      "cp": "8265.14",
       "party": "1"
     },
     {
@@ -277,7 +277,7 @@
       "class": "Breaker",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5467.7",
+      "cp": "5689.18",
       "party": "1"
     },
     {
@@ -287,7 +287,7 @@
       "class": "Artillerist",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "6329.14",
+      "cp": "6739.35",
       "party": "1"
     },
     {
@@ -297,7 +297,7 @@
       "class": "Striker",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5626.48",
+      "cp": "5718.01",
       "party": "1"
     },
     {
@@ -307,7 +307,7 @@
       "class": "Sharpshooter",
       "static": "Cheangiv",
       "role": "dps",
-      "cp": "5606.27",
+      "cp": "5968.62",
       "party": "1"
     },
     {
@@ -327,7 +327,7 @@
       "class": "Scrapper",
       "static": "Shizu",
       "role": "dps",
-      "cp": "6930.16",
+      "cp": "7694.22",
       "party": "1"
     },
     {
@@ -337,7 +337,7 @@
       "class": "Glaivier",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4686.64",
+      "cp": "5146.57",
       "party": "1"
     },
     {
@@ -347,37 +347,37 @@
       "class": "Berserker",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4797.25",
+      "cp": "5162.7",
       "party": "1"
     },
     {
       "id": 70,
-      "ilvl": "1765.83",
+      "ilvl": "1770",
       "ign": "Shizuvera",
       "class": "Deathblade",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4531.45",
+      "cp": "4700.8",
       "party": "1"
     },
     {
       "id": 71,
-      "ilvl": "1768.33",
+      "ilvl": "1770",
       "ign": "Saifuyu",
       "class": "Bard",
       "static": "Shizu",
       "role": "sup",
-      "cp": "4243.16",
+      "cp": "4403.57",
       "party": "1"
     },
     {
       "id": 72,
-      "ilvl": "1770",
+      "ilvl": "1771.67",
       "ign": "Anevera",
       "class": "Gunslinger",
       "static": "Shizu",
       "role": "dps",
-      "cp": "4602.81",
+      "cp": "4873.25",
       "party": "1"
     },
     {
@@ -397,7 +397,7 @@
       "class": "Dimensionalist",
       "static": "megu",
       "role": "dps",
-      "cp": "5429.61",
+      "cp": "5453.41",
       "party": "2"
     },
     {
@@ -417,7 +417,7 @@
       "class": "Dimensionalist",
       "static": "Frost",
       "role": "dps",
-      "cp": "3980.37",
+      "cp": "4035.13",
       "party": "1"
     },
     {
@@ -427,7 +427,7 @@
       "class": "Breaker",
       "static": "Malice",
       "role": "dps",
-      "cp": "7800.54",
+      "cp": "7800.55",
       "party": "2"
     },
     {
@@ -447,7 +447,7 @@
       "class": "Breaker",
       "static": "Malice",
       "role": "dps",
-      "cp": "6490.87",
+      "cp": "6608.84",
       "party": "2"
     },
     {
@@ -498,7 +498,7 @@
     ],
     "belgardin-2": [
       [
-        51,
+        52,
         63,
         68,
         59
@@ -512,38 +512,38 @@
     ],
     "belgardin-3": [
       [
-        52,
-        64,
-        69,
-        56
+        51,
+        65,
+        55,
+        71
       ],
       [
-        21,
         46,
+        86,
         91,
-        29
+        30
       ]
     ],
     "belgardin-4": [
       [
         53,
-        65,
-        58,
-        71
+        64,
+        69,
+        56
       ],
       [
-        28,
-        48,
-        93,
-        22
+        47,
+        21,
+        94,
+        29
       ]
     ],
     "belgardin-5": [
       [
-        72,
-        62,
-        55,
-        50
+        88,
+        66,
+        70,
+        60
       ],
       [
         20,
@@ -554,16 +554,16 @@
     ],
     "belgardin-6": [
       [
-        88,
-        66,
-        70,
-        60
+        58,
+        62,
+        72,
+        50
       ],
       [
-        86,
-        47,
-        94,
-        30
+        28,
+        48,
+        93,
+        22
       ]
     ],
     "serca-1": [
@@ -763,7 +763,7 @@
     "belgardin-1": "NiM",
     "belgardin-2": "HM",
     "belgardin-3": "HM",
-    "belgardin-4": "NM",
+    "belgardin-4": "HM",
     "belgardin-5": "NM",
     "belgardin-6": "NM",
     "serca-1": "NiM",
@@ -795,6 +795,26 @@
     "serca-party1-6__0__2",
     "serca-party1-6__0__0",
     "serca-party1-6__0__1",
-    "serca-party1-6__0__3"
+    "serca-party1-6__0__3",
+    "belgardin-2__0__2",
+    "belgardin-2__1__0",
+    "belgardin-2__1__2",
+    "belgardin-2__1__3",
+    "belgardin-2__1__1",
+    "belgardin-2__0__3",
+    "belgardin-2__0__1",
+    "belgardin-1__0__1",
+    "belgardin-1__0__3",
+    "belgardin-1__1__1",
+    "belgardin-1__1__3",
+    "belgardin-1__1__2",
+    "belgardin-1__1__0",
+    "belgardin-1__0__2",
+    "belgardin-1__0__0",
+    "belgardin-6__1__0",
+    "belgardin-6__1__3",
+    "belgardin-5__1__3",
+    "belgardin-5__1__1",
+    "belgardin-6__1__1"
   ]
 }
