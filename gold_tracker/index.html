@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -364,28 +364,28 @@
   }
 
   /* --- Home / overview --- */
-  .stat-row{
-    display:grid; grid-template-columns: repeat(3, minmax(220px, 300px)); justify-content:center; gap:14px; margin:0 auto 22px;
-  }
-  @media (max-width: 700px){ .stat-row{ grid-template-columns: 1fr; } }
-  .stat-card{
+  .summary-card{
     background: rgba(19, 19, 25, 0.25);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border:1px solid var(--border); border-radius:14px;
-    padding: 18px 20px;
+    padding: 8px 16px; margin: 0 0 14px;
+    display:flex; align-items:center; flex-wrap:wrap; gap:6px 14px;
   }
-  .stat-card .stat-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color: var(--muted); margin-bottom:8px; }
-  .stat-card .stat-value{ font-size: 26px; font-weight:800; display:flex; align-items:center; }
-  .stat-breakdown{ margin-top:7px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; font-size:9.5px; font-weight:700; color:var(--muted-2); }
-  .stat-breakdown span{ white-space:nowrap; }
-  .stat-breakdown b{ color:var(--muted); font-weight:800; }
-  .stat-card{ text-align:center; }
-  .stat-card .stat-value{ justify-content:center; }
-  @media (max-width: 980px){ .stat-row{ grid-template-columns:repeat(3,minmax(180px,1fr)); } }
-  .stat-card.earned .stat-value{ color: var(--teal); }
-  .stat-card.pending .stat-value{ color: var(--amber); }
-  .stat-card.total .stat-value{ color: var(--amber); }
+  .summary-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color: var(--muted); white-space:nowrap; }
+  .summary-earned{ font-size:19px; font-weight:800; color: var(--amber); display:flex; align-items:center; line-height:1.1; }
+  .summary-total{ font-size:12px; font-weight:700; color: var(--muted-2); white-space:nowrap; margin-left:-8px; }
+  .summary-pill{ font-size:10.5px; font-weight:800; padding:2px 9px; white-space:nowrap; border-radius:999px; background: var(--violet-soft); color: var(--text); }
+  .summary-bar{ display:flex; height:8px; border-radius:999px; overflow:hidden; background: var(--panel-2); border:1px solid var(--border-soft); }
+  .summary-bar i{ display:block; height:100%; width:0; transition: width .25s ease; }
+  .summary-bar .u, .summary-legend .u b{ background: var(--amber); }
+  .summary-bar .r, .summary-legend .r b{ background: var(--teal); }
+  .summary-bar .c, .summary-legend .c b{ background: var(--purple); }
+  .summary-legend{ display:flex; flex-wrap:wrap; align-items:center; gap:2px 12px; font-size:10.5px; font-weight:700; color: var(--muted-2); }
+  .summary-legend b{ background:none !important; font-weight:800; }
+  .summary-legend .u b{ color: var(--amber); }
+  .summary-legend .r b{ color: var(--teal); }
+  .summary-legend .c b{ color: var(--purple); }
+  .summary-legend .open b{ color: var(--muted); }
 
   .char-grid{
     display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;
@@ -404,14 +404,31 @@
   .armory-link{ margin-left:6px; width:18px; height:18px; display:inline-flex; align-items:center; justify-content:center; border:0; border-radius:4px; color:var(--muted); background:transparent; text-decoration:none; flex-shrink:0; vertical-align:middle; }
   .armory-link:hover{ color:var(--sky); }
   .armory-link svg{ width:14px; height:14px; }
+  .char-card-head .csub .cp{ color: var(--text); font-weight:700; }
   .char-card-head .csub{ font-size:11px; color:var(--muted); font-weight:600; }
-  .char-card-sum{
-    display:flex; align-items:center; justify-content:space-between;
-    font-size:11.5px; font-weight:700; color: var(--muted);
-    background: var(--panel-2); border:1px solid var(--border-soft); border-radius:8px;
-    padding:6px 10px;
-  }
-  .char-card-sum .val{ color: var(--teal); display:flex; align-items:center; }
+  .char-card-sum{ display:flex; flex-direction:column; gap:5px; }
+  .char-card-sum .sum-row{ display:flex; align-items:center; justify-content:space-between; font-size:11.5px; font-weight:700; color: var(--muted); }
+  .char-card-sum .val{ color: var(--text); display:flex; align-items:center; }
+  .summary-bar.slim{ height:6px; }
+  .sum-left{ display:flex; align-items:center; gap:7px; }
+  .task-dots{ display:inline-flex; gap:3px; align-items:center; padding:5px 3px; margin:-5px -3px; background:none; border:0; cursor:pointer; flex-shrink:0; }
+  .task-dots:hover i{ filter:brightness(1.25); }
+  .task-dots i{ display:block; width:13px; height:4px; border-radius:999px; background:#ff5d6c; }
+  .task-dots i.ok{ background:#4ade80; }
+  .card-body{ display:grid; }
+  .card-body .face{ grid-area:1 / 1; display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .card-body .face.off{ visibility:hidden; pointer-events:none; }
+  .card-body .face.back .task-row{ flex:1; }
+  .task-row{ background: rgba(13, 13, 19, 0.25); border:1px solid var(--border-soft); border-radius:10px; padding:14px 12px; min-height:58px; display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; user-select:none; -webkit-user-select:none; transition: border-color .15s ease, background .15s ease; }
+  .task-row:hover{ border-color: var(--border); }
+  .task-main{ display:flex; flex-direction:column; gap:7px; min-width:0; }
+  .task-icons{ display:flex; flex-wrap:wrap; gap:5px; }
+  .task-icons img{ width:22px; height:22px; object-fit:contain; }
+  .task-row .task-name{ font-size:12.5px; font-weight:700; }
+  .task-row .task-check{ width:20px; height:20px; border-radius:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#06130d; flex-shrink:0; }
+  .task-row.done{ border-color:#2f7a4e; background: rgba(15, 28, 20, 0.35); }
+  .task-row.done .task-check{ background:#4ade80; border-color:#4ade80; }
+  .summary-bar.grow{ flex:1 1 160px; min-width:140px; }
 
   .raid-slot{
     background: rgba(13, 13, 19, 0.25); border:1px solid var(--border-soft); border-radius:10px;
@@ -421,6 +438,36 @@
     -webkit-user-select:none;
     cursor:pointer;
   }
+  .paste-area{ width:100%; min-height:150px; resize:vertical; font-family: inherit; }
+  .paste-result{ margin-top:10px; }
+  .help-tip{ position:relative; display:inline-flex; vertical-align:middle; }
+  .help-tip-btn{ width:20px; height:20px; border-radius:50%; border:1px solid var(--violet); background:rgba(109,63,209,.25); color:#e6d9ff; font:800 12px/1 inherit; cursor:help; padding:0; display:inline-flex; align-items:center; justify-content:center; }
+  .help-pop{ display:none; position:fixed; z-index:1000; width:min(660px, calc(100vw - 16px)); overflow:auto; background:var(--panel); border:1px solid var(--violet); border-radius:12px; padding:12px 14px 14px; box-shadow:0 14px 40px rgba(0,0,0,.55); font-size:12.5px; font-weight:500; color:var(--text); line-height:1.5; text-align:left; }
+  .help-pop.show{ display:block; }
+  .help-pop img{ display:block; width:100%; height:auto; border-radius:8px; border:1px solid var(--border); margin-bottom:10px; }
+  .help-pop ol{ margin:0; padding-left:18px; }
+  .help-pop b{ color:#e6d9ff; }
+  .paste-opt{ display:flex; align-items:center; gap:8px; margin-top:10px; font-size:12.5px; color:var(--muted); cursor:pointer; }
+  .paste-opt input{ width:auto; margin:0; }
+  .home-bar{ display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-bottom:10px; font-size:12px; font-weight:700; color:var(--muted); }
+  .home-bar b{ color:var(--gold); }
+  .earner-check{ width:18px; height:18px; accent-color: var(--gold); cursor:pointer; }
+  .earner-badge{ margin-left:auto; flex-shrink:0; font-family:inherit; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; line-height:1.4; padding:2px 7px; border-radius:999px; border:0; background: var(--panel-2); color: var(--muted-2); cursor:pointer; }
+  .earner-badge.on{ background: var(--gold-soft); color: var(--gold); }
+  .earner-badge:hover{ filter:brightness(1.2); }
+  .paste-table{ width:100%; border-collapse:collapse; margin-top:12px; font-size:12.5px; }
+  .paste-table th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted-2); padding:4px 8px; }
+  .paste-table td{ padding:7px 8px; border-top:1px solid var(--border-soft); vertical-align:top; }
+  .paste-table .was{ color:var(--muted-2); font-size:11px; margin-top:2px; }
+  .paste-table .tag-new{ background:var(--teal-soft); color:var(--teal); font-size:9.5px; font-weight:800; padding:2px 6px; border-radius:999px; margin-right:6px; }
+  .paste-table input[type=checkbox]{ accent-color: var(--violet); width:16px; height:16px; }
+  .paste-summary{ margin-top:12px; font-size:12.5px; color:var(--muted); }
+  .char-card-head[draggable="true"]{ cursor:grab; }
+  .raid-slot[draggable="true"]{ cursor:grab; }
+  .char-card.dragging, .raid-slot.dragging{ opacity:.35; }
+  .raid-slot.drop-ok{ border-color: var(--violet); background: rgba(109, 63, 209, 0.22); box-shadow: 0 0 0 1px var(--violet); }
+  .char-card.drop-ok{ border-color: var(--violet); box-shadow: 0 0 0 1px var(--violet); }
+  .raid-slot.empty-slot{ cursor:default; }
   .raid-slot.cleared{ border-color: var(--teal-soft); background: rgba(15, 24, 21, 0.25); }
   .raid-slot-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
   .raid-slot-name{ font-size:12.5px; font-weight:700; }
@@ -510,26 +557,18 @@
 
   <!-- HOME TAB -->
   <div class="tab-panel active" id="panel-home">
+    <div class="summary-card">
+      <span class="summary-label">Net gold this week</span>
+      <span class="summary-earned" id="statEarned">0</span>
+      <span class="summary-total" id="statTotal">/ 0</span>
+      <span class="summary-pill" id="statPct">0% earned</span>
+      <div class="summary-bar grow"><i class="u" id="barU"></i><i class="r" id="barR"></i><i class="c" id="barC"></i></div>
+      <div class="summary-legend" id="statLegend"></div>
+    </div>
+    <div class="home-bar" id="homeBar" style="display:none;"><button class="btn btn-small" id="btnResetOrder" title="Go back to automatic sorting by ilvl">Sort by ilvl</button></div>
     <div class="char-grid" id="homeCharGrid"></div>
     <div class="empty-state" id="homeEmptyState" style="display:none;">
       No chars here. Go to <b>Settings</b> to add them.
-    </div>
-    <div class="stat-row">
-      <div class="stat-card earned">
-        <div class="stat-label">Earned</div>
-        <div class="stat-value" id="statEarned">0</div>
-        <div class="stat-breakdown" id="statEarnedBreakdown"></div>
-      </div>
-      <div class="stat-card pending">
-        <div class="stat-label">Open</div>
-        <div class="stat-value" id="statPending">0</div>
-        <div class="stat-breakdown" id="statPendingBreakdown"></div>
-      </div>
-      <div class="stat-card total">
-        <div class="stat-label">Total (this week)</div>
-        <div class="stat-value" id="statTotal">0</div>
-        <div class="stat-breakdown" id="statTotalBreakdown"></div>
-      </div>
     </div>
   </div>
 
@@ -597,10 +636,25 @@
     </div>
 
     <div class="card">
+      <div class="card-title" style="justify-content:flex-start; gap:8px;">Update roster from paste<span class="help-tip"><button type="button" class="help-tip-btn" aria-label="How does this work?">?</button><span class="help-pop" role="tooltip"><img src="data:image/jpeg;base64,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N7JZo5cbiiyPEIQjwD0DHvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm7wz7Su6G8M+0ruiFCAJu8M+0ruhvDPtK7ohQgCbvDPtK7obwz7Su6IUIAm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/JCaRQkVbf3ikUjYZDKlIyZ9j6N73y39K3GOYRmenH5hIQ6vMkG9rARhjz7RMhmR3odB3SYXDDSIQhCMDUQhCAEIQgBCEIAQhCAEIQgBCEIA+jujnpD3jAclIYSorCqxJzbK63SpdCc1QlAClbjKFXSVK9DMEi/3Cxjm3ShgmuuVyoYmk8D1ShUKaeBaYWwBsTlAVmSn7AKrkcBrYRz6Wmn5KYbmZV91h9tWZDrSilSD6wRqDHS6D+0h0h0KVEsqpsVJCRZJn2dosf8AuCFH8SYA8TQncR4JpuCsP0/EVfnEVAz6piYkygSwLeTYoAUuyb+kokgXA++LFzDcn0H0tyoVmblZnHMy1kkKeyoOCmBQsX3CNNoAfR7L6i/ERa1+0t0iViVVLIn5SnBQspclLhKyPcpRUR94sY5hMzL87MOTMy84++6orcddUVKWo8SSdSYAxwhH4pQQkqUbAamAKCEIQAj9StaDdClJPuNoQgD3vD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGPKnXFiynFqHqJvCEAeY/UrWg3QpST7jaEIA97w9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8Rjyp1xYspxah6ibwhAHmP1K1oN0KUk+42hCAPe8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEYbw9znPEYQgBvD3Oc8RhvD3Oc8RhCAG8Pc5zxGG8Pc5zxGEIAbw9znPEY8qdcWLKcWoeom8IQB5hCEAf/Z" alt="Roster tab on lostark.bible with the character cards selected"><ol><li>Go to your roster on <b>lostark.bible</b>.</li><li>Drag over the character cards like in the screenshot, so the names, ilvl and combat power are highlighted.</li><li>Ctrl+C, paste it into the box and hit <b>Preview changes</b>. Check the list, then press <b>Apply</b>.</li></ol></span></span></div>
+      <div class="card-sub">Paste your roster list (name + ilvl per line, optionally followed by a line with ≈ combat power). "Last updated …" lines are ignored. Name, ilvl and combat power are read; characters are matched by IGN. You get a preview first and nothing changes until you press Apply.</div>
+      <div class="divider"></div>
+      <textarea class="paste-area" id="pasteInput" placeholder="Miysu 1790&#10;≈7502.12&#10;&#10;Last updated 42 minutes ago&#10;Miynu 1770&#10;≈5090"></textarea>
+      <label class="paste-opt"><input type="checkbox" id="pasteAddNew" checked> Add characters that don't exist yet (set their class afterwards)</label>
+      <label class="paste-opt"><input type="checkbox" id="pasteAssign" checked> Assign the highest raids for each character's ilvl</label>
+      <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+        <button class="btn btn-violet" id="btnPasteUpdate">Preview changes</button>
+        <button class="btn" id="btnPasteClear">Clear text</button>
+      </div>
+      <div id="pastePreview"></div>
+      <div class="card-sub paste-result" id="pasteResult" style="margin-bottom:0;"></div>
+    </div>
+
+    <div class="card">
       <div class="toolbar">
         <div>
           <div class="card-title" style="margin-bottom:2px;">All characters <span class="rate" style="background:var(--panel-2); color:var(--muted); font-size:12px;" id="charCount">0</span></div>
-          <div class="card-sub" style="margin-bottom:0;">Choose up to 3 raids per character · Changes will be saved automatically</div>
+          <div class="card-sub" style="margin-bottom:0;">Choose up to 3 raids per character · Gold earners <b class="earner-count">0</b>/6 · Changes will be saved automatically</div>
         </div>
         <div class="toolbar-actions">
           <input type="text" class="search-bar" id="charSearch" placeholder="Search for IGN or class…" style="min-width:220px;">
@@ -617,6 +671,8 @@
               <th>Ilvl</th>
               <th>IGN</th>
               <th>Class</th>
+              <th>Combat power</th>
+              <th title="Gold earner (max 6 per roster)">Gold</th>
               <th>Raids (3)</th>
               <th></th>
             </tr>
@@ -630,8 +686,8 @@
   </div>
 
   <footer>
-    All data is stored locally in your browser · no server, no sync -> use Export / Import<br>
-    <code>@meguyu · miysu-chan</code> · Weekly reset: <code>Wednesday 09:00am</code> (local time)
+    <div>Made by miysu | @meguyu ・Not affiliated with Smilegate or Amazon Games. Game data and icons © Smilegate RPG.</div>
+    <div>Data is saved in your browser only, use Export / Import to back up.</div>
   </footer>
 </div>
 
@@ -660,9 +716,12 @@ const RES_ICON_ABILITY_STONE = 'data:image/webp;base64,UklGRkgJAABXRUJQVlA4WAoAA
 /* =========================================================
    RAID DATA (parsed from provided spreadsheet)
    ========================================================= */
-const RAID_DATA = [{"id":"abyssal_dungeon_horizon_cathedral_level_3","raid":"Abyssal Dungeon: Horizon Cathedral","difficulty":"Level 3","ilvl":1750,"gold":50000,"chest":16000,"tier":"Tier 4.1","shortName":"Horizon Cathedral","gates":[{"gold":0,"rosterGold":0,"charGold":20000,"chest":6400},{"gold":0,"rosterGold":0,"charGold":30000,"chest":9600}],"goldBreakdown":{"gold":0,"rosterGold":0,"charGold":50000.0}},{"id":"abyssal_dungeon_horizon_cathedral_level_2","raid":"Abyssal Dungeon: Horizon Cathedral","difficulty":"Level 2","ilvl":1720,"gold":40000,"chest":12800,"tier":"Tier 4","shortName":"Horizon Cathedral","gates":[{"gold":0,"rosterGold":0,"charGold":16000,"chest":5120},{"gold":0,"rosterGold":0,"charGold":24000,"chest":7680}],"goldBreakdown":{"gold":0,"rosterGold":0,"charGold":40000.0}},{"id":"abyssal_dungeon_horizon_cathedral_level_1","raid":"Abyssal Dungeon: Horizon Cathedral","difficulty":"Level 1","ilvl":1700,"gold":30000,"chest":9600,"tier":"Tier 4","shortName":"Horizon Cathedral","gates":[{"gold":0,"rosterGold":0,"charGold":13500,"chest":4320},{"gold":0,"rosterGold":0,"charGold":16500,"chest":5280}],"goldBreakdown":{"gold":0,"rosterGold":0,"charGold":30000.0}},{"id":"shadow_raid_serca_nightmare","raid":"Shadow Raid: Serca","difficulty":"Nightmare","ilvl":1740,"gold":54000,"chest":17280,"tier":"Tier 4.1","shortName":"Serca","gates":[{"gold":21000,"rosterGold":0,"charGold":0,"chest":6720},{"gold":33000,"rosterGold":0,"charGold":0,"chest":10560}],"goldBreakdown":{"gold":54000.0,"rosterGold":0,"charGold":0}},{"id":"shadow_raid_serca_hard","raid":"Shadow Raid: Serca","difficulty":"Hard","ilvl":1730,"gold":44000,"chest":14080,"tier":"Tier 4.1","shortName":"Serca","gates":[{"gold":17500,"rosterGold":0,"charGold":0,"chest":5600},{"gold":26500,"rosterGold":0,"charGold":0,"chest":8480}],"goldBreakdown":{"gold":44000.0,"rosterGold":0,"charGold":0}},{"id":"shadow_raid_serca_normal","raid":"Shadow Raid: Serca","difficulty":"Normal","ilvl":1710,"gold":32000,"chest":11200,"tier":"Tier 4","shortName":"Serca","gates":[{"gold":6500,"rosterGold":6500,"charGold":0,"chest":4480},{"gold":9500,"rosterGold":9500,"charGold":0,"chest":6720}],"goldBreakdown":{"gold":16000.0,"rosterGold":16000.0,"charGold":0}},{"id":"shadow_raid_serca_matching","raid":"Shadow Raid: Serca","difficulty":"Matching","ilvl":1710,"gold":32000,"chest":11200,"tier":"Tier 4","shortName":"Serca","gates":[{"gold":6500,"rosterGold":6500,"charGold":0,"chest":4480},{"gold":9500,"rosterGold":9500,"charGold":0,"chest":6720}],"goldBreakdown":{"gold":16000.0,"rosterGold":16000.0,"charGold":0}},{"id":"denouement_final_day_hard","raid":"Denouement: Kazeros","difficulty":"Hard","ilvl":1730,"gold":48000,"chest":15360,"tier":"Tier 4.1","shortName":"Kazeros","gates":[{"gold":16000,"rosterGold":0,"charGold":0,"chest":5120},{"gold":32000,"rosterGold":0,"charGold":0,"chest":10240}],"goldBreakdown":{"gold":48000.0,"rosterGold":0,"charGold":0}},{"id":"denouement_final_day_normal","raid":"Denouement: Kazeros","difficulty":"Normal","ilvl":1710,"gold":32000,"chest":10240,"tier":"Tier 4","shortName":"Kazeros","gates":[{"gold":5500,"rosterGold":5500,"charGold":0,"chest":3520},{"gold":10500,"rosterGold":10500,"charGold":0,"chest":6720}],"goldBreakdown":{"gold":16000.0,"rosterGold":16000.0,"charGold":0}},{"id":"denouement_final_day_solo","raid":"Denouement: Kazeros","difficulty":"Solo","ilvl":1710,"gold":32000,"chest":10240,"tier":"Tier 4","shortName":"Kazeros","gates":[{"gold":5500,"rosterGold":5500,"charGold":0,"chest":3520},{"gold":10500,"rosterGold":10500,"charGold":0,"chest":6720}],"goldBreakdown":{"gold":16000.0,"rosterGold":16000.0,"charGold":0}},{"id":"act_4_armoche_hard","raid":"Act 4: Armoche","difficulty":"Hard","ilvl":1720,"gold":38000,"chest":12160,"tier":"Tier 4","shortName":"Armoche","gates":[{"gold":13500,"rosterGold":0,"charGold":0,"chest":4320},{"gold":24500,"rosterGold":0,"charGold":0,"chest":7840}],"goldBreakdown":{"gold":38000.0,"rosterGold":0,"charGold":0}},{"id":"act_4_armoche_normal","raid":"Act 4: Armoche","difficulty":"Normal","ilvl":1700,"gold":27000,"chest":8640,"tier":"Tier 4","shortName":"Armoche","gates":[{"gold":5000,"rosterGold":5000,"charGold":0,"chest":3200},{"gold":8500,"rosterGold":8500,"charGold":0,"chest":5440}],"goldBreakdown":{"gold":13500.0,"rosterGold":13500.0,"charGold":0}},{"id":"act_4_armoche_solo","raid":"Act 4: Armoche","difficulty":"Solo","ilvl":1700,"gold":27000,"chest":8640,"tier":"Tier 4","shortName":"Armoche","gates":[{"gold":5000,"rosterGold":5000,"charGold":0,"chest":3200},{"gold":8500,"rosterGold":8500,"charGold":0,"chest":5440}],"goldBreakdown":{"gold":13500.0,"rosterGold":13500.0,"charGold":0}},{"id":"act_3_mordum_hard","raid":"Act 3: Mordum","difficulty":"Hard","ilvl":1700,"gold":27000,"chest":8350,"tier":"Tier 4","shortName":"Mordum","gates":[{"gold":2500,"rosterGold":2500,"charGold":0,"chest":1650},{"gold":4000,"rosterGold":4000,"charGold":0,"chest":2640},{"gold":7000,"rosterGold":7000,"charGold":0,"chest":4060}],"goldBreakdown":{"gold":13500.0,"rosterGold":13500.0,"charGold":0}},{"id":"act_3_mordum_normal","raid":"Act 3: Mordum","difficulty":"Normal","ilvl":1680,"gold":21000,"chest":7010,"tier":"Tier 4","shortName":"Mordum","gates":[{"gold":2000,"rosterGold":2000,"charGold":0,"chest":1300},{"gold":3500,"rosterGold":3500,"charGold":0,"chest":2350},{"gold":5000,"rosterGold":5000,"charGold":0,"chest":3360}],"goldBreakdown":{"gold":10500.0,"rosterGold":10500.0,"charGold":0}},{"id":"act_3_mordum_solo","raid":"Act 3: Mordum","difficulty":"Solo","ilvl":1680,"gold":21000,"chest":7010,"tier":"Tier 4","shortName":"Mordum","gates":[{"gold":2000,"rosterGold":2000,"charGold":0,"chest":1300},{"gold":3500,"rosterGold":3500,"charGold":0,"chest":2350},{"gold":5000,"rosterGold":5000,"charGold":0,"chest":3360}],"goldBreakdown":{"gold":10500.0,"rosterGold":10500.0,"charGold":0}},{"id":"act_2_brelshaza_hard","raid":"Act 2: Brelshaza","difficulty":"Hard","ilvl":1690,"gold":23000,"chest":7500,"tier":"Tier 4","shortName":"Brelshaza","gates":[{"gold":210,"rosterGold":970,"charGold":0,"chest":300},{"gold":220,"rosterGold":980,"charGold":0,"chest":300},{"gold":220,"rosterGold":1000,"charGold":0,"chest":300}],"goldBreakdown":{"gold":650.0,"rosterGold":2950.0,"charGold":0}},{"id":"act_2_brelshaza_normal","raid":"Act 2: Brelshaza","difficulty":"Normal","ilvl":1670,"gold":16500,"chest":5540,"tier":"Tier 4","shortName":"Brelshaza","gates":[{"gold":170,"rosterGold":810,"charGold":0,"chest":100},{"gold":180,"rosterGold":820,"charGold":0,"chest":150},{"gold":200,"rosterGold":820,"charGold":0,"chest":200}],"goldBreakdown":{"gold":550.0,"rosterGold":2450.0,"charGold":0}},{"id":"act_2_brelshaza_solo","raid":"Act 2: Brelshaza","difficulty":"Solo","ilvl":1670,"gold":16500,"chest":5540,"tier":"Tier 4","shortName":"Brelshaza","gates":[{"gold":0,"rosterGold":980,"charGold":0,"chest":100},{"gold":0,"rosterGold":1000,"charGold":0,"chest":150},{"gold":0,"rosterGold":1020,"charGold":0,"chest":200}],"goldBreakdown":{"gold":0,"rosterGold":3000.0,"charGold":0}},{"id":"act_1_aegir_hard","raid":"Act 1: Aegir","difficulty":"Hard","ilvl":1680,"gold":18000,"chest":5970,"tier":"Tier 4","shortName":"Aegir","gates":[{"gold":2750,"rosterGold":2750,"charGold":0,"chest":1820},{"gold":6250,"rosterGold":6250,"charGold":0,"chest":4150}],"goldBreakdown":{"gold":9000.0,"rosterGold":9000.0,"charGold":0}},{"id":"act_1_aegir_normal","raid":"Act 1: Aegir","difficulty":"Normal","ilvl":1660,"gold":11500,"chest":2530,"tier":"Tier 4","shortName":"Aegir","gates":[{"gold":1750,"rosterGold":1750,"charGold":0,"chest":750},{"gold":4000,"rosterGold":4000,"charGold":0,"chest":1780}],"goldBreakdown":{"gold":5750.0,"rosterGold":5750.0,"charGold":0}},{"id":"act_1_aegir_solo","raid":"Act 1: Aegir","difficulty":"Solo","ilvl":1660,"gold":11500,"chest":2530,"tier":"Tier 4","shortName":"Aegir","gates":[{"gold":1750,"rosterGold":1750,"charGold":0,"chest":750},{"gold":4000,"rosterGold":4000,"charGold":0,"chest":1780}],"goldBreakdown":{"gold":5750.0,"rosterGold":5750.0,"charGold":0}},{"id":"behemoth_normal","raid":"Behemoth","difficulty":"Normal","ilvl":1620,"gold":7200,"chest":3250,"tier":"Tier 4","shortName":"Behemoth","gates":[{"gold":1100,"rosterGold":1100,"charGold":0,"chest":1250},{"gold":2500,"rosterGold":2500,"charGold":0,"chest":2000}],"goldBreakdown":{"gold":3600.0,"rosterGold":3600.0,"charGold":0}},{"id":"overture_echidna_hard","raid":"Overture: Echidna","difficulty":"Hard","ilvl":1630,"gold":7200,"chest":2350,"tier":"Tier 4","shortName":"Echidna","gates":[{"gold":1100,"rosterGold":1100,"charGold":0,"chest":720},{"gold":2500,"rosterGold":2500,"charGold":0,"chest":1630}],"goldBreakdown":{"gold":3600.0,"rosterGold":3600.0,"charGold":0}},{"id":"overture_echidna_normal","raid":"Overture: Echidna","difficulty":"Normal","ilvl":1620,"gold":6100,"chest":1010,"tier":"Tier 4","shortName":"Echidna","gates":[{"gold":0,"rosterGold":1900,"charGold":0,"chest":310},{"gold":0,"rosterGold":4200,"charGold":0,"chest":700}],"goldBreakdown":{"gold":0,"rosterGold":6100.0,"charGold":0}},{"id":"overture_echidna_solo","raid":"Overture: Echidna","difficulty":"Solo","ilvl":1620,"gold":6100,"chest":1010,"tier":"Tier 4","shortName":"Echidna","gates":[{"gold":0,"rosterGold":1900,"charGold":0,"chest":310},{"gold":0,"rosterGold":4200,"charGold":0,"chest":700}],"goldBreakdown":{"gold":0,"rosterGold":6100.0,"charGold":0}},{"id":"thaemine_hard","raid":"Thaemine","difficulty":"Hard","ilvl":1620,"gold":13000,"chest":3250,"tier":"Tier 4","shortName":"Thaemine","gates":[{"gold":0,"rosterGold":2000,"charGold":0,"chest":500},{"gold":0,"rosterGold":2400,"charGold":0,"chest":600},{"gold":0,"rosterGold":3600,"charGold":0,"chest":900}],"goldBreakdown":{"gold":0,"rosterGold":8000.0,"charGold":0}},{"id":"thaemine_normal","raid":"Thaemine","difficulty":"Normal","ilvl":1610,"gold":6400,"chest":1440,"tier":"Tier 3","shortName":"Thaemine","gates":[{"gold":0,"rosterGold":1600,"charGold":0,"chest":360},{"gold":0,"rosterGold":2000,"charGold":0,"chest":440},{"gold":0,"rosterGold":2800,"charGold":0,"chest":640}],"goldBreakdown":{"gold":0,"rosterGold":6400.0,"charGold":0}},{"id":"thaemine_solo","raid":"Thaemine","difficulty":"Solo","ilvl":1610,"gold":6400,"chest":1440,"tier":"Tier 3","shortName":"Thaemine","gates":[{"gold":0,"rosterGold":1600,"charGold":0,"chest":360},{"gold":0,"rosterGold":2000,"charGold":0,"chest":440},{"gold":0,"rosterGold":2800,"charGold":0,"chest":640}],"goldBreakdown":{"gold":0,"rosterGold":6400.0,"charGold":0}},{"id":"ivory__tower_hard","raid":"Ivory  Tower","difficulty":"Hard","ilvl":1610,"gold":7200,"chest":1800,"tier":"Tier 3","shortName":"Ivory  Tower","gates":[{"gold":420,"rosterGold":1680,"charGold":0,"chest":350},{"gold":480,"rosterGold":1920,"charGold":0,"chest":500},{"gold":540,"rosterGold":2160,"charGold":0,"chest":950}],"goldBreakdown":{"gold":1440.0,"rosterGold":5760.0,"charGold":0}},{"id":"ivory__tower_normal","raid":"Ivory  Tower","difficulty":"Normal","ilvl":1600,"gold":5200,"chest":700,"tier":"Tier 3","shortName":"Ivory  Tower","gates":[{"gold":250,"rosterGold":1100,"charGold":0,"chest":180},{"gold":350,"rosterGold":1400,"charGold":0,"chest":220},{"gold":420,"rosterGold":1680,"charGold":0,"chest":300}],"goldBreakdown":{"gold":1020.0,"rosterGold":4180.0,"charGold":0}},{"id":"ivory__tower_solo","raid":"Ivory  Tower","difficulty":"Solo","ilvl":1600,"gold":5200,"chest":700,"tier":"Tier 3","shortName":"Ivory  Tower","gates":[{"gold":0,"rosterGold":1350,"charGold":0,"chest":180},{"gold":0,"rosterGold":1750,"charGold":0,"chest":220},{"gold":0,"rosterGold":2100,"charGold":0,"chest":300}],"goldBreakdown":{"gold":0,"rosterGold":5200.0,"charGold":0}},{"id":"akkan_hard","raid":"Akkan","difficulty":"Hard","ilvl":1600,"gold":6000,"chest":1500,"tier":"Tier 3","shortName":"Akkan","gates":[{"gold":200,"rosterGold":1300,"charGold":0,"chest":300},{"gold":410,"rosterGold":1640,"charGold":0,"chest":500},{"gold":490,"rosterGold":1960,"charGold":0,"chest":700}],"goldBreakdown":{"gold":1100.0,"rosterGold":4900.0,"charGold":0}},{"id":"akkan_normal","raid":"Akkan","difficulty":"Normal","ilvl":1580,"gold":4700,"chest":750,"tier":"Tier 3","shortName":"Akkan","gates":[{"gold":255,"rosterGold":1015,"charGold":0,"chest":190},{"gold":300,"rosterGold":1300,"charGold":0,"chest":230},{"gold":330,"rosterGold":1500,"charGold":0,"chest":330}],"goldBreakdown":{"gold":885.0,"rosterGold":3815.0,"charGold":0}},{"id":"akkan_solo","raid":"Akkan","difficulty":"Solo","ilvl":1580,"gold":4700,"chest":750,"tier":"Tier 3","shortName":"Akkan","gates":[{"gold":0,"rosterGold":1270,"charGold":0,"chest":190},{"gold":0,"rosterGold":1600,"charGold":0,"chest":230},{"gold":0,"rosterGold":1830,"charGold":0,"chest":330}],"goldBreakdown":{"gold":0,"rosterGold":4700.0,"charGold":0}},{"id":"kayangel_hard","raid":"Kayangel","difficulty":"Hard","ilvl":1580,"gold":4300,"chest":1075,"tier":"Tier 3","shortName":"Kayangel","gates":[{"gold":150,"rosterGold":1000,"charGold":0,"chest":225},{"gold":250,"rosterGold":1200,"charGold":0,"chest":350},{"gold":400,"rosterGold":1300,"charGold":0,"chest":500}],"goldBreakdown":{"gold":800.0,"rosterGold":3500.0,"charGold":0}},{"id":"kayangel_normal","raid":"Kayangel","difficulty":"Normal","ilvl":1540,"gold":3300,"chest":650,"tier":"Tier 3","shortName":"Kayangel","gates":[{"gold":100,"rosterGold":900,"charGold":0,"chest":180},{"gold":200,"rosterGold":900,"charGold":0,"chest":200},{"gold":300,"rosterGold":900,"charGold":0,"chest":270}],"goldBreakdown":{"gold":600.0,"rosterGold":2700.0,"charGold":0}},{"id":"kayangel_solo","raid":"Kayangel","difficulty":"Solo","ilvl":1540,"gold":3300,"chest":650,"tier":"Tier 3","shortName":"Kayangel","gates":[{"gold":0,"rosterGold":1000,"charGold":0,"chest":180},{"gold":0,"rosterGold":1100,"charGold":0,"chest":200},{"gold":0,"rosterGold":1200,"charGold":0,"chest":270}],"goldBreakdown":{"gold":0,"rosterGold":3300.0,"charGold":0}},{"id":"brelshaza_hard","raid":"Brelshaza","difficulty":"Hard","ilvl":1540,"gold":5600,"chest":1400,"tier":"Tier 3","shortName":"Brelshaza","gates":[{"gold":210,"rosterGold":970,"charGold":0,"chest":300},{"gold":220,"rosterGold":980,"charGold":0,"chest":300},{"gold":220,"rosterGold":1000,"charGold":0,"chest":300}],"goldBreakdown":{"gold":650.0,"rosterGold":2950.0,"charGold":0}},{"id":"brelshaza_normal","raid":"Brelshaza","difficulty":"Normal","ilvl":1490,"gold":4600,"chest":825,"tier":"Tier 3","shortName":"Brelshaza","gates":[{"gold":170,"rosterGold":810,"charGold":0,"chest":100},{"gold":180,"rosterGold":820,"charGold":0,"chest":150},{"gold":200,"rosterGold":820,"charGold":0,"chest":200}],"goldBreakdown":{"gold":550.0,"rosterGold":2450.0,"charGold":0}},{"id":"brelshaza_solo","raid":"Brelshaza","difficulty":"Solo","ilvl":1490,"gold":4600,"chest":825,"tier":"Tier 3","shortName":"Brelshaza","gates":[{"gold":0,"rosterGold":980,"charGold":0,"chest":100},{"gold":0,"rosterGold":1000,"charGold":0,"chest":150},{"gold":0,"rosterGold":1020,"charGold":0,"chest":200}],"goldBreakdown":{"gold":0,"rosterGold":3000.0,"charGold":0}},{"id":"kakul_saydon_normal","raid":"Kakul- Saydon","difficulty":"Normal","ilvl":1475,"gold":2000,"chest":450,"tier":"Tier 3","shortName":"Kakul- Saydon","gates":[{"gold":70,"rosterGold":330,"charGold":0,"chest":100},{"gold":100,"rosterGold":500,"charGold":0,"chest":150},{"gold":180,"rosterGold":820,"charGold":0,"chest":200}],"goldBreakdown":{"gold":350.0,"rosterGold":1650.0,"charGold":0}},{"id":"kakul_saydon_solo","raid":"Kakul- Saydon","difficulty":"Solo","ilvl":1475,"gold":2000,"chest":450,"tier":"Tier 3","shortName":"Kakul- Saydon","gates":[{"gold":0,"rosterGold":400,"charGold":0,"chest":100},{"gold":0,"rosterGold":600,"charGold":0,"chest":150},{"gold":0,"rosterGold":1000,"charGold":0,"chest":200}],"goldBreakdown":{"gold":0,"rosterGold":2000.0,"charGold":0}},{"id":"vykas_hard","raid":"Vykas","difficulty":"Hard","ilvl":1460,"gold":1500,"chest":600,"tier":"Tier 3","shortName":"Vykas","gates":[{"gold":80,"rosterGold":420,"charGold":0,"chest":225},{"gold":170,"rosterGold":830,"charGold":0,"chest":375}],"goldBreakdown":{"gold":250.0,"rosterGold":1250.0,"charGold":0}},{"id":"vykas_normal","raid":"Vykas","difficulty":"Normal","ilvl":1430,"gold":1000,"chest":250,"tier":"Tier 3","shortName":"Vykas","gates":[{"gold":50,"rosterGold":300,"charGold":0,"chest":100},{"gold":100,"rosterGold":550,"charGold":0,"chest":150}],"goldBreakdown":{"gold":150.0,"rosterGold":850.0,"charGold":0}},{"id":"vykas_solo","raid":"Vykas","difficulty":"Solo","ilvl":1430,"gold":1000,"chest":250,"tier":"Tier 3","shortName":"Vykas","gates":[{"gold":0,"rosterGold":350,"charGold":0,"chest":100},{"gold":0,"rosterGold":650,"charGold":0,"chest":150}],"goldBreakdown":{"gold":0,"rosterGold":1000.0,"charGold":0}},{"id":"valtan_hard","raid":"Valtan","difficulty":"Hard","ilvl":1445,"gold":1100,"chest":450,"tier":"Tier 3","shortName":"Valtan","gates":[{"gold":70,"rosterGold":330,"charGold":0,"chest":175},{"gold":130,"rosterGold":570,"charGold":0,"chest":275}],"goldBreakdown":{"gold":200.0,"rosterGold":900.0,"charGold":0}},{"id":"valtan_normal","raid":"Valtan","difficulty":"Normal","ilvl":1415,"gold":750,"chest":175,"tier":"Tier 3","shortName":"Valtan","gates":[{"gold":40,"rosterGold":250,"charGold":0,"chest":75},{"gold":60,"rosterGold":400,"charGold":0,"chest":100}],"goldBreakdown":{"gold":100.0,"rosterGold":650.0,"charGold":0}},{"id":"valtan_solo","raid":"Valtan","difficulty":"Solo","ilvl":1415,"gold":750,"chest":175,"tier":"Tier 3","shortName":"Valtan","gates":[{"gold":0,"rosterGold":290,"charGold":0,"chest":75},{"gold":0,"rosterGold":460,"charGold":0,"chest":100}],"goldBreakdown":{"gold":0,"rosterGold":750.0,"charGold":0}}];
 
 const RAID_FULL_DATA = [
+  { tier:'Tier 4.5', raid:'Shadow Raid: Belgardin', difficulty:'Nightmare', ilvl:1780, gates:[{gate:'Gate 1', gold:30000, rosterGold:null, charGold:null, mainMat:12, clearMedal:1700, destinyStone:null, destructionStones:565, guardianStones:1130, shards:12550, leapstones:12, bidMainMat:null, chestCost:9600, chestMainMat:12, chestDestructionStones:1300, chestGuardianStones:2600, chestShards:26220, chestLeapstones:49, chestCardPack:null}, {gate:'Gate 2', gold:45000, rosterGold:null, charGold:null, mainMat:18, clearMedal:2700, destinyStone:10, destructionStones:690, guardianStones:1380, shards:15180, leapstones:18, bidMainMat:null, chestCost:14400, chestMainMat:18, chestDestructionStones:1980, chestGuardianStones:3960, chestShards:44440, chestLeapstones:83, chestCardPack:1}], total:{gold:75000, mainMat:30, clearMedal:4400, destinyStone:10, destructionStones:1255, guardianStones:2510, shards:27730, leapstones:30, bidMainMat:null, chestCost:24000, chestMainMat:30, chestDestructionStones:3280, chestGuardianStones:6560, chestShards:70660, chestLeapstones:132, chestCardPack:1} },
+  { tier:'Tier 4.5', raid:'Shadow Raid: Belgardin', difficulty:'Hard', ilvl:1770, gates:[{gate:'Gate 1', gold:25000, rosterGold:null, charGold:null, mainMat:12, clearMedal:1700, destinyStone:null, destructionStones:490, guardianStones:980, shards:10920, leapstones:10, bidMainMat:null, chestCost:8000, chestMainMat:12, chestDestructionStones:1130, chestGuardianStones:2260, chestShards:22800, chestLeapstones:43, chestCardPack:null}, {gate:'Gate 2', gold:37000, rosterGold:null, charGold:null, mainMat:18, clearMedal:2700, destinyStone:10, destructionStones:600, guardianStones:1200, shards:13200, leapstones:15, bidMainMat:null, chestCost:11840, chestMainMat:18, chestDestructionStones:1720, chestGuardianStones:3440, chestShards:38640, chestLeapstones:72, chestCardPack:1}], total:{gold:62000, mainMat:30, clearMedal:4400, destinyStone:10, destructionStones:1090, guardianStones:2180, shards:24120, leapstones:25, bidMainMat:null, chestCost:19840, chestMainMat:30, chestDestructionStones:2850, chestGuardianStones:5700, chestShards:61440, chestLeapstones:115, chestCardPack:1} },
+  { tier:'Tier 4.5', raid:'Shadow Raid: Belgardin', difficulty:'Normal', ilvl:1750, gates:[{gate:'Gate 1', gold:20000, rosterGold:null, charGold:null, mainMat:12, clearMedal:1700, destinyStone:null, destructionStones:405, guardianStones:810, shards:9100, leapstones:8, bidMainMat:null, chestCost:6400, chestMainMat:12, chestDestructionStones:860, chestGuardianStones:1720, chestShards:19000, chestLeapstones:36, chestCardPack:null}, {gate:'Gate 2', gold:30000, rosterGold:null, charGold:null, mainMat:18, clearMedal:2700, destinyStone:10, destructionStones:500, guardianStones:1000, shards:11000, leapstones:12, bidMainMat:null, chestCost:9600, chestMainMat:18, chestDestructionStones:1430, chestGuardianStones:2860, chestShards:32200, chestLeapstones:60, chestCardPack:1}], total:{gold:50000, mainMat:30, clearMedal:4400, destinyStone:10, destructionStones:905, guardianStones:1810, shards:20100, leapstones:20, bidMainMat:null, chestCost:16000, chestMainMat:30, chestDestructionStones:2290, chestGuardianStones:4580, chestShards:51200, chestLeapstones:96, chestCardPack:1} },
+  { tier:'Tier 4.5', raid:'Shadow Raid: Belgardin', difficulty:'Matching', ilvl:1750, gates:[{gate:'Gate 1', gold:10000, rosterGold:10000, charGold:null, mainMat:12, clearMedal:1700, destinyStone:null, destructionStones:405, guardianStones:810, shards:9100, leapstones:8, bidMainMat:null, chestCost:6400, chestMainMat:12, chestDestructionStones:860, chestGuardianStones:1720, chestShards:19000, chestLeapstones:36, chestCardPack:null}, {gate:'Gate 2', gold:15000, rosterGold:15000, charGold:null, mainMat:18, clearMedal:2700, destinyStone:10, destructionStones:500, guardianStones:1000, shards:11000, leapstones:12, bidMainMat:null, chestCost:9600, chestMainMat:18, chestDestructionStones:1430, chestGuardianStones:2860, chestShards:32200, chestLeapstones:60, chestCardPack:1}], total:{gold:50000, mainMat:30, clearMedal:4400, destinyStone:10, destructionStones:905, guardianStones:1810, shards:20100, leapstones:20, bidMainMat:null, chestCost:16000, chestMainMat:30, chestDestructionStones:2290, chestGuardianStones:4580, chestShards:51200, chestLeapstones:96, chestCardPack:1} },
   { tier:'Tier 4.5', raid:'Abyssal Dungeon: Horizon Cathedral', difficulty:'Level 3', ilvl:1750, gates:[{gate:'Gate 1', gold:null, rosterGold:null, charGold:20000, mainMat:24, clearMedal:null, destinyStone:null, destructionStones:405, guardianStones:810, shards:9100, leapstones:8, bidMainMat:null, chestCost:6400, chestMainMat:24, chestDestructionStones:860, chestGuardianStones:1720, chestShards:19000, chestLeapstones:36, chestCardPack:null}, {gate:'Gate 2', gold:null, rosterGold:null, charGold:30000, mainMat:36, clearMedal:null, destinyStone:10, destructionStones:500, guardianStones:1000, shards:11000, leapstones:12, bidMainMat:null, chestCost:9600, chestMainMat:36, chestDestructionStones:1430, chestGuardianStones:2860, chestShards:32200, chestLeapstones:60, chestCardPack:1}], total:{gold:50000, mainMat:60, clearMedal:null, destinyStone:10, destructionStones:905, guardianStones:1810, shards:20100, leapstones:20, bidMainMat:null, chestCost:16000, chestMainMat:60, chestDestructionStones:2290, chestGuardianStones:4580, chestShards:51200, chestLeapstones:96, chestCardPack:1} },
   { tier:'Tier 4', raid:'Abyssal Dungeon: Horizon Cathedral', difficulty:'Level 2', ilvl:1720, gates:[{gate:'Gate 1', gold:null, rosterGold:null, charGold:16000, mainMat:12, clearMedal:null, destinyStone:null, destructionStones:980, guardianStones:1960, shards:6800, leapstones:11, bidMainMat:null, chestCost:5120, chestMainMat:12, chestDestructionStones:1680, chestGuardianStones:3360, chestShards:14250, chestLeapstones:53, chestCardPack:null}, {gate:'Gate 2', gold:null, rosterGold:null, charGold:24000, mainMat:18, clearMedal:null, destinyStone:10, destructionStones:1150, guardianStones:2300, shards:8600, leapstones:16, bidMainMat:null, chestCost:7680, chestMainMat:18, chestDestructionStones:2880, chestGuardianStones:5760, chestShards:24200, chestLeapstones:94, chestCardPack:1}], total:{gold:40000, mainMat:30, clearMedal:null, destinyStone:10, destructionStones:2130, guardianStones:4260, shards:15400, leapstones:27, bidMainMat:null, chestCost:12800, chestMainMat:30, chestDestructionStones:4560, chestGuardianStones:9120, chestShards:38450, chestLeapstones:147, chestCardPack:1} },
   { tier:'Tier 4', raid:'Abyssal Dungeon: Horizon Cathedral', difficulty:'Level 1', ilvl:1700, gates:[{gate:'Gate 1', gold:null, rosterGold:null, charGold:13500, mainMat:4, clearMedal:null, destinyStone:null, destructionStones:820, guardianStones:1640, shards:5400, leapstones:9, bidMainMat:null, chestCost:4320, chestMainMat:4, chestDestructionStones:1400, chestGuardianStones:2800, chestShards:11880, chestLeapstones:44, chestCardPack:null}, {gate:'Gate 2', gold:null, rosterGold:null, charGold:16500, mainMat:6, clearMedal:null, destinyStone:8, destructionStones:960, guardianStones:1920, shards:6800, leapstones:12, bidMainMat:null, chestCost:5280, chestMainMat:6, chestDestructionStones:2400, chestGuardianStones:4800, chestShards:20160, chestLeapstones:78, chestCardPack:1}], total:{gold:30000, mainMat:10, clearMedal:null, destinyStone:8, destructionStones:1780, guardianStones:3560, shards:12200, leapstones:21, bidMainMat:null, chestCost:9600, chestMainMat:10, chestDestructionStones:3800, chestGuardianStones:7600, chestShards:32040, chestLeapstones:122, chestCardPack:1} },
@@ -671,8 +730,8 @@ const RAID_FULL_DATA = [
   { tier:'Tier 4', raid:'Shadow Raid: Serca', difficulty:'Normal', ilvl:1710, gates:[{gate:'Gate 1', gold:6500, rosterGold:6500, charGold:null, mainMat:100, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:4480, chestMainMat:100, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:9500, rosterGold:9500, charGold:null, mainMat:100, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:100, chestDestructionStones:2480, chestGuardianStones:4960, chestShards:20880, chestLeapstones:82, chestCardPack:1}], total:{gold:32000, mainMat:200, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:11200, chestMainMat:200, chestDestructionStones:4090, chestGuardianStones:8180, chestShards:34530, chestLeapstones:132, chestCardPack:1} },
   { tier:'Tier 4', raid:'Shadow Raid: Serca', difficulty:'Matching', ilvl:1710, gates:[{gate:'Gate 1', gold:6500, rosterGold:6500, charGold:null, mainMat:100, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:4480, chestMainMat:100, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:9500, rosterGold:9500, charGold:null, mainMat:100, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:100, chestDestructionStones:2480, chestGuardianStones:4960, chestShards:20880, chestLeapstones:82, chestCardPack:1}], total:{gold:32000, mainMat:200, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:11200, chestMainMat:200, chestDestructionStones:4090, chestGuardianStones:8180, chestShards:34530, chestLeapstones:132, chestCardPack:1} },
   { tier:'Tier 4.5', raid:'Denouement: Final Day', difficulty:'Hard', ilvl:1730, gates:[{gate:'Gate 1', gold:16000, rosterGold:null, charGold:null, mainMat:null, clearMedal:1300, destinyStone:null, destructionStones:385, guardianStones:770, shards:8300, leapstones:7, bidMainMat:null, chestCost:5120, chestMainMat:null, chestDestructionStones:750, chestGuardianStones:1500, chestShards:17500, chestLeapstones:30, chestCardPack:null}, {gate:'Gate 2', gold:32000, rosterGold:null, charGold:null, mainMat:null, clearMedal:2100, destinyStone:10, destructionStones:475, guardianStones:950, shards:10100, leapstones:10, bidMainMat:null, chestCost:10240, chestMainMat:null, chestDestructionStones:1320, chestGuardianStones:2640, chestShards:29800, chestLeapstones:50, chestCardPack:1}], total:{gold:48000, mainMat:null, clearMedal:3400, destinyStone:10, destructionStones:860, guardianStones:1720, shards:18400, leapstones:17, bidMainMat:null, chestCost:15360, chestMainMat:null, chestDestructionStones:2070, chestGuardianStones:4140, chestShards:47300, chestLeapstones:80, chestCardPack:1} },
-  { tier:'Tier 4', raid:'Denouement: Final Day', difficulty:'Normal', ilvl:1710, gates:[{gate:'Gate 1', gold:5500, rosterGold:5500, charGold:null, mainMat:null, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:3520, chestMainMat:null, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:10500, rosterGold:10500, charGold:null, mainMat:null, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:null, chestDestructionStones:2760, chestGuardianStones:5520, chestShards:23200, chestLeapstones:90, chestCardPack:1}], total:{gold:32000, mainMat:null, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:10240, chestMainMat:null, chestDestructionStones:4370, chestGuardianStones:8740, chestShards:36850, chestLeapstones:140, chestCardPack:1} },
-  { tier:'Tier 4', raid:'Denouement: Final Day', difficulty:'Solo', ilvl:1710, gates:[{gate:'Gate 1', gold:5500, rosterGold:5500, charGold:null, mainMat:null, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:3520, chestMainMat:null, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:10500, rosterGold:10500, charGold:null, mainMat:null, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:null, chestDestructionStones:2760, chestGuardianStones:5520, chestShards:23200, chestLeapstones:90, chestCardPack:1}], total:{gold:32000, mainMat:null, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:10240, chestMainMat:null, chestDestructionStones:4370, chestGuardianStones:8740, chestShards:36850, chestLeapstones:140, chestCardPack:1} },
+  { tier:'Tier 4', raid:'Denouement: Final Day', difficulty:'Normal', ilvl:1710, gates:[{gate:'Gate 1', gold:6500, rosterGold:6500, charGold:null, mainMat:null, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:3520, chestMainMat:null, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:9500, rosterGold:9500, charGold:null, mainMat:null, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:null, chestDestructionStones:2760, chestGuardianStones:5520, chestShards:23200, chestLeapstones:90, chestCardPack:1}], total:{gold:32000, mainMat:null, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:10240, chestMainMat:null, chestDestructionStones:4370, chestGuardianStones:8740, chestShards:36850, chestLeapstones:140, chestCardPack:1} },
+  { tier:'Tier 4', raid:'Denouement: Final Day', difficulty:'Solo', ilvl:1710, gates:[{gate:'Gate 1', gold:6500, rosterGold:6500, charGold:null, mainMat:null, clearMedal:1300, destinyStone:null, destructionStones:880, guardianStones:1760, shards:6200, leapstones:12, bidMainMat:null, chestCost:3520, chestMainMat:null, chestDestructionStones:1610, chestGuardianStones:3220, chestShards:13650, chestLeapstones:50, chestCardPack:null}, {gate:'Gate 2', gold:9500, rosterGold:9500, charGold:null, mainMat:null, clearMedal:2100, destinyStone:8, destructionStones:1100, guardianStones:2200, shards:7900, leapstones:15, bidMainMat:null, chestCost:6720, chestMainMat:null, chestDestructionStones:2760, chestGuardianStones:5520, chestShards:23200, chestLeapstones:90, chestCardPack:1}], total:{gold:32000, mainMat:null, clearMedal:3400, destinyStone:8, destructionStones:1980, guardianStones:3960, shards:14100, leapstones:27, bidMainMat:null, chestCost:10240, chestMainMat:null, chestDestructionStones:4370, chestGuardianStones:8740, chestShards:36850, chestLeapstones:140, chestCardPack:1} },
   { tier:'Tier 4', raid:'Act 4: Armoche', difficulty:'Hard', ilvl:1720, gates:[{gate:'Gate 1', gold:13500, rosterGold:null, charGold:null, mainMat:null, clearMedal:1200, destinyStone:null, destructionStones:980, guardianStones:1960, shards:6800, leapstones:11, bidMainMat:null, chestCost:4320, chestMainMat:null, chestDestructionStones:1680, chestGuardianStones:3360, chestShards:14250, chestLeapstones:53, chestCardPack:null}, {gate:'Gate 2', gold:24500, rosterGold:null, charGold:null, mainMat:null, clearMedal:1900, destinyStone:9, destructionStones:1150, guardianStones:2300, shards:8600, leapstones:16, bidMainMat:null, chestCost:7840, chestMainMat:null, chestDestructionStones:2880, chestGuardianStones:5760, chestShards:24200, chestLeapstones:94, chestCardPack:1}], total:{gold:38000, mainMat:null, clearMedal:3100, destinyStone:9, destructionStones:2130, guardianStones:4260, shards:15400, leapstones:27, bidMainMat:null, chestCost:12160, chestMainMat:null, chestDestructionStones:4560, chestGuardianStones:9120, chestShards:38450, chestLeapstones:147, chestCardPack:1} },
   { tier:'Tier 4', raid:'Act 4: Armoche', difficulty:'Normal', ilvl:1700, gates:[{gate:'Gate 1', gold:5000, rosterGold:5000, charGold:null, mainMat:null, clearMedal:1200, destinyStone:null, destructionStones:820, guardianStones:1640, shards:5400, leapstones:9, bidMainMat:null, chestCost:3200, chestMainMat:null, chestDestructionStones:1400, chestGuardianStones:2800, chestShards:11880, chestLeapstones:44, chestCardPack:null}, {gate:'Gate 2', gold:8500, rosterGold:8500, charGold:null, mainMat:null, clearMedal:1900, destinyStone:7, destructionStones:960, guardianStones:1920, shards:6800, leapstones:12, bidMainMat:null, chestCost:5440, chestMainMat:null, chestDestructionStones:2400, chestGuardianStones:4800, chestShards:20160, chestLeapstones:78, chestCardPack:1}], total:{gold:27000, mainMat:null, clearMedal:3100, destinyStone:7, destructionStones:1780, guardianStones:3560, shards:12200, leapstones:21, bidMainMat:null, chestCost:8640, chestMainMat:null, chestDestructionStones:3800, chestGuardianStones:7600, chestShards:32040, chestLeapstones:122, chestCardPack:1} },
   { tier:'Tier 4', raid:'Act 4: Armoche', difficulty:'Solo', ilvl:1700, gates:[{gate:'Gate 1', gold:5000, rosterGold:5000, charGold:null, mainMat:null, clearMedal:1200, destinyStone:null, destructionStones:820, guardianStones:1640, shards:5400, leapstones:9, bidMainMat:null, chestCost:3200, chestMainMat:null, chestDestructionStones:1400, chestGuardianStones:2800, chestShards:11880, chestLeapstones:44, chestCardPack:null}, {gate:'Gate 2', gold:8500, rosterGold:8500, charGold:null, mainMat:null, clearMedal:1900, destinyStone:7, destructionStones:960, guardianStones:1920, shards:6800, leapstones:12, bidMainMat:null, chestCost:5440, chestMainMat:null, chestDestructionStones:2400, chestGuardianStones:4800, chestShards:20160, chestLeapstones:78, chestCardPack:1}], total:{gold:27000, mainMat:null, clearMedal:3100, destinyStone:7, destructionStones:1780, guardianStones:3560, shards:12200, leapstones:21, bidMainMat:null, chestCost:8640, chestMainMat:null, chestDestructionStones:3800, chestGuardianStones:7600, chestShards:32040, chestLeapstones:122, chestCardPack:1} },
@@ -713,6 +772,22 @@ const RAID_FULL_DATA = [
   { tier:'Tier 3', raid:'Valtan', difficulty:'Normal', ilvl:1415, gates:[{gate:'Gate 1', gold:40, rosterGold:250, charGold:null, mainMat:null, clearMedal:50, destinyStone:null, destructionStones:8, guardianStones:16, shards:600, leapstones:1, bidMainMat:null, chestCost:75, chestMainMat:null, chestDestructionStones:11, chestGuardianStones:22, chestShards:600, chestLeapstones:1, chestCardPack:null}, {gate:'Gate 2', gold:60, rosterGold:400, charGold:null, mainMat:null, clearMedal:70, destinyStone:null, destructionStones:10, guardianStones:20, shards:900, leapstones:1, bidMainMat:null, chestCost:100, chestMainMat:null, chestDestructionStones:14, chestGuardianStones:28, chestShards:900, chestLeapstones:1, chestCardPack:1}], total:{gold:750, mainMat:null, clearMedal:120, destinyStone:null, destructionStones:18, guardianStones:36, shards:1500, leapstones:2, bidMainMat:null, chestCost:175, chestMainMat:null, chestDestructionStones:25, chestGuardianStones:50, chestShards:1500, chestLeapstones:2, chestCardPack:1} },
   { tier:'Tier 3', raid:'Valtan', difficulty:'Solo', ilvl:1415, gates:[{gate:'Gate 1', gold:null, rosterGold:290, charGold:null, mainMat:null, clearMedal:50, destinyStone:null, destructionStones:8, guardianStones:16, shards:600, leapstones:1, bidMainMat:null, chestCost:75, chestMainMat:null, chestDestructionStones:11, chestGuardianStones:22, chestShards:600, chestLeapstones:1, chestCardPack:null}, {gate:'Gate 2', gold:null, rosterGold:460, charGold:null, mainMat:null, clearMedal:70, destinyStone:null, destructionStones:10, guardianStones:20, shards:900, leapstones:1, bidMainMat:null, chestCost:100, chestMainMat:null, chestDestructionStones:14, chestGuardianStones:28, chestShards:900, chestLeapstones:1, chestCardPack:1}], total:{gold:750, mainMat:null, clearMedal:120, destinyStone:null, destructionStones:18, guardianStones:36, shards:1500, leapstones:2, bidMainMat:null, chestCost:175, chestMainMat:null, chestDestructionStones:25, chestGuardianStones:50, chestShards:1500, chestLeapstones:2, chestCardPack:1} },
 ];
+
+// Single source of truth: RAID_FULL_DATA (reward table). The tracker's RAID_DATA is derived from it.
+const slugId = str => str.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+function raidShortName(raid){
+  if(raid === 'Denouement: Final Day') return 'Kazeros';
+  return raid.replace(/^(Act \d+|Shadow Raid|Overture|Abyssal Dungeon):\s*/, '').replace(/\s+/g, ' ').trim();
+}
+const RAID_DATA = RAID_FULL_DATA.map(e => {
+  const gates = e.gates.map(g => ({ gold: g.gold || 0, rosterGold: g.rosterGold || 0, charGold: g.charGold || 0, chest: g.chestCost || 0 }));
+  return {
+    id: slugId(e.raid + ' ' + e.difficulty), raid: e.raid, difficulty: e.difficulty, ilvl: e.ilvl, tier: e.tier,
+    shortName: raidShortName(e.raid), gates,
+    gold: gates.reduce((sum, g) => sum + g.gold + g.rosterGold + g.charGold, 0),
+    chest: gates.reduce((sum, g) => sum + g.chest, 0)
+  };
+});
 
 const raidById = {};
 RAID_DATA.forEach(r => raidById[r.id] = r);
@@ -1091,7 +1166,7 @@ function classIconHtml(className, variant){
 }
 
 function classOptionsHtml(selected){
-  return CLASS_LIST.map(c => `<option value="${c}" ${c===selected?'selected':''}>${c}</option>`).join('');
+  return (selected ? '' : '<option value="" selected>—</option>') + CLASS_LIST.map(c => `<option value="${c}" ${c===selected?'selected':''}>${c}</option>`).join('');
 }
 
 function escapeAttr(str){
@@ -1109,29 +1184,38 @@ function formatGold(n){
 let characters = [];   // { id, ilvl, ign, class, raidIds:[id,id,id] }
 let progress = {};     // { [charId]: { [raidId]: { cleared:bool, box:bool } } }
 let resetKey = null;
+let manualOrder = false; // true after cards were dragged: home keeps array order instead of sorting by ilvl
 let nextId = 1;
 
 function uid(){ return nextId++; }
 
-const HIGH_ILVL_THRESHOLD = 1750;
-const HIGH_ILVL_DEFAULT_RAID_IDS = [
-  'abyssal_dungeon_horizon_cathedral_level_3',
-  'shadow_raid_serca_nightmare',
-  'denouement_final_day_hard'
+// Fixed display order: the "biggest" raid always comes first. Everything else follows in sheet order.
+const RAID_PRIORITY = [
+  'Shadow Raid: Belgardin',
+  'Abyssal Dungeon: Horizon Cathedral',
+  'Shadow Raid: Serca',
+  'Denouement: Final Day',
+  'Act 4: Armoche'
 ];
+function raidPriority(r){
+  const i = RAID_PRIORITY.indexOf(r.raid);
+  return i >= 0 ? i : RAID_PRIORITY.length + RAID_DATA.indexOf(r);
+}
 
+// The 3 best raids (by gold) a character of this ilvl can enter, listed in RAID_PRIORITY order.
 function defaultTop3(ilvl){
   const parsed = parseInt(ilvl, 10);
-  if(!isNaN(parsed) && parsed >= HIGH_ILVL_THRESHOLD){
-    return HIGH_ILVL_DEFAULT_RAID_IDS.slice();
-  }
   const maxIlvl = isNaN(parsed) ? Infinity : parsed;
   const byRaid = {};
   RAID_DATA.forEach(r => {
     if(r.ilvl > maxIlvl) return; // char's ilvl too low to enter this difficulty
     if(!byRaid[r.raid] || r.gold > byRaid[r.raid].gold) byRaid[r.raid] = r;
   });
-  return Object.values(byRaid).sort((a,b) => b.gold - a.gold).slice(0,3).map(r => r.id);
+  return Object.values(byRaid)
+    .sort((a, b) => (b.gold - a.gold) || (raidPriority(a) - raidPriority(b)))
+    .slice(0, 3)
+    .sort((a, b) => raidPriority(a) - raidPriority(b))
+    .map(r => r.id);
 }
 
 function ensureProgress(charId){
@@ -1193,6 +1277,7 @@ function checkReset(showMsg){
   if(current !== resetKey){
     // wipe all cleared/box flags, keep characters & raid selections
     Object.keys(progress).forEach(charId => { progress[charId] = {}; });
+    characters.forEach(c => { c.tasks = {}; });
     resetKey = current;
     saveState();
     if(showMsg) showToast('Weekly reset ・ resetting all checkboxes.');
@@ -1211,7 +1296,7 @@ function updateResetNote(){
   const m = totalMin%60;
   const el = document.getElementById('resetNote');
   if(el){
-    el.innerHTML = `Next reset in <b>${d}T ${h}Std ${m}Min</b>`;
+    el.innerHTML = `Next reset in <b>${d}d ${h}h ${m}m</b>`;
   }
 }
 
@@ -1222,7 +1307,7 @@ const STORAGE_KEY = 'lostark_raid_gold_helper_v1';
 
 function saveState(){
   try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ characters, progress, resetKey }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ characters, progress, resetKey, manualOrder }));
   }catch(err){
     console.error('Could not save to localStorage', err);
   }
@@ -1238,6 +1323,7 @@ function loadState(){
     nextId = characters.length ? Math.max(1, ...characters.map(c => c.id || 0)) + 1 : 1;
     progress = (data.progress && typeof data.progress === 'object') ? data.progress : {};
     resetKey = typeof data.resetKey === 'number' ? data.resetKey : null;
+    manualOrder = data.manualOrder === true;
     return true;
   }catch(err){
     console.error('Could not load from localStorage', err);
@@ -1359,7 +1445,7 @@ function raidSelectGroupHtml(char){
     html += `<div class="raid-setting-box">
       <div class="raid-setting-label">Raid ${i+1}</div>
       <select data-slot="${i}" class="raid-slot-select">
-        <option value="">— wählen —</option>
+        <option value="">— select —</option>
         ${raidOptionsHtml(selectedId, otherNames)}
       </select>
     </div>`;
@@ -1382,6 +1468,7 @@ function getFilteredCharacters(){
 }
 
 function renderCharacterTable(){
+  updateEarnerCounts();
   const body = document.getElementById('charTableBody');
   const list = getFilteredCharacters();
   document.getElementById('charCount').textContent = characters.length;
@@ -1409,9 +1496,11 @@ function renderCharacterTable(){
           <select data-field="class" style="width:150px;">${classOptionsHtml(c.class)}</select>
         </div>
       </td>
+      <td><input type="text" value="${escapeAttr(c.cp == null ? '' : c.cp)}" data-field="cp" style="width:90px;"></td>
+      <td><input type="checkbox" class="earner-check" data-earner ${c.goldEarner ? 'checked' : ''} title="Gold earner (max 6 per roster)"></td>
       <td>${raidSelectGroupHtml(c)}</td>
       <td class="row-actions">
-        <button class="btn btn-small btn-danger" data-action="delete">Löschen</button>
+        <button class="btn btn-small btn-danger" data-action="delete">Delete</button>
       </td>
     </tr>
   `).join('');
@@ -1448,6 +1537,11 @@ function renderCharacterTable(){
       });
     });
 
+    const earnerBox = row.querySelector('[data-earner]');
+    earnerBox.addEventListener('change', () => {
+      if(!setGoldEarner(id, earnerBox.checked)) earnerBox.checked = false;
+    });
+
     row.querySelector('[data-action="delete"]').addEventListener('click', () => {
       deleteCharacter(id);
     });
@@ -1460,12 +1554,12 @@ function addCharacter(){
   const cls = document.getElementById('f_class').value;
 
   if(!ign){
-    showToast('Bitte einen IGN eingeben');
+    showToast('Please enter an IGN');
     return;
   }
 
   const id = uid();
-  characters.push({ id, ilvl, ign, class: cls, raidIds: defaultTop3(ilvl) });
+  characters.push({ id, ilvl, ign, class: cls, raidIds: defaultTop3(ilvl), goldEarner: earnerCount() < GOLD_EARNER_LIMIT });
   ensureProgress(id);
 
   document.getElementById('f_ilvl').value = '';
@@ -1474,7 +1568,7 @@ function addCharacter(){
   renderCharacterTable();
   renderHome();
   saveState();
-  showToast(`${ign} hinzugefügt`);
+  showToast(`${ign} added`);
 }
 
 function deleteCharacter(id){
@@ -1484,7 +1578,7 @@ function deleteCharacter(id){
   renderCharacterTable();
   renderHome();
   saveState();
-  if(c) showToast(`${c.ign} gelöscht`);
+  if(c) showToast(`${c.ign} deleted`);
 }
 
 /* =========================================================
@@ -1515,6 +1609,7 @@ function deductBreakdown(b, cost){
 function charBreakdown(c, includePending){
   const p = progress[c.id] || {};
   const earned = emptyBreakdown(), pending = emptyBreakdown();
+  if(!c.goldEarner) return { earned, pending };   // only gold earners get gold from raids
   (c.raidIds||[]).forEach(rid => {
     if(!rid) return;
     const r = raidById[rid];
@@ -1546,6 +1641,11 @@ function charPending(c){
   return breakdownTotal(charBreakdown(c, true).pending);
 }
 
+function homeOrder(){
+  if(manualOrder) return characters;
+  return [...characters].sort((a,b) => (parseInt(b.ilvl)||0) - (parseInt(a.ilvl)||0));
+}
+
 function renderHome(){
   const grid = document.getElementById('homeCharGrid');
   const empty = document.getElementById('homeEmptyState');
@@ -1555,9 +1655,11 @@ function renderHome(){
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
-    const sorted = [...characters].sort((a,b) => (parseInt(b.ilvl)||0) - (parseInt(a.ilvl)||0));
-    grid.innerHTML = sorted.map(c => charCardHtml(c)).join('');
+    grid.innerHTML = homeOrder().map(c => charCardHtml(c)).join('');
+    grid.querySelectorAll('a, img').forEach(el => el.setAttribute('draggable', 'false'));
   }
+  document.getElementById('homeBar').style.display = (manualOrder && characters.length > 1) ? 'flex' : 'none';
+  updateEarnerCounts();
 
   // totals
   const totalEarned = emptyBreakdown(), totalPending = emptyBreakdown();
@@ -1569,41 +1671,71 @@ function renderHome(){
   const total = emptyBreakdown();
   addBreakdown(total, totalEarned);
   addBreakdown(total, totalPending);
-  document.getElementById('statEarned').innerHTML = goldValueHtml(breakdownTotal(totalEarned));
-  document.getElementById('statPending').innerHTML = goldValueHtml(breakdownTotal(totalPending));
-  document.getElementById('statTotal').innerHTML = goldValueHtml(breakdownTotal(total));
-  document.getElementById('statEarnedBreakdown').innerHTML = breakdownHtml(totalEarned);
-  document.getElementById('statPendingBreakdown').innerHTML = breakdownHtml(totalPending);
-  document.getElementById('statTotalBreakdown').innerHTML = breakdownHtml(total);
+  renderSummary(totalEarned, totalPending);
 
   attachHomeListeners();
 }
 
-function breakdownHtml(b){
-  return `<span>Unbound <b>${formatGold(b.gold)}</b></span><span>Roster-bound <b>${formatGold(b.rosterGold)}</b></span><span>Char-bound <b>${formatGold(b.charGold)}</b></span>`;
+function fmtK(v){
+  if(v >= 1000){ const k = Math.round(v / 100) / 10; return (Number.isInteger(k) ? k : k.toFixed(1)) + 'k'; }
+  return String(v);
+}
+
+function renderSummary(earned, pending){
+  const e = breakdownTotal(earned), o = breakdownTotal(pending), t = e + o;
+  const w = x => t > 0 ? (x / t * 100) : 0;
+  document.getElementById('statEarned').innerHTML = goldValueHtml(e);
+  document.getElementById('statTotal').textContent = '/ ' + formatGold(t);
+  document.getElementById('statPct').textContent = (t > 0 ? Math.round(e / t * 100) : 0) + '% earned';
+  document.getElementById('barU').style.width = w(earned.gold) + '%';
+  document.getElementById('barR').style.width = w(earned.rosterGold) + '%';
+  document.getElementById('barC').style.width = w(earned.charGold) + '%';
+  document.getElementById('statLegend').innerHTML =
+    `<span class="u">Unbound <b>${fmtK(earned.gold)}</b></span>` +
+    `<span class="r">Roster-bound <b>${fmtK(earned.rosterGold)}</b></span>` +
+    `<span class="c">Character <b>${fmtK(earned.charGold)}</b></span>` +
+    `<span class="open">Open <b>${fmtK(o)}</b></span>`;
+}
+
+// slim progress bar under a character's "Earned" line, same colours as the summary bar up top
+function earnedBarHtml(b){
+  const total = breakdownTotal(b.earned) + breakdownTotal(b.pending);
+  const w = x => total > 0 ? (x / total * 100) : 0;
+  return `<div class="summary-bar slim"><i class="u" style="width:${w(b.earned.gold)}%"></i><i class="r" style="width:${w(b.earned.rosterGold)}%"></i><i class="c" style="width:${w(b.earned.charGold)}%"></i></div>`;
 }
 
 function goldValueHtml(v){
   return `<img class="gold-icon lg" src="${GOLD_ICON_SRC}" alt="gold">${formatGold(v)}`;
 }
 
+function cpHtml(c){
+  const v = parseFloat(c.cp);
+  return Number.isFinite(v) ? ` · <span class="cp" title="Combat Power ${escapeAttr(String(c.cp))}">${Math.floor(v)} CP</span>` : '';
+}
+
 function charCardHtml(c){
   const raidIds = (c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl);
-  const earned = charEarned(c);
+  const flipped = flippedCards.has(c.id);
+  const bd = charBreakdown(c, true);
+  const earned = breakdownTotal(bd.earned);
   return `
   <div class="char-card" data-charid="${c.id}">
-    <div class="char-card-head">
+    <div class="char-card-head" draggable="true" title="Drag onto another character to swap places">
       ${classIconHtml(c.class, 'tile')}
       <div class="name-block">
-        <div class="cname">${escapeAttr(c.ign) || 'Unbenannt'}${c.ign ? `<a class="armory-link" href="https://lostark.bible/character/CE/${encodeURIComponent(c.ign)}" target="_blank" rel="noopener noreferrer" title="Open ${escapeAttr(c.ign)} on lostark.bible" aria-label="Open ${escapeAttr(c.ign)} on lostark.bible"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3H3.75A1.75 1.75 0 0 0 2 4.75v7.5A1.75 1.75 0 0 0 3.75 14h7.5A1.75 1.75 0 0 0 13 12.25V9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 2h5v5M14 2 7.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>` : ''}</div>
-        <div class="csub">${escapeAttr(c.class) || '—'} · ${escapeAttr(c.ilvl) || '?'} ilvl</div>
+        <div class="cname">${escapeAttr(c.ign) || 'Unnamed'}${c.ign ? `<a class="armory-link" href="https://lostark.bible/character/CE/${encodeURIComponent(c.ign)}" target="_blank" rel="noopener noreferrer" title="Open ${escapeAttr(c.ign)} on lostark.bible" aria-label="Open ${escapeAttr(c.ign)} on lostark.bible"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3H3.75A1.75 1.75 0 0 0 2 4.75v7.5A1.75 1.75 0 0 0 3.75 14h7.5A1.75 1.75 0 0 0 13 12.25V9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 2h5v5M14 2 7.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>` : ''}</div>
+        <div class="csub">${escapeAttr(c.ilvl) || '?'} ilvl${cpHtml(c)}</div>
       </div>
+      <button type="button" class="earner-badge ${c.goldEarner ? 'on' : ''}" data-earner-toggle="${c.id}" title="${c.goldEarner ? 'Gold earner — click to turn off' : 'No gold from raids — click to make gold earner'}">Gold</button>
     </div>
     <div class="char-card-sum">
-      <span>Earned</span>
-      <span class="val">${goldValueHtmlSmall(earned)}</span>
+      <div class="sum-row"><span class="sum-left"><span>Earned</span><span class="val">${goldValueHtmlSmall(earned)}</span></span>${taskDotsHtml(c)}</div>
+      ${earnedBarHtml(bd)}
     </div>
-    ${raidIds.map(rid => raidSlotHtml(c, rid)).join('')}
+    <div class="card-body">
+      <div class="face ${flipped ? 'off' : ''}" ${flipped ? 'aria-hidden="true"' : ''}>${raidIds.map((rid, idx) => raidSlotHtml(c, rid, idx)).join('')}</div>
+      <div class="face back ${flipped ? '' : 'off'}" ${flipped ? '' : 'aria-hidden="true"'}>${tasksPanelHtml(c)}</div>
+    </div>
   </div>`;
 }
 
@@ -1611,9 +1743,9 @@ function goldValueHtmlSmall(v){
   return `<img class="gold-icon" src="${GOLD_ICON_SRC}" alt="gold">${formatGold(v)}`;
 }
 
-function raidSlotHtml(c, rid){
+function raidSlotHtml(c, rid, idx){
   if(!rid || !raidById[rid]){
-    return `<div class="raid-slot"><div class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</div></div>`;
+    return `<div class="raid-slot empty-slot" data-char="${c.id}" data-slot="${idx}"><div class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</div></div>`;
   }
   const r = raidById[rid];
   const s = getSlotState(c.id, rid);
@@ -1627,13 +1759,13 @@ function raidSlotHtml(c, rid){
   const displayGold = Math.max(0, gateTotal - boxCost);
 
   return `
-  <div class="raid-slot ${allCleared ? 'cleared' : ''}" data-action="toggle-cleared" data-char="${c.id}" data-raid="${rid}" role="button" tabindex="0" title="${clearedCount}/${gates.length} gates cleared">
+  <div class="raid-slot ${allCleared ? 'cleared' : ''}" data-action="toggle-cleared" data-char="${c.id}" data-raid="${rid}" data-slot="${idx}" draggable="true" role="button" tabindex="0" title="${clearedCount}/${gates.length} gates cleared · drag onto another raid to swap">
     <div class="raid-slot-top">
       <span class="raid-slot-name">${escapeAttr(r.shortName)}</span>
       <span class="raid-slot-diff" style="background:${dc.bg}; color:${dc.fg};">${escapeAttr(r.difficulty)}</span>
     </div>
     <div class="raid-slot-bottom">
-      <span class="raid-slot-gold">${goldValueHtmlSmall(displayGold)}</span>
+      <span class="raid-slot-gold">${c.goldEarner ? goldValueHtmlSmall(displayGold) : '<span style="color:var(--muted-2); font-size:11px; font-weight:700;">no gold</span>'}</span>
       <div class="raid-slot-actions">
         ${r.chest && allCleared ? `<span class="check-btn compact box-btn ${s.box ? 'on' : ''}" data-action="toggle-box" data-char="${c.id}" data-raid="${rid}" title="Open box">
           <span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -2115,6 +2247,30 @@ async function renderParadiseRewards(){
 }
 
 function attachHomeListeners(){
+  document.querySelectorAll('[data-flip]').forEach(el => {
+    el.addEventListener('click', e => { e.stopPropagation(); flipCard(parseInt(el.dataset.flip, 10)); });
+  });
+  document.querySelectorAll('.task-row').forEach(el => {
+    const toggleTask = () => {
+      const c = characters.find(x => x.id === parseInt(el.dataset.char, 10));
+      if(!c) return;
+      const t = getTasks(c);
+      t[el.dataset.task] = !t[el.dataset.task];
+      renderHome();
+      saveState();
+    };
+    el.addEventListener('click', toggleTask);
+    el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggleTask(); } });
+  });
+  document.querySelectorAll('[data-earner-toggle]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.earnerToggle, 10);
+      const c = characters.find(x => x.id === id);
+      if(c) setGoldEarner(id, !c.goldEarner);
+    });
+  });
+
   document.querySelectorAll('.raid-slot[data-action="toggle-cleared"]').forEach(el => {
     const toggleClear = () => {
       const charId = parseInt(el.dataset.char, 10);
@@ -2155,12 +2311,441 @@ function attachHomeListeners(){
   });
 }
 
+
+/* =========================================================
+   PASTE ROSTER (ilvl update)
+   ========================================================= */
+// "7,502.12" / "7502,12" / "7.502,12" -> number (NaN if not a number)
+function parseDecimal(str){
+  let t = String(str).replace(/\s/g, '');
+  const lastDot = t.lastIndexOf('.'), lastComma = t.lastIndexOf(',');
+  if(lastDot >= 0 && lastComma >= 0){
+    t = lastDot > lastComma ? t.replace(/,/g, '') : t.replace(/\./g, '').replace(',', '.');
+  } else if(lastComma >= 0){
+    t = /,\d{1,2}$/.test(t) ? t.replace(',', '.') : t.replace(/,/g, '');
+  }
+  return Number(t);
+}
+
+// "<name> <ilvl>" line, optionally followed by a "≈<combat power>" line (ignored here).
+// Blank lines and "Last updated …" lines are skipped.
+function parseRosterPaste(text){
+  const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const out = [];
+  let cur = null;
+  for(const line of lines){
+    if(/^last updated/i.test(line)){ cur = null; continue; }
+    const cpLine = line.match(/^[≈~]\s*(\d[\d.,]*)$/) || (cur && cur.cp == null ? line.match(/^(\d[\d.,]*)$/) : null);
+    if(cpLine){
+      const v = parseDecimal(cpLine[1]);
+      if(cur && Number.isFinite(v)) cur.cp = v;
+      continue;
+    }
+    const m = line.match(/^(.+?)\s+(\d[\d.,]*)(?:\s*[≈~]\s*(\d[\d.,]*))?$/);
+    if(!m){ cur = null; continue; }
+    const ilvl = parseDecimal(m[2]);
+    if(!Number.isFinite(ilvl)){ cur = null; continue; }
+    const cp = m[3] != null ? parseDecimal(m[3]) : null;
+    cur = { name: m[1].trim(), ilvl, cp: Number.isFinite(cp) ? cp : null };
+    out.push(cur);
+  }
+  return out;
+}
+
+/* ---------- Gold earners (max 6 per roster) ---------- */
+const GOLD_EARNER_LIMIT = 6;
+
+/* ---------- Weekly tasks on the back of each card ---------- */
+const WEEKLY_TASKS = [
+  { key:'guild',    label:'Guild Shop',  icons:['Cube Ticket.webp', 'Destiny Crystallized Destruction Stone.png'] },
+  { key:'growth',   label:'Growth Shop', icons:['Destiny Crystallized Destruction Stone.png', 'Superior Abidos Fusion Material.png', 'Agony Thorn.webp', 'Graced Shard.webp'] },
+  { key:'paradise', label:'Paradise',    icons:['Hell Key.webp', 'Elysian Ticket.png', 'Banner.webp'] }
+];
+// icons are loaded from ICON_DIR (same folder as the class icons)
+function taskIconsHtml(k){
+  return k.icons.map(f => `<img src="${ICON_DIR}${encodeURIComponent(f)}" alt="" title="${escapeAttr(f.replace(/\.[a-z]+$/i, ''))}" draggable="false" onerror="this.style.display='none'">`).join('');
+}
+const flippedCards = new Set();   // UI only: every card starts on the raids side after a reload
+function getTasks(c){ if(!c.tasks || typeof c.tasks !== 'object') c.tasks = {}; return c.tasks; }
+
+function tasksPanelHtml(c){
+  const t = getTasks(c);
+  return WEEKLY_TASKS.map(k => `<div class="task-row ${t[k.key] ? 'done' : ''}" data-task="${k.key}" data-char="${c.id}" role="button" tabindex="0"><span class="task-main"><span class="task-name">${k.label}</span><span class="task-icons">${taskIconsHtml(k)}</span></span><span class="task-check">${t[k.key] ? '✓' : ''}</span></div>`).join('');
+}
+
+function taskDotsHtml(c){
+  const t = getTasks(c);
+  const status = WEEKLY_TASKS.map(k => `${k.label} ${t[k.key] ? '✓' : '✗'}`).join(' · ');
+  const hint = flippedCards.has(c.id) ? 'click to flip back to the raids' : 'click to flip to the weekly tasks';
+  return `<button type="button" class="task-dots" data-flip="${c.id}" title="${status} — ${hint}">${WEEKLY_TASKS.map(k => `<i class="${t[k.key] ? 'ok' : ''}"></i>`).join('')}</button>`;
+}
+
+function flipCard(id){
+  const sel = `.char-card[data-charid="${id}"]`;
+  const card = document.querySelector(sel);
+  const toggle = () => { if(flippedCards.has(id)) flippedCards.delete(id); else flippedCards.add(id); renderHome(); };
+  if(!card || !card.animate){ toggle(); return; }
+  card.animate([{ transform:'perspective(900px) rotateY(0deg)' }, { transform:'perspective(900px) rotateY(90deg)' }], { duration:140, easing:'ease-in' })
+    .onfinish = () => {
+      toggle();
+      const next = document.querySelector(sel);
+      if(next) next.animate([{ transform:'perspective(900px) rotateY(-90deg)' }, { transform:'perspective(900px) rotateY(0deg)' }], { duration:140, easing:'ease-out' });
+    };
+}
+function earnerCount(){ return characters.filter(c => c.goldEarner).length; }
+function updateEarnerCounts(){
+  const n = earnerCount();
+  document.querySelectorAll('.earner-count').forEach(el => { el.textContent = n; });
+}
+// returns true if the change was applied
+function setGoldEarner(id, on){
+  const c = characters.find(x => x.id === id);
+  if(!c) return false;
+  if(on && !c.goldEarner && earnerCount() >= GOLD_EARNER_LIMIT){
+    showToast(`Max ${GOLD_EARNER_LIMIT} gold earners — turn another one off first`);
+    return false;
+  }
+  c.goldEarner = !!on;
+  renderCharacterTable();
+  renderHome();
+  saveState();
+  return true;
+}
+
+// ids that changed between versions + default gold earners for characters saved before the limit existed
+const LEGACY_RAID_IDS = { 'ivory__tower_hard':'ivory_tower_hard', 'ivory__tower_normal':'ivory_tower_normal', 'ivory__tower_solo':'ivory_tower_solo' };
+function migrateCharacters(){
+  characters.forEach(c => {
+    if(Array.isArray(c.raidIds)) c.raidIds = c.raidIds.map(id => LEGACY_RAID_IDS[id] || id);
+    const p = progress[c.id];
+    if(p) Object.keys(LEGACY_RAID_IDS).forEach(old => {
+      if(p[old]){ p[LEGACY_RAID_IDS[old]] = p[old]; delete p[old]; }
+    });
+  });
+  let count = characters.filter(c => c.goldEarner === true).length;
+  characters.filter(c => typeof c.goldEarner !== 'boolean')
+    .sort((a, b) => (parseInt(b.ilvl) || 0) - (parseInt(a.ilvl) || 0))
+    .forEach(c => { if(count < GOLD_EARNER_LIMIT){ c.goldEarner = true; count++; } else c.goldEarner = false; });
+}
+
+function sameIds(a, b){
+  return Array.isArray(a) && Array.isArray(b) && a.length === b.length && a.every((v, i) => v === b[i]);
+}
+
+let pastePlan = null;
+
+function raidLabel(id){ const r = raidById[id]; return r ? `${r.shortName} ${r.difficulty}` : '—'; }
+function raidsLabel(ids){ return (ids || []).filter(Boolean).map(raidLabel).join(' · ') || '—'; }
+function currentRaids(c){ return (c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl); }
+
+function buildPastePlan(entries, addNew, assignRaids){
+  const plain = n => n.toLowerCase();
+  const fold = n => n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const rows = [];
+  const newSeen = new Set();
+  entries.forEach(e => {
+    const newIlvl = String(Math.floor(e.ilvl));
+    let matches = characters.filter(c => plain(c.ign) === plain(e.name));
+    if(!matches.length) matches = characters.filter(c => fold(c.ign) === fold(e.name));
+    if(!matches.length){
+      const key = fold(e.name);
+      if(newSeen.has(key)) return;
+      newSeen.add(key);
+      rows.push({ kind: addNew ? 'new' : 'missing', name: e.name, char: null, oldIlvl: null, newIlvl, oldCp: null, newCp: e.cp != null ? String(e.cp) : null, oldRaids: null, newRaids: defaultTop3(newIlvl), apply: addNew });
+      return;
+    }
+    matches.forEach(c => {
+      const oldRaids = currentRaids(c).slice();
+      const newRaids = assignRaids ? defaultTop3(newIlvl) : oldRaids;
+      const ilvlChanged = newIlvl !== String(c.ilvl).trim();
+      const raidsChanged = !sameIds(oldRaids, newRaids);
+      const oldCp = c.cp != null && String(c.cp).trim() !== '' ? String(c.cp).trim() : null;
+      const newCp = e.cp != null ? String(e.cp) : oldCp;
+      const cpChanged = e.cp != null && Math.floor(parseFloat(oldCp)) !== Math.floor(e.cp);
+      rows.push({ kind: (ilvlChanged || raidsChanged || cpChanged) ? 'update' : 'same', name: c.ign, char: c, oldIlvl: String(c.ilvl).trim(), newIlvl, oldCp, newCp, cpChanged, oldRaids, newRaids, ilvlChanged, raidsChanged, apply: true });
+    });
+  });
+  return rows;
+}
+
+function previewPaste(){
+  const input = document.getElementById('pasteInput');
+  const out = document.getElementById('pasteResult');
+  const box = document.getElementById('pastePreview');
+  const entries = parseRosterPaste(input.value);
+  out.textContent = '';
+
+  if(!entries.length){
+    pastePlan = null;
+    box.innerHTML = '';
+    out.textContent = 'No characters found in the pasted text. Expected lines like "Name 1790".';
+    return;
+  }
+  pastePlan = buildPastePlan(entries, document.getElementById('pasteAddNew').checked, document.getElementById('pasteAssign').checked);
+  renderPastePreview(entries.length);
+}
+
+function renderPastePreview(entryCount){
+  const box = document.getElementById('pastePreview');
+  const changes = pastePlan.map((r, i) => ({ r, i })).filter(x => x.r.kind === 'update' || x.r.kind === 'new');
+  const same = pastePlan.filter(r => r.kind === 'same').length;
+  const missing = pastePlan.filter(r => r.kind === 'missing').map(r => r.name);
+  const nUpd = changes.filter(x => x.r.kind === 'update').length, nNew = changes.length - nUpd;
+
+  let html = `<div class="paste-summary">${entryCount} characters read · ${nUpd} to update · ${nNew} new · ${same} unchanged</div>`;
+  if(changes.length){
+    html += `<table class="paste-table"><thead><tr><th></th><th>Character</th><th>Ilvl</th><th>Combat power</th><th>Raids</th></tr></thead><tbody>`;
+    changes.forEach(({ r, i }) => {
+      const ilvlCell = r.kind === 'new'
+        ? `<span class="tag-new">NEW</span>${escapeAttr(r.newIlvl)}`
+        : (r.ilvlChanged ? `${escapeAttr(r.oldIlvl) || '?'} → <b>${escapeAttr(r.newIlvl)}</b>` : `${escapeAttr(r.newIlvl)}`);
+      const cpOf = v => v == null ? '—' : String(Math.floor(parseFloat(v)));
+      const cpCell = r.kind === 'new' ? cpOf(r.newCp)
+        : (r.cpChanged ? `${cpOf(r.oldCp)} → <b>${cpOf(r.newCp)}</b>` : cpOf(r.newCp));
+      const raidCell = `${escapeAttr(raidsLabel(r.newRaids))}` +
+        ((r.kind === 'update' && r.raidsChanged) ? `<div class="was">was: ${escapeAttr(raidsLabel(r.oldRaids))}</div>` : '');
+      html += `<tr><td><input type="checkbox" data-plan="${i}" ${r.apply ? 'checked' : ''}></td><td>${escapeAttr(r.name)}</td><td>${ilvlCell}</td><td>${cpCell}</td><td>${raidCell}</td></tr>`;
+    });
+    html += `</tbody></table>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <button class="btn btn-violet" id="btnPasteApply">Apply</button>
+        <button class="btn" id="btnPasteCancel">Cancel</button>
+      </div>`;
+  } else {
+    html += `<div class="paste-summary">Nothing to change.</div>`;
+  }
+  if(missing.length) html += `<div class="paste-summary"><b>Not in your roster (${missing.length}), skipped:</b> ${missing.map(escapeAttr).join(', ')}</div>`;
+  box.innerHTML = html;
+
+  box.querySelectorAll('[data-plan]').forEach(cb => {
+    cb.addEventListener('change', () => { pastePlan[parseInt(cb.dataset.plan, 10)].apply = cb.checked; });
+  });
+  const applyBtn = document.getElementById('btnPasteApply');
+  if(applyBtn) applyBtn.addEventListener('click', applyPaste);
+  const cancelBtn = document.getElementById('btnPasteCancel');
+  if(cancelBtn) cancelBtn.addEventListener('click', clearPastePreview);
+}
+
+function clearPastePreview(){
+  pastePlan = null;
+  document.getElementById('pastePreview').innerHTML = '';
+}
+
+function applyPaste(){
+  if(!pastePlan) return;
+  let updated = 0, added = 0, raidsChanged = 0;
+  pastePlan.forEach(row => {
+    if(!row.apply) return;
+    if(row.kind === 'new'){
+      const id = uid();
+      characters.push({ id, ilvl: row.newIlvl, cp: row.newCp != null ? row.newCp : '', ign: row.name, class: '', raidIds: row.newRaids.slice(), goldEarner: earnerCount() < GOLD_EARNER_LIMIT });
+      ensureProgress(id);
+      added++;
+    } else if(row.kind === 'update'){
+      const c = row.char;
+      c.ilvl = row.newIlvl;
+      if(row.newCp != null) c.cp = row.newCp;
+      if(row.raidsChanged){
+        c.raidIds = row.newRaids.slice();
+        const p = ensureProgress(c.id);
+        Object.keys(p).forEach(rid => { if(!c.raidIds.includes(rid)) delete p[rid]; });   // progress of dropped raids goes away
+        raidsChanged++;
+      } else if(!c.raidIds || c.raidIds.length !== 3){
+        c.raidIds = row.oldRaids.slice();
+      }
+      updated++;
+    }
+  });
+  const skipped = pastePlan.filter(r => r.kind === 'missing').length;
+  clearPastePreview();
+  if(!skipped) document.getElementById('pasteInput').value = '';
+  renderCharacterTable();
+  renderHome();
+  saveState();
+  const out = document.getElementById('pasteResult');
+  out.textContent = `Applied: ${updated} updated (${raidsChanged} with new raids), ${added} added.` + (added ? ' Set the class of new characters in the table below.' : '');
+  showToast(`${updated + added} character${updated + added === 1 ? '' : 's'} updated`);
+}
+
+/* =========================================================
+   DRAG & DROP (home): swap raids / swap characters
+   ========================================================= */
+let dragInfo = null; // { type:'raid', charId, slot } | { type:'char', charId }
+
+function ensureRaidIds(c){
+  if(!c.raidIds || c.raidIds.length !== 3) c.raidIds = defaultTop3(c.ilvl);
+  return c.raidIds;
+}
+
+// Would `raidId` clash with another raid of the same name on this character (ignoring slot `skip`)?
+function raidNameClash(c, raidId, skip){
+  if(!raidId) return false;
+  const name = raidById[raidId].raid;
+  return ensureRaidIds(c).some((rid, i) => i !== skip && rid && raidById[rid] && raidById[rid].raid === name);
+}
+
+function swapRaids(from, to){
+  const a = characters.find(x => x.id === from.charId);
+  const b = characters.find(x => x.id === to.charId);
+  if(!a || !b) return;
+  if(a.id === b.id && from.slot === to.slot) return;
+  const ra = ensureRaidIds(a), rb = ensureRaidIds(b);
+  const idA = ra[from.slot], idB = rb[to.slot];
+
+  if(a.id === b.id){
+    ra[from.slot] = idB; ra[to.slot] = idA;      // reorder inside one character, progress is keyed by raid so it stays
+  } else {
+    // a character can't hold the same raid twice
+    const clashB = raidNameClash(b, idA, to.slot);
+    const clashA = raidNameClash(a, idB, from.slot);
+    if(clashB || clashA){
+      const who = clashB ? b.ign : a.ign;
+      showToast(`Can't swap: ${who} already has that raid`);
+      return;
+    }
+    const pa = ensureProgress(a.id), pb = ensureProgress(b.id);
+    const sa = idA ? pa[idA] : undefined, sb = idB ? pb[idB] : undefined;
+    if(idA) delete pa[idA];
+    if(idB) delete pb[idB];
+    ra[from.slot] = idB; rb[to.slot] = idA;
+    if(sa !== undefined && idA) pb[idA] = sa;     // cleared/box state travels with the raid
+    if(sb !== undefined && idB) pa[idB] = sb;
+    const low = [[a, idB], [b, idA]].find(([c, rid]) => rid && c.ilvl && parseInt(c.ilvl, 10) < raidById[rid].ilvl);
+    if(low){ showToast(`Swapped — note: ${low[0].ign} is below ${raidById[low[1]].ilvl} ilvl`); }
+    else showToast('Raids swapped');
+  }
+  renderCharacterTable();
+  renderHome();
+  saveState();
+}
+
+function swapCharacters(idA, idB){
+  if(idA === idB) return;
+  if(!manualOrder){ characters = homeOrder().slice(); manualOrder = true; }   // freeze the current (ilvl) order first
+  const i = characters.findIndex(x => x.id === idA), j = characters.findIndex(x => x.id === idB);
+  if(i < 0 || j < 0) return;
+  [characters[i], characters[j]] = [characters[j], characters[i]];
+  renderHome();
+  saveState();
+  showToast('Characters swapped');
+}
+
+function initHomeDragDrop(){
+  const grid = document.getElementById('homeCharGrid');
+  let hl = null;
+  const clearHl = () => { if(hl){ hl.classList.remove('drop-ok'); hl = null; } };
+  const slotInfo = el => ({ charId: parseInt(el.dataset.char, 10), slot: parseInt(el.dataset.slot, 10) });
+
+  grid.addEventListener('dragstart', e => {
+    const slot = e.target.closest ? e.target.closest('.raid-slot[draggable="true"]') : null;
+    const head = e.target.closest ? e.target.closest('.char-card-head[draggable="true"]') : null;
+    if(slot){
+      dragInfo = { type:'raid', ...slotInfo(slot) };
+      setTimeout(() => slot.classList.add('dragging'), 0);
+    } else if(head){
+      const card = head.closest('.char-card');
+      dragInfo = { type:'char', charId: parseInt(card.dataset.charid, 10) };
+      setTimeout(() => card.classList.add('dragging'), 0);
+    } else return;
+    if(e.dataTransfer){
+      e.dataTransfer.effectAllowed = 'move';
+      try{ e.dataTransfer.setData('text/plain', JSON.stringify(dragInfo)); }catch(_){ /* some browsers refuse */ }
+    }
+  });
+
+  grid.addEventListener('dragover', e => {
+    if(!dragInfo) return;
+    let target = null;
+    if(dragInfo.type === 'raid'){
+      target = e.target.closest('.raid-slot[data-slot]');
+      if(target){ const t = slotInfo(target); if(t.charId === dragInfo.charId && t.slot === dragInfo.slot) target = null; }
+    } else {
+      target = e.target.closest('.char-card');
+      if(target && parseInt(target.dataset.charid, 10) === dragInfo.charId) target = null;
+    }
+    if(!target){ clearHl(); return; }
+    e.preventDefault();
+    if(e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    if(hl !== target){ clearHl(); hl = target; hl.classList.add('drop-ok'); }
+  });
+
+  grid.addEventListener('dragleave', e => {
+    if(hl && !hl.contains(e.relatedTarget)) clearHl();
+  });
+
+  grid.addEventListener('drop', e => {
+    if(!dragInfo) return;
+    e.preventDefault();
+    const info = dragInfo;
+    dragInfo = null;
+    clearHl();
+    if(info.type === 'raid'){
+      const t = e.target.closest('.raid-slot[data-slot]');
+      if(t) swapRaids(info, slotInfo(t));
+    } else {
+      const t = e.target.closest('.char-card');
+      if(t) swapCharacters(info.charId, parseInt(t.dataset.charid, 10));
+    }
+  });
+
+  grid.addEventListener('dragend', () => {
+    dragInfo = null;
+    clearHl();
+    grid.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+  });
+
+  document.getElementById('btnResetOrder').addEventListener('click', () => {
+    manualOrder = false;
+    renderHome();
+    saveState();
+    showToast('Sorted by ilvl');
+  });
+}
+
+
+/* ---------- Help popup: lives on <body> and is clamped to the viewport ---------- */
+function initHelpTip(){
+  const btn = document.querySelector('.help-tip-btn');
+  const pop = document.querySelector('.help-pop');
+  if(!btn || !pop) return;
+  document.body.appendChild(pop);   // out of the blurred card, so position:fixed is relative to the window
+  let hideTimer = null;
+  const place = () => {
+    pop.style.maxHeight = '';
+    const r = btn.getBoundingClientRect();
+    const vw = document.documentElement.clientWidth, vh = window.innerHeight, m = 8;
+    const w = pop.offsetWidth, h = pop.offsetHeight;
+    const left = Math.max(m, Math.min(r.left - 6, vw - w - m));
+    const below = vh - r.bottom - m - 6, above = r.top - m - 6;
+    let top;
+    if(h <= below) top = r.bottom + 6;
+    else if(h <= above) top = r.top - 6 - h;
+    else if(below >= above){ top = r.bottom + 6; pop.style.maxHeight = Math.max(120, below) + 'px'; }
+    else { const mh = Math.max(120, above); pop.style.maxHeight = mh + 'px'; top = r.top - 6 - Math.min(h, mh); }
+    pop.style.left = left + 'px';
+    pop.style.top = Math.max(m, top) + 'px';
+  };
+  const show = () => { clearTimeout(hideTimer); pop.classList.add('show'); place(); };
+  const hide = () => { clearTimeout(hideTimer); pop.classList.remove('show'); };
+  const hideSoon = () => { clearTimeout(hideTimer); hideTimer = setTimeout(hide, 150); };
+  btn.addEventListener('mouseenter', show);
+  btn.addEventListener('focus', show);
+  btn.addEventListener('mouseleave', hideSoon);
+  btn.addEventListener('blur', hideSoon);
+  btn.addEventListener('click', () => pop.classList.contains('show') ? hide() : show());
+  pop.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+  pop.addEventListener('mouseleave', hideSoon);
+  window.addEventListener('resize', () => { if(pop.classList.contains('show')) place(); });
+  window.addEventListener('scroll', () => { if(pop.classList.contains('show')) place(); }, true);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') hide(); });
+}
+
 /* =========================================================
    IMPORT / EXPORT / CLEAR ALL
    ========================================================= */
 function initToolbarActions(){
   document.getElementById('btnExport').addEventListener('click', () => {
-    const data = { characters, progress, resetKey };
+    const data = { characters, progress, resetKey, manualOrder };
     const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -2186,12 +2771,14 @@ function initToolbarActions(){
         nextId = characters.length ? Math.max(1, ...characters.map(c => c.id || 0)) + 1 : 1;
         progress = (data.progress && typeof data.progress === 'object') ? data.progress : {};
         if(typeof data.resetKey === 'number') resetKey = data.resetKey;
+        manualOrder = data.manualOrder === true;
+        migrateCharacters();
         renderCharacterTable();
         renderHome();
         saveState();
-        showToast('Import erfolgreich');
+        showToast('Import successful');
       }catch(err){
-        showToast('Import fehlgeschlagen — ungültige Datei');
+        showToast('Import failed — invalid file');
       }
       e.target.value = '';
     };
@@ -2199,13 +2786,14 @@ function initToolbarActions(){
   });
 
   document.getElementById('btnClearAll').addEventListener('click', () => {
-    if(!confirm('Wirklich ALLE Charaktere löschen?')) return;
+    if(!confirm('Really delete ALL characters?')) return;
     characters = [];
     progress = {};
+    manualOrder = false;
     renderCharacterTable();
     renderHome();
     saveState();
-    showToast('Alle Charaktere gelöscht');
+    showToast('All characters deleted');
   });
 }
 
@@ -2215,6 +2803,7 @@ function initToolbarActions(){
    ========================================================= */
 function init(){
   const restored = loadState();
+  migrateCharacters();
 
   const sel = document.getElementById('f_class');
   sel.innerHTML = classOptionsHtml(CLASS_LIST[0]);
@@ -2227,6 +2816,18 @@ function init(){
   initTabs();
   initRewardSubtabs();
   initToolbarActions();
+  initHomeDragDrop();
+  initHelpTip();
+  document.getElementById('btnPasteUpdate').addEventListener('click', previewPaste);
+  document.getElementById('btnPasteClear').addEventListener('click', () => {
+    document.getElementById('pasteInput').value = '';
+    document.getElementById('pasteResult').textContent = '';
+    clearPastePreview();
+  });
+  document.getElementById('pasteInput').addEventListener('input', clearPastePreview);
+  ['pasteAddNew', 'pasteAssign'].forEach(id => document.getElementById(id).addEventListener('change', () => {
+    if(pastePlan) previewPaste();
+  }));
 
   checkReset(false);
   renderCharacterTable();
