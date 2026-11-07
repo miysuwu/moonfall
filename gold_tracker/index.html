@@ -2646,27 +2646,55 @@ function parseDecimal(str){
   return Number(t);
 }
 
-// "<name> <ilvl>" line, optionally followed by a "≈<combat power>" line (ignored here).
+// Roster paste, in either layout the browsers produce:
+//   Firefox: "<name> <ilvl>"  then "≈<combat power>"
+//   Chrome:  "<name>"  then "<ilvl>"  then "≈<combat power>"   (each on its own line)
 // Blank lines and "Last updated …" lines are skipped.
 function parseRosterPaste(text){
   const lines = String(text).split(/\r?\n/).map(l => l.trim()).filter(Boolean);
   const out = [];
-  let cur = null;
+  let cur = null;          // entry that can still receive a combat power
+  let pendingName = null;  // a name seen on its own line, waiting for its ilvl
+  const start = (name, ilvl, cp) => {
+    cur = { name: name.trim(), ilvl, cp: Number.isFinite(cp) ? cp : null };
+    out.push(cur);
+    pendingName = null;
+  };
   for(const line of lines){
-    if(/^last updated/i.test(line)){ cur = null; continue; }
-    const cpLine = line.match(/^[≈~]\s*(\d[\d.,]*)$/) || (cur && cur.cp == null ? line.match(/^(\d[\d.,]*)$/) : null);
-    if(cpLine){
-      const v = parseDecimal(cpLine[1]);
+    if(/^last updated/i.test(line)){ cur = null; pendingName = null; continue; }
+
+    // "≈8494.52"
+    const cpMark = line.match(/^[≈~]\s*(\d[\d.,]*)$/);
+    if(cpMark){
+      const v = parseDecimal(cpMark[1]);
       if(cur && Number.isFinite(v)) cur.cp = v;
+      pendingName = null;
       continue;
     }
+
+    // a bare number: the ilvl of a name from the line above (Chrome), else a combat power
+    const bare = line.match(/^(\d[\d.,]*)$/);
+    if(bare){
+      const v = parseDecimal(bare[1]);
+      if(pendingName && Number.isFinite(v)){ start(pendingName, v, null); continue; }
+      if(cur && cur.cp == null && Number.isFinite(v)) cur.cp = v;
+      continue;
+    }
+
+    // "Miysu 1790" or "Miysu 1790 ≈8494.52"
     const m = line.match(/^(.+?)\s+(\d[\d.,]*)(?:\s*[≈~]\s*(\d[\d.,]*))?$/);
-    if(!m){ cur = null; continue; }
-    const ilvl = parseDecimal(m[2]);
-    if(!Number.isFinite(ilvl)){ cur = null; continue; }
-    const cp = m[3] != null ? parseDecimal(m[3]) : null;
-    cur = { name: m[1].trim(), ilvl, cp: Number.isFinite(cp) ? cp : null };
-    out.push(cur);
+    if(m){
+      const ilvl = parseDecimal(m[2]);
+      if(Number.isFinite(ilvl)){
+        const cp = m[3] != null ? parseDecimal(m[3]) : null;
+        start(m[1], ilvl, cp);
+        continue;
+      }
+    }
+
+    // anything else is taken as a name whose ilvl follows on the next line
+    cur = null;
+    pendingName = line;
   }
   return out;
 }
