@@ -224,6 +224,12 @@
   .raid-select-group{ display:grid; grid-template-columns:repeat(3,minmax(180px,1fr)); gap:8px; min-width:540px; }
   .raid-setting-box{ background:var(--panel-2); border:1px solid var(--border-soft); border-radius:9px; padding:7px; }
   .raid-setting-box .raid-setting-label{ font-size:9px; font-weight:800; color:var(--muted-2); text-transform:uppercase; letter-spacing:.06em; margin:0 0 5px 2px; }
+  .task-chips{ display:flex; flex-wrap:wrap; gap:5px; min-width:190px; max-width:260px; }
+  .task-chip{ font:inherit; font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; border:1px solid var(--border); background:var(--panel-2); color:var(--muted); cursor:pointer; transition: all .15s ease; }
+  .task-chip.on{ color:var(--text); border-color:var(--teal-soft); background:rgba(63,230,196,0.08); }
+  .task-chip:hover{ border-color:var(--muted-2); }
+  .task-chip.locked{ opacity:.35; cursor:not-allowed; text-decoration:line-through; }
+  .task-empty{ flex:1; display:flex; align-items:center; justify-content:center; text-align:center; font-size:12px; color:var(--muted-2); border:1px dashed var(--border-soft); border-radius:10px; padding:8px; }
   .raid-select-group select{ font-size:11.5px; padding:7px 8px; }
   @media (max-width: 900px){ .raid-select-group{ min-width:420px; grid-template-columns:1fr; } }
   .raid-select-group select.invalid{ border-color: var(--danger); }
@@ -376,7 +382,7 @@
   .summary-total{ font-size:12px; font-weight:700; color: var(--muted-2); white-space:nowrap; margin-left:-8px; }
   .summary-pill{ font-size:10.5px; font-weight:800; padding:2px 9px; white-space:nowrap; border-radius:999px; background: var(--violet-soft); color: var(--text); }
   .summary-bar{ display:flex; height:8px; border-radius:999px; overflow:hidden; background: var(--panel-2); border:1px solid var(--border-soft); }
-  .summary-bar i{ display:block; height:100%; width:0; transition: width .25s ease; }
+  .summary-bar i{ display:block; height:100%; width:0; transition: width .6s cubic-bezier(.3,.8,.3,1); }
   .summary-bar .u, .summary-legend .u b{ background: var(--amber); }
   .summary-bar .r, .summary-legend .r b{ background: var(--teal); }
   .summary-bar .c, .summary-legend .c b{ background: var(--purple); }
@@ -398,6 +404,36 @@
     border:1px solid var(--border); border-radius:14px;
     padding: 16px 16px 18px; display:flex; flex-direction:column; gap:12px;
   }
+  /* show more / less: a thin line with a small, quiet label that wakes up on hover */
+  .more-wrap{ display:flex; justify-content:center; margin:-8px 0 22px; }
+  .more-btn{ all:unset; box-sizing:border-box; width:100%; display:flex; align-items:center; gap:12px; cursor:pointer; opacity:.4; transition: opacity .2s ease; }
+  .more-btn:hover, .more-btn:focus-visible{ opacity:1; }
+  .more-btn .more-line{ flex:1; height:1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+  .more-btn .more-label{ display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); padding:5px 12px; border-radius:999px; border:1px solid transparent; transition: all .2s ease; }
+  .more-btn:hover .more-label, .more-btn:focus-visible .more-label{ color:var(--text); border-color:var(--border); background:var(--panel-2); }
+  .more-btn svg{ width:12px; height:12px; transition: transform .25s ease; }
+  .more-btn.open svg{ transform: rotate(180deg); }
+  .char-card.reveal{ animation: cardReveal .45s ease-out both; animation-delay: calc(var(--ri, 0) * 60ms); }
+  @keyframes cardReveal{ from{ opacity:0; transform: translateY(12px); } to{ opacity:1; transform:none; } }
+  /* all raids of a character done: ring pulse + light sweep over its earned bar */
+  .char-card.fx-raids{ animation: cardRing .9s ease-out; }
+  @keyframes cardRing{ 0%{ box-shadow:0 0 0 0 rgba(63,230,196,.55); } 100%{ box-shadow:0 0 0 14px rgba(63,230,196,0); } }
+  .char-card.fx-raids .summary-bar.slim{ position:relative; }
+  .char-card.fx-raids .summary-bar.slim::after{
+    content:''; position:absolute; top:0; bottom:0; left:0; width:40%; pointer-events:none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+    transform: translateX(-120%); animation: slotShine .8s ease-out .1s forwards;
+  }
+  /* everything on the roster done */
+  .summary-card{ position:relative; }
+  .summary-card.fx-all{ overflow:hidden; animation: cardRing 1.2s ease-out; }
+  .summary-card.fx-all::after{
+    content:''; position:absolute; top:0; bottom:0; left:0; width:30%; pointer-events:none;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,.2), transparent);
+    transform: translateX(-120%) skewX(-12deg); animation: bigShine 1.1s ease-out .1s forwards;
+  }
+  @keyframes bigShine{ to{ transform: translateX(450%) skewX(-12deg); } }
+  .summary-card.fx-all .summary-earned{ animation: goldGlow 1.4s ease-out; }
   .char-card-head{ display:flex; align-items:center; gap:10px; }
   .char-card-head .name-block{ min-width:0; }
   .char-card-head .cname{ font-size:14px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -414,7 +450,26 @@
   .task-dots{ display:inline-flex; gap:3px; align-items:center; padding:5px 3px; margin:-5px -3px; background:none; border:0; cursor:pointer; flex-shrink:0; }
   .task-dots:hover i{ filter:brightness(1.25); }
   .task-dots i{ display:block; width:13px; height:4px; border-radius:999px; background:#ff5d6c; }
-  .task-dots i.ok{ background:#4ade80; }
+  .task-dots i.ok{ background:var(--teal); }
+  .task-dots i.to-ok{ animation: dotToGreen .6s ease-out; }
+  /* all tasks of a character done: a wave runs through the segments */
+  .task-dots.wave i{ animation: dotWave .7s ease-out both; animation-delay: calc(var(--i, 0) * 90ms); }
+  @keyframes dotWave{
+    0%, 100%{ transform:scaleY(1); box-shadow:0 0 0 rgba(63,230,196,0); }
+    40%{ transform:scaleY(2.8) scaleX(1.1); box-shadow:0 0 10px rgba(63,230,196,.9); }
+  }
+  .task-dots i.to-red{ animation: dotToRed .6s ease-out; }
+  @keyframes dotToGreen{
+    0%{ background:#ff5d6c; transform:scaleY(1); }
+    35%{ background:#facc5c; transform:scaleY(2.2) scaleX(1.12); box-shadow:0 0 8px rgba(63,230,196,.8); }
+    100%{ background:var(--teal); transform:scaleY(1); box-shadow:0 0 0 rgba(63,230,196,0); }
+  }
+  @keyframes dotToRed{
+    0%{ background:var(--teal); transform:scaleY(1); }
+    35%{ background:#facc5c; transform:scaleY(2.2) scaleX(1.12); box-shadow:0 0 8px rgba(255,93,108,.8); }
+    100%{ background:#ff5d6c; transform:scaleY(1); box-shadow:0 0 0 rgba(255,93,108,0); }
+  }
+  @media (prefers-reduced-motion: reduce){ .task-dots i.to-ok, .task-dots i.to-red, .task-dots.wave i, .char-card.reveal, .char-card.fx-raids, .char-card.fx-raids .summary-bar.slim::after, .summary-card.fx-all, .summary-card.fx-all::after, .summary-card.fx-all .summary-earned{ animation:none; } }
   .card-body{ display:grid; }
   .card-body .face{ grid-area:1 / 1; display:flex; flex-direction:column; gap:12px; min-width:0; }
   .card-body .face.off{ visibility:hidden; pointer-events:none; }
@@ -432,11 +487,27 @@
   .task-icons img{ width:22px; height:22px; object-fit:contain; }
   .task-row .task-name{ font-size:12.5px; font-weight:700; }
   .task-row .task-check{ width:20px; height:20px; border-radius:6px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; color:#06130d; flex-shrink:0; }
-  .task-row.done{ border-color:#2f7a4e; background: rgba(15, 28, 20, 0.35); }
-  .task-row.done .task-check{ background:#4ade80; border-color:#4ade80; }
+  .task-row.done{ border-color: var(--teal-soft); background: rgba(15, 24, 21, 0.25); }   /* same as .raid-slot.cleared */
+  .task-row.done .task-check{ background:var(--teal); border-color:var(--teal); }
+  /* finish animation, same as the raids: light sweep over the row, check pops with a ripple */
+  .task-row{ position:relative; }
+  .task-row.shine{ overflow:hidden; }
+  .task-row.shine::after{
+    content:''; position:absolute; top:0; bottom:0; left:0; width:45%; pointer-events:none;
+    background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+    transform: translateX(-120%) skewX(-12deg); animation: slotShine .55s ease-out forwards;
+  }
+  .task-row .task-check{ position:relative; }
+  .task-row.shine .task-check{ animation: clearScale .5s cubic-bezier(.2,1.5,.4,1); }
+  .task-row.shine .task-check::after{
+    content:''; position:absolute; inset:-1px; border-radius:inherit; border:2px solid var(--teal);
+    pointer-events:none; animation: clearRipple .6s ease-out forwards;
+  }
+  @media (prefers-reduced-motion: reduce){ .task-row.shine::after, .task-row.shine .task-check, .task-row.shine .task-check::after{ animation:none; } }
   .summary-bar.grow{ flex:1 1 160px; min-width:140px; }
 
   .raid-slot{
+    position:relative;
     background: rgba(13, 13, 19, 0.25); border:1px solid var(--border-soft); border-radius:10px;
     padding:10px 11px; display:flex; flex-direction:column; gap:7px;
     transition: border-color .15s ease, background .15s ease;
@@ -481,6 +552,10 @@
     font-size: 9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
     padding: 2px 7px; border-radius:999px; flex-shrink:0;
   }
+  .raid-slot-diff[data-action="cycle-diff"]{ cursor:pointer; transition: filter .15s ease, transform .15s ease; }
+  .raid-slot-diff[data-action="cycle-diff"]:hover{ filter:brightness(1.25); transform:translateY(-1px); }
+  .raid-slot-diff.pop{ animation: clearScale .45s cubic-bezier(.2,1.5,.4,1); }
+  @media (prefers-reduced-motion: reduce){ .raid-slot-diff.pop{ animation:none; } }
   .raid-slot-gold{ font-size:12px; font-weight:700; color: var(--muted); display:flex; align-items:center; }
   .raid-slot-bottom{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
   .raid-slot-actions{
@@ -512,16 +587,50 @@
     display:flex; align-items:center; justify-content:center; flex-shrink:0; transition: all .15s ease;
   }
   .check-btn .box svg{ width:10px; height:10px; opacity:0; transition: opacity .1s ease; }
-  .check-btn.on{ color: var(--text); border-color: var(--teal-soft); background: rgba(63,230,196,0.08); }
+  .check-btn{ position:relative; background-repeat:no-repeat; background-position:left center; }
+  .check-btn.on{ color: var(--text); border-color: var(--teal); }
   .check-btn.on .box{ background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
   .check-btn.on .box svg{ opacity:1; }
-  .check-btn.partial{ color: var(--text); border-color: var(--teal-soft); background: rgba(63,230,196,0.04); }
+  /* the pill fills left to right with the share of gates cleared (--fill), fully green at 100% */
+  .check-btn[data-role="clear-indicator"]{ padding:5px 12px; }
+  .check-btn.partial, .check-btn.on{
+    background-image: linear-gradient(rgba(63,230,196,0.30), rgba(63,230,196,0.30));
+    background-size: var(--fill, 0%) 100%;
+  }
+  .check-btn.on{ background-image: linear-gradient(rgba(63,230,196,0.38), rgba(63,230,196,0.38)); }
+  .check-btn.partial{ color: var(--text); border-color: var(--teal-soft); }
+  .check-btn.fill-anim{ animation: clearFill .45s cubic-bezier(.3,.9,.3,1); }
+  @keyframes clearFill{ from{ background-size: var(--from, 0%) 100%; } to{ background-size: var(--fill, 0%) 100%; } }
+  .check-btn.done-pop{ animation: clearFill .45s cubic-bezier(.3,.9,.3,1), clearScale .5s cubic-bezier(.2,1.5,.4,1); }
+  .check-btn.done-pop::after{
+    content:''; position:absolute; inset:-1px; border-radius:inherit; border:2px solid var(--teal);
+    pointer-events:none; animation: clearRipple .6s ease-out forwards;
+  }
+  @keyframes clearScale{ 0%{ transform:scale(1); } 40%{ transform:scale(1.14); } 100%{ transform:scale(1); } }
+  @keyframes clearRipple{ from{ transform:scale(1); opacity:.9; } to{ transform:scale(1.7, 2.2); opacity:0; } }
   .check-btn.partial .box{ border-color: var(--teal); }
   .chest-btn{ width:24px; height:24px; padding:0; display:inline-flex; align-items:center; justify-content:center; border:0; background:none; border-radius:6px; color: var(--muted); cursor:pointer; transition: opacity .15s ease, transform .15s ease, color .15s ease; }
   .chest-btn.open{ color: var(--amber); }
+  /* light sweep across a raid slot when its last gate is cleared */
+  .raid-slot.shine{ overflow:hidden; }
+  .raid-slot.shine::after{
+    content:''; position:absolute; top:0; bottom:0; left:0; width:45%; pointer-events:none;
+    background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+    transform: translateX(-120%) skewX(-12deg); animation: slotShine .55s ease-out forwards;
+  }
+  @keyframes slotShine{ to{ transform: translateX(300%) skewX(-12deg); } }
+  /* gold counter */
+  /* fixed-width digits and a reserved width, so nothing shifts when 5 digits become 6 (or 6 become 7) */
+  .gnum{ display:inline-block; text-align:left; font-variant-numeric: tabular-nums; font-feature-settings:'tnum' 1; min-width:6.7ch; white-space:nowrap; }
+  .summary-earned .gnum{ min-width:8.3ch; }   /* up to 7 digits: 9.999.999 */
+  .gnum.glow{ animation: goldGlow .9s ease-out; }
+  @keyframes goldGlow{ 0%{ text-shadow:0 0 12px var(--amber), 0 0 4px var(--amber); color:var(--amber); } 100%{ text-shadow:0 0 0 transparent; } }
+  @media (prefers-reduced-motion: reduce){
+    .check-btn.fill-anim, .check-btn.done-pop, .check-btn.done-pop::after, .raid-slot.shine::after, .gnum.glow{ animation:none; }
+  }
   .chest-btn svg{ width:20px; height:20px; display:block; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
   .chest-btn:hover{ opacity:.75; transform: translateY(-1px); }
-  .chest-btn.pop{ animation: chestPop .5s cubic-bezier(.2, 1.5, .4, 1); }
+  .chest-btn.pop{ animation: chestPop .5s cubic-bezier(.2, 1.5, .4, 1) .225s backwards; }   /* waits for the shine to pass */
   @keyframes chestPop{ 0%{ transform: scale(0) rotate(-25deg); opacity:0; } 60%{ transform: scale(1.3) rotate(8deg); opacity:1; } 100%{ transform: scale(1) rotate(0); } }
   @media (prefers-reduced-motion: reduce){ .chest-btn.pop{ animation:none; } }
   .check-btn.box-btn.on{ color: var(--text); border-color: var(--coral-soft); background: rgba(255,107,92,0.08); }
@@ -578,8 +687,8 @@
       <div class="summary-bar grow"><i class="u" id="barU"></i><i class="r" id="barR"></i><i class="c" id="barC"></i></div>
       <div class="summary-legend" id="statLegend"></div>
     </div>
-    <div class="home-bar" id="homeBar" style="display:none;"><button class="btn btn-small" id="btnResetOrder" title="Go back to automatic sorting by ilvl">Sort by ilvl</button></div>
     <div class="char-grid" id="homeCharGrid"></div>
+    <div class="more-wrap" id="homeMoreWrap" style="display:none;"></div>
     <div class="empty-state" id="homeEmptyState" style="display:none;">
       No chars here. Go to <b>Settings</b> to add them.
     </div>
@@ -687,6 +796,7 @@
               <th>Combat power</th>
               <th title="Gold earner (max 6 per roster)">Gold</th>
               <th>Raids (3)</th>
+              <th title="Weekly tasks shown on the card">Tasks</th>
               <th></th>
             </tr>
           </thead>
@@ -1446,6 +1556,14 @@ function raidOptionsHtml(selectedId, excludedRaidNames){
   }).join('');
 }
 
+function taskChipsHtml(c){
+  const hidden = c.hiddenTasks || {};
+  return `<div class="task-chips">${WEEKLY_TASKS.map(k => {
+    if(!taskEligible(c, k)) return `<span class="task-chip locked" title="${escapeAttr(k.label)} unlocks at ${k.minIlvl} item level">${escapeAttr(k.label)}</span>`;
+    const on = !hidden[k.key];
+    return `<button type="button" class="task-chip ${on ? 'on' : ''}" data-task-toggle="${k.key}" aria-pressed="${on}" title="${on ? 'Shown on the card. Click to hide' : 'Hidden. Click to show'}">${escapeAttr(k.label)}</button>`;
+  }).join('')}</div>`;
+}
 function raidSelectGroupHtml(char){
   const raidIds = (char.raidIds && char.raidIds.length === 3) ? char.raidIds : defaultTop3(char.ilvl);
   let html = '<div class="raid-select-group">';
@@ -1512,6 +1630,7 @@ function renderCharacterTable(){
       <td><input type="text" value="${escapeAttr(c.cp == null ? '' : c.cp)}" data-field="cp" style="width:90px;"></td>
       <td><input type="checkbox" class="earner-check" data-earner ${c.goldEarner ? 'checked' : ''} title="Gold earner (max 6 per roster)"></td>
       <td>${raidSelectGroupHtml(c)}</td>
+      <td>${taskChipsHtml(c)}</td>
       <td class="row-actions">
         <button class="btn btn-small btn-danger" data-action="delete">Delete</button>
       </td>
@@ -1544,6 +1663,19 @@ function renderCharacterTable(){
         Object.keys(p).forEach(rid => {
           if(!c.raidIds.includes(rid)) delete p[rid];
         });
+        renderCharacterTable();
+        renderHome();
+        saveState();
+      });
+    });
+
+    row.querySelectorAll('[data-task-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const c = characters.find(x => x.id === id);
+        if(!c) return;
+        if(!c.hiddenTasks || typeof c.hiddenTasks !== 'object') c.hiddenTasks = {};
+        const key = btn.dataset.taskToggle;
+        if(c.hiddenTasks[key]) delete c.hiddenTasks[key]; else c.hiddenTasks[key] = true;
         renderCharacterTable();
         renderHome();
         saveState();
@@ -1614,9 +1746,10 @@ function gateReward(g){
 
 function deductBreakdown(b, cost){
   let left = Math.max(0, cost || 0);
-  const fromGold = Math.min(b.gold, left); b.gold -= fromGold; left -= fromGold;
-  const fromRoster = Math.min(b.rosterGold, left); b.rosterGold -= fromRoster; left -= fromRoster;
+  // box costs come out of character-bound gold first, then roster-bound, and only then unbound gold
   const fromChar = Math.min(b.charGold, left); b.charGold -= fromChar; left -= fromChar;
+  const fromRoster = Math.min(b.rosterGold, left); b.rosterGold -= fromRoster; left -= fromRoster;
+  const fromGold = Math.min(b.gold, left); b.gold -= fromGold; left -= fromGold;
 }
 
 function charBreakdown(c, includePending){
@@ -1654,6 +1787,63 @@ function charPending(c){
   return breakdownTotal(charBreakdown(c, true).pending);
 }
 
+/* ---- "done" moments ---- */
+const HOME_LIMIT = 6;                 // cards shown before "Show more"
+let showAllChars = false, justExpanded = false;
+const doneState = new Map();          // 'charId:done:raids|tasks' -> was done at the last render
+let rosterDonePrev;
+
+function charRaidIds(c){
+  return ((c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl)).filter(rid => rid && raidById[rid]);
+}
+function charRaidsDone(c){
+  const ids = charRaidIds(c);
+  return ids.length > 0 && ids.every(rid => getSlotState(c.id, rid).clearedGates.filter(Boolean).length >= gateCount(raidById[rid]));
+}
+function charTasksDone(c){
+  const list = visibleTasks(c), t = getTasks(c);
+  return list.length > 0 && list.every(k => t[k.key]);
+}
+// { raids, tasks }: true only on the render where that group just became complete
+function charDoneTransitions(c){
+  const out = { raids:false, tasks:false };
+  [['raids', charRaidsDone(c)], ['tasks', charTasksDone(c)]].forEach(([k, now]) => {
+    const key = c.id + ':done:' + k, prev = doneState.get(key);
+    doneState.set(key, now);
+    if(chestPopReady && prev === false && now) out[k] = true;
+  });
+  return out;
+}
+function rosterAllDone(){
+  let items = 0;
+  for(const c of characters){
+    const raids = charRaidIds(c).length, tasks = visibleTasks(c).length;
+    items += raids + tasks;
+    if(raids && !charRaidsDone(c)) return false;
+    if(tasks && !charTasksDone(c)) return false;
+  }
+  return items > 0;
+}
+function playRosterFx(){
+  const el = document.querySelector('.summary-card');
+  if(!el) return;
+  el.classList.remove('fx-all'); void el.offsetWidth; el.classList.add('fx-all');
+  setTimeout(() => el.classList.remove('fx-all'), 1800);
+  showToast('Everything is done this week');
+}
+function renderMoreButton(total){
+  const wrap = document.getElementById('homeMoreWrap');
+  if(total <= HOME_LIMIT){ wrap.style.display = 'none'; wrap.innerHTML = ''; return; }
+  const extra = total - HOME_LIMIT;
+  wrap.style.display = 'flex';
+  wrap.innerHTML = `<button type="button" class="more-btn ${showAllChars ? 'open' : ''}" id="btnHomeMore" aria-expanded="${showAllChars}"><span class="more-line"></span><span class="more-label">${showAllChars ? 'Show less' : `Show ${extra} more`}<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5L6 8l3.5-3.5"/></svg></span><span class="more-line"></span></button>`;
+  document.getElementById('btnHomeMore').addEventListener('click', () => {
+    showAllChars = !showAllChars;
+    justExpanded = showAllChars;
+    renderHome();
+  });
+}
+
 function homeOrder(){
   if(manualOrder) return characters;
   return [...characters].sort((a,b) => (parseInt(b.ilvl)||0) - (parseInt(a.ilvl)||0));
@@ -1668,10 +1858,13 @@ function renderHome(){
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
-    grid.innerHTML = homeOrder().map(c => charCardHtml(c)).join('');
+    const ordered = homeOrder();
+    const shown = (showAllChars || ordered.length <= HOME_LIMIT) ? ordered : ordered.slice(0, HOME_LIMIT);
+    grid.innerHTML = shown.map((c, i) => charCardHtml(c, (justExpanded && i >= HOME_LIMIT) ? i - HOME_LIMIT : null)).join('');
+    justExpanded = false;
     grid.querySelectorAll('a, img').forEach(el => el.setAttribute('draggable', 'false'));
   }
-  document.getElementById('homeBar').style.display = (manualOrder && characters.length > 1) ? 'flex' : 'none';
+  renderMoreButton(characters.length);
   updateEarnerCounts();
 
   // totals
@@ -1685,7 +1878,12 @@ function renderHome(){
   addBreakdown(total, totalEarned);
   addBreakdown(total, totalPending);
   renderSummary(totalEarned, totalPending);
+  const rosterNow = rosterAllDone();
+  if(chestPopReady && rosterDonePrev === false && rosterNow) playRosterFx();
+  rosterDonePrev = rosterNow;
   chestPopReady = true;
+  animateGoldCounts();
+  animateBars();
 
   attachHomeListeners();
 }
@@ -1698,7 +1896,7 @@ function fmtK(v){
 function renderSummary(earned, pending){
   const e = breakdownTotal(earned), o = breakdownTotal(pending), t = e + o;
   const w = x => t > 0 ? (x / t * 100) : 0;
-  document.getElementById('statEarned').innerHTML = goldValueHtml(e);
+  document.getElementById('statEarned').innerHTML = goldValueHtml(e, 'sum');
   document.getElementById('statTotal').textContent = '/ ' + formatGold(t);
   document.getElementById('statPct').textContent = (t > 0 ? Math.round(e / t * 100) : 0) + '% earned';
   document.getElementById('barU').style.width = w(earned.gold) + '%';
@@ -1712,14 +1910,55 @@ function renderSummary(earned, pending){
 }
 
 // slim progress bar under a character's "Earned" line, same colours as the summary bar up top
-function earnedBarHtml(b){
+// the cards are rebuilt on every change, so each segment starts at the width it had last time and
+// animateBars() then moves it to the new one, which lets the CSS transition play
+const barShown = new Map();   // 'charId:u|r|c' -> width % currently drawn
+function earnedBarHtml(b, id){
   const total = breakdownTotal(b.earned) + breakdownTotal(b.pending);
   const w = x => total > 0 ? (x / total * 100) : 0;
-  return `<div class="summary-bar slim"><i class="u" style="width:${w(b.earned.gold)}%"></i><i class="r" style="width:${w(b.earned.rosterGold)}%"></i><i class="c" style="width:${w(b.earned.charGold)}%"></i></div>`;
+  const seg = (cls, v) => {
+    const key = id + ':' + cls, to = w(v);
+    const from = barShown.has(key) ? barShown.get(key) : to;
+    barShown.set(key, to);
+    return `<i class="${cls}" data-to="${to}" style="width:${from}%"></i>`;
+  };
+  return `<div class="summary-bar slim">${seg('u', b.earned.gold)}${seg('r', b.earned.rosterGold)}${seg('c', b.earned.charGold)}</div>`;
+}
+function animateBars(){
+  const els = document.querySelectorAll('.summary-bar.slim i[data-to]');
+  if(!els.length) return;
+  void document.body.offsetWidth;   // commit the starting widths before changing them
+  requestAnimationFrame(() => els.forEach(el => { el.style.width = el.dataset.to + '%'; }));
 }
 
-function goldValueHtml(v){
-  return `<img class="gold-icon lg" src="${GOLD_ICON_SRC}" alt="gold">${formatGold(v)}`;
+function goldValueHtml(v, key){
+  return `<img class="gold-icon lg" src="${GOLD_ICON_SRC}" alt="gold">${gnumHtml(v, key)}`;
+}
+// number that can roll up to a new value (key identifies it between renders)
+function gnumHtml(v, key){
+  return key ? `<span class="gnum" data-key="${key}" data-v="${Math.round(v || 0)}">${formatGold(v)}</span>` : formatGold(v);
+}
+const gnumShown = new Map();   // key -> value currently on screen
+function animateGoldCounts(){
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.gnum[data-key]').forEach(el => {
+    const key = el.dataset.key, to = parseInt(el.dataset.v, 10);
+    const from = gnumShown.has(key) ? gnumShown.get(key) : to;
+    gnumShown.set(key, to);
+    if(from === to || reduce) return;
+    el.textContent = formatGold(from);
+    el.classList.add('glow');
+    const t0 = performance.now(), dur = 650;
+    const tick = now => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      const cur = Math.round(from + (to - from) * e);
+      gnumShown.set(key, cur);
+      if(!el.isConnected) return;   // card was re-rendered; the next render continues from the shown value
+      el.textContent = formatGold(cur);
+      if(k < 1) requestAnimationFrame(tick); else el.classList.remove('glow');
+    };
+    requestAnimationFrame(tick);
+  });
 }
 
 function cpHtml(c){
@@ -1727,53 +1966,75 @@ function cpHtml(c){
   return Number.isFinite(v) ? ` · <span class="cp" title="Combat Power ${escapeAttr(String(c.cp))}">${Math.floor(v)} CP</span>` : '';
 }
 
-function charCardHtml(c){
+function charCardHtml(c, revealIdx){
+  const tr = taskTransitions(c);
+  const fx = charDoneTransitions(c);
   const raidIds = (c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl);
   const flipped = isFlipped(c);
   const bd = charBreakdown(c, true);
   const earned = breakdownTotal(bd.earned);
   return `
-  <div class="char-card" data-charid="${c.id}">
+  <div class="char-card ${fx.raids ? 'fx-raids' : ''} ${revealIdx != null ? 'reveal' : ''}" data-charid="${c.id}" ${revealIdx != null ? `style="--ri:${revealIdx}"` : ''}>
     <div class="char-card-head" draggable="true" title="Drag onto another character to swap places">
       ${classIconHtml(c.class, 'tile')}
       <div class="name-block">
         <div class="cname">${escapeAttr(c.ign) || 'Unnamed'}${c.ign ? `<a class="armory-link" href="https://lostark.bible/character/CE/${encodeURIComponent(c.ign)}" target="_blank" rel="noopener noreferrer" title="Open ${escapeAttr(c.ign)} on lostark.bible" aria-label="Open ${escapeAttr(c.ign)} on lostark.bible"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 3H3.75A1.75 1.75 0 0 0 2 4.75v7.5A1.75 1.75 0 0 0 3.75 14h7.5A1.75 1.75 0 0 0 13 12.25V9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M9 2h5v5M14 2 7.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>` : ''}</div>
         <div class="csub">${escapeAttr(c.ilvl) || '?'} ilvl${cpHtml(c)}</div>
       </div>
-      <button type="button" class="earner-badge ${c.goldEarner ? 'on' : ''}" data-earner-toggle="${c.id}" title="${c.goldEarner ? 'Gold earner — click to turn off' : 'No gold from raids — click to make gold earner'}">Gold</button>
+      <button type="button" class="earner-badge ${c.goldEarner ? 'on' : ''}" data-earner-toggle="${c.id}" title="${c.goldEarner ? 'Gold earner. Click to turn off' : 'No gold from raids. Click to make gold earner'}">Gold</button>
     </div>
     <div class="char-card-sum">
-      <div class="sum-row"><span class="sum-left"><span>Earned</span><span class="val">${goldValueHtmlSmall(earned)}</span></span>${taskDotsHtml(c)}</div>
-      ${earnedBarHtml(bd)}
+      <div class="sum-row"><span class="sum-left"><span>Earned</span><span class="val">${goldValueHtmlSmall(earned, 'c' + c.id)}</span></span>${taskDotsHtml(c, tr, fx.tasks)}</div>
+      ${earnedBarHtml(bd, c.id)}
     </div>
     <div class="card-body">
       <div class="face ${flipped ? 'off' : ''}" ${flipped ? 'aria-hidden="true"' : ''}>${raidIds.map((rid, idx) => raidSlotHtml(c, rid, idx)).join('')}</div>
-      <div class="face back ${flipped ? '' : 'off'}" ${flipped ? '' : 'aria-hidden="true"'}>${tasksPanelHtml(c)}</div>
+      <div class="face back ${flipped ? '' : 'off'}" ${flipped ? '' : 'aria-hidden="true"'}>${tasksPanelHtml(c, tr)}</div>
     </div>
   </div>`;
 }
 
-function goldValueHtmlSmall(v){
-  return `<img class="gold-icon" src="${GOLD_ICON_SRC}" alt="gold">${formatGold(v)}`;
+function goldValueHtmlSmall(v, key){
+  return `<img class="gold-icon" src="${GOLD_ICON_SRC}" alt="gold">${gnumHtml(v, key)}`;
 }
 
 // line icon, drawn in currentColor: grey normally, yellow once the chest is opened
 const CHEST_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="14" rx="1.5"/><path d="M3.5 11.5h17"/><rect x="10.2" y="10.2" width="3.6" height="4" rx=".8" fill="var(--bg, #0d0d13)"/></svg>';
 let chestPopReady = false;            // false during the first render, so nothing pops on page load
-const chestSeen = new Set();          // chests that already popped up
+const chestSeen = new Set();
+const slotPrev = new Map();           // 'charId:raidId' -> gates cleared at the last render (to animate changes)          // chests that already popped up
 
 function chestHtml(c, rid, r, s, allCleared){
   const key = c.id + ':' + rid;
   if(!(r.chest && allCleared)){ chestSeen.delete(key); return ''; }
   const pop = chestPopReady && !chestSeen.has(key);
   chestSeen.add(key);
-  const title = s.box ? 'Chest opened — click to undo' : `Open chest (costs ${formatGold(r.chest)})`;
+  const title = s.box ? 'Chest opened. Click to undo' : `Open chest (costs ${formatGold(r.chest)})`;
   return `<span class="chest-btn ${s.box ? 'open' : ''} ${pop ? 'pop' : ''}" data-action="toggle-box" data-char="${c.id}" data-raid="${rid}" role="button" tabindex="0" aria-pressed="${s.box ? 'true' : 'false'}" title="${title}">${CHEST_SVG}</span>`;
 }
 
+function diffBadgeHtml(c, r, idx, dc){
+  const key = c.id + ':' + idx, prev = slotRaidPrev.get(key);
+  slotRaidPrev.set(key, r.id);
+  const pop = (chestPopReady && prev !== undefined && prev !== r.id) ? 'pop' : '';
+  const opts = diffOptions(c, r);
+  const style = `background:${dc.bg}; color:${dc.fg};`;
+  if(opts.length < 2) return `<span class="raid-slot-diff ${pop}" style="${style}">${escapeAttr(r.difficulty)}</span>`;
+  const next = opts[(opts.findIndex(o => o.id === r.id) + 1) % opts.length];
+  return `<span class="raid-slot-diff ${pop}" style="${style}" data-action="cycle-diff" data-char="${c.id}" data-slot="${idx}" role="button" tabindex="0" title="Click to switch to ${escapeAttr(next.difficulty)}">${escapeAttr(r.difficulty)}</span>`;
+}
+// difficulties of the same raid this character can enter, easiest first
+function diffOptions(c, r){
+  const parsed = parseInt(c.ilvl, 10), max = isNaN(parsed) ? Infinity : parsed;
+  return RAID_DATA.map((x, i) => ({ x, i }))
+    .filter(o => o.x.raid === r.raid && (o.x.ilvl <= max || o.x.id === r.id))
+    .sort((a, b) => (a.x.ilvl - b.x.ilvl) || (a.i - b.i))
+    .map(o => o.x);
+}
+const slotRaidPrev = new Map();   // 'charId:slot' -> raid id at the last render (to pop the badge when it changes)
 function raidSlotHtml(c, rid, idx){
   if(!rid || !raidById[rid]){
-    return `<div class="raid-slot empty-slot" data-char="${c.id}" data-slot="${idx}"><div class="raid-slot-top"><span class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</span></div><div class="raid-slot-bottom" aria-hidden="true" style="visibility:hidden;"><span class="raid-slot-gold">&nbsp;</span><div class="raid-slot-actions"><span class="check-btn"><span class="box"><svg viewBox="0 0 16 16" fill="none"></svg></span>Clear</span></div></div></div>`;   // invisible filler so an empty slot is as tall as a filled one
+    return `<div class="raid-slot empty-slot" data-char="${c.id}" data-slot="${idx}"><div class="raid-slot-top"><span class="raid-slot-name" style="color:var(--muted-2);">Choose a raid</span></div><div class="raid-slot-bottom" aria-hidden="true" style="visibility:hidden;"><span class="raid-slot-gold">&nbsp;</span><div class="raid-slot-actions"><span class="check-btn" data-role="clear-indicator">Clear</span></div></div></div>`;   // invisible filler so an empty slot is as tall as a filled one
   }
   const r = raidById[rid];
   const s = getSlotState(c.id, rid);
@@ -1783,21 +2044,28 @@ function raidSlotHtml(c, rid, idx){
   const clearedCount = s.clearedGates.filter(Boolean).length;
   const allCleared = clearedCount >= gates.length;
   const partial = clearedCount > 0 && !allCleared;
+  const slotKey = c.id + ':' + rid;
+  const prevCount = slotPrev.get(slotKey);
+  slotPrev.set(slotKey, clearedCount);
+  const changed = chestPopReady && prevCount !== undefined && prevCount !== clearedCount;
+  const justDone = changed && allCleared;
+  const fillPct = Math.round(clearedCount / gates.length * 100);
+  const fromPct = Math.round((prevCount || 0) / gates.length * 100);
+  const pillAnim = justDone ? 'done-pop' : (changed ? 'fill-anim' : '');
   const boxCost = (s.box && allCleared) ? (r.chest || 0) : 0;
   const displayGold = Math.max(0, gateTotal - boxCost);
 
   return `
-  <div class="raid-slot ${allCleared ? 'cleared' : ''}" data-action="toggle-cleared" data-char="${c.id}" data-raid="${rid}" data-slot="${idx}" draggable="true" role="button" tabindex="0" title="${clearedCount}/${gates.length} gates cleared · drag onto another raid to swap">
+  <div class="raid-slot ${allCleared ? 'cleared' : ''} ${justDone ? 'shine' : ''}" data-action="toggle-cleared" data-char="${c.id}" data-raid="${rid}" data-slot="${idx}" draggable="true" role="button" tabindex="0" title="${clearedCount}/${gates.length} gates cleared · drag onto another raid to swap">
     <div class="raid-slot-top">
       <span class="raid-slot-name">${escapeAttr(r.shortName)}</span>
-      <span class="raid-slot-diff" style="background:${dc.bg}; color:${dc.fg};">${escapeAttr(r.difficulty)}</span>
+      ${diffBadgeHtml(c, r, idx, dc)}
     </div>
     <div class="raid-slot-bottom">
       <span class="raid-slot-gold">${c.goldEarner ? goldValueHtmlSmall(displayGold) : '<span style="color:var(--muted-2); font-size:11px; font-weight:700;">no gold</span>'}</span>
       <div class="raid-slot-actions">
         ${chestHtml(c, rid, r, s, allCleared)}
-        <span class="check-btn ${allCleared ? 'on' : ''} ${partial ? 'partial' : ''}" data-role="clear-indicator" style="grid-column:2;">
-          <span class="box"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5L6.2 11.5L13 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="check-btn ${allCleared ? 'on' : ''} ${partial ? 'partial' : ''} ${pillAnim}" data-role="clear-indicator" style="grid-column:2; --fill:${fillPct}%; --from:${fromPct}%;">
           Clear
         </span>
       </div>
@@ -2296,6 +2564,30 @@ function attachHomeListeners(){
     });
   });
 
+  document.querySelectorAll('[data-action="cycle-diff"]').forEach(el => {
+    const cycle = () => {
+      const c = characters.find(x => x.id === parseInt(el.dataset.char, 10));
+      if(!c) return;
+      const slot = parseInt(el.dataset.slot, 10);
+      const ids = (c.raidIds && c.raidIds.length === 3) ? c.raidIds : defaultTop3(c.ilvl);
+      const cur = raidById[ids[slot]];
+      if(!cur) return;
+      const opts = diffOptions(c, cur);
+      if(opts.length < 2) return;
+      const next = opts[(opts.findIndex(o => o.id === cur.id) + 1) % opts.length];
+      c.raidIds = ids.slice();
+      c.raidIds[slot] = next.id;
+      // carry the cleared gates (and chest) over to the new difficulty
+      const old = getSlotState(c.id, cur.id);
+      setSlotState(c.id, next.id, { clearedGates: old.clearedGates, box: old.box });
+      if(progress[c.id]) delete progress[c.id][cur.id];
+      renderHome();
+      saveState();
+    };
+    el.addEventListener('click', e => { e.stopPropagation(); cycle(); });
+    el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); e.stopPropagation(); cycle(); } });
+  });
+
   document.querySelectorAll('.raid-slot[data-action="toggle-cleared"]').forEach(el => {
     const toggleClear = () => {
       const charId = parseInt(el.dataset.char, 10);
@@ -2387,7 +2679,7 @@ const WEEKLY_TASKS = [
   { key:'guild',    label:'Guild Shop',  icons:['Cube Ticket.webp', 'Destiny Crystallized Destruction Stone.png'] },
   { key:'growth',   label:'Growth Shop', icons:['Destiny Crystallized Destruction Stone.png', 'Superior Abidos Fusion Material.png', 'Agony Thorn.webp', 'Graced Shard.webp'] },
   { key:'paradise', label:'Paradise',    icons:['Hell Key.webp', 'Elysian Ticket.png', 'Banner.webp'] },
-  { key:'hourglass', label:"Haal's Hourglass", icons:['DMG Gem.webp', 'CD Gem.webp', "Lava's Breath.webp", "Glacier's Breath.webp", 'RelicBook.webp'] }
+  { key:'hourglass', label:"Haal's Hourglass", minIlvl:1730, icons:['DMG Gem.webp', 'CD Gem.webp', "Lava's Breath.webp", "Glacier's Breath.webp", 'RelicBook.webp'] }
 ];
 // icons are loaded from ICON_DIR (same folder as the class icons)
 function taskIconsHtml(k){
@@ -2396,22 +2688,48 @@ function taskIconsHtml(k){
 const flippedCards = new Set();   // UI only: every card starts on the raids side after a reload
 // a character with no raid selected, or that isn't a gold earner, shows the weekly tasks side by default; clicking the bars flips it to the raids side
 function isFlipped(c){
+  if(!visibleTasks(c).length) return false;   // nothing to show on the tasks side
   const noRaids = Array.isArray(c.raidIds) && c.raidIds.length === 3 && c.raidIds.every(r => !r);
   const defaultBack = noRaids || !c.goldEarner;
   return defaultBack ? !flippedCards.has(c.id) : flippedCards.has(c.id);
 }
+// a task can only be shown from its minimum item level on (Haal's Hourglass starts at 1730)
+function taskEligible(c, k){ return !k.minIlvl || (parseInt(c.ilvl, 10) || 0) >= k.minIlvl; }
+// the tasks this character actually displays: eligible by item level and not switched off in the Characters tab
+function visibleTasks(c){
+  const hidden = (c.hiddenTasks && typeof c.hiddenTasks === 'object') ? c.hiddenTasks : {};
+  return WEEKLY_TASKS.filter(k => taskEligible(c, k) && !hidden[k.key]);
+}
 function getTasks(c){ if(!c.tasks || typeof c.tasks !== 'object') c.tasks = {}; return c.tasks; }
 
-function tasksPanelHtml(c){
+// which tasks of this character changed since the last render: { key: 'to-ok' | 'to-red' }
+function taskTransitions(c){
+  const t = getTasks(c), out = {};
+  visibleTasks(c).forEach(k => {
+    const key = c.id + ':' + k.key, now = !!t[k.key], prev = taskPrev.get(key);
+    taskPrev.set(key, now);
+    if(chestPopReady && prev !== undefined && prev !== now) out[k.key] = now ? 'to-ok' : 'to-red';
+  });
+  return out;
+}
+function tasksPanelHtml(c, tr){
   const t = getTasks(c);
-  return WEEKLY_TASKS.map(k => `<div class="task-row ${t[k.key] ? 'done' : ''}" data-task="${k.key}" data-char="${c.id}" role="button" tabindex="0"><span class="task-main"><span class="task-name">${k.label}</span><span class="task-icons">${taskIconsHtml(k)}</span></span><span class="task-check">${t[k.key] ? '✓' : ''}</span></div>`).join('');
+  tr = tr || {};
+  const list = visibleTasks(c);
+  if(!list.length) return '<div class="task-empty">No weekly tasks selected for this character</div>';
+  return list.map(k => `<div class="task-row ${t[k.key] ? 'done' : ''} ${tr[k.key] === 'to-ok' ? 'shine' : ''}" data-task="${k.key}" data-char="${c.id}" role="button" tabindex="0"><span class="task-main"><span class="task-name">${k.label}</span><span class="task-icons">${taskIconsHtml(k)}</span></span><span class="task-check">${t[k.key] ? '✓' : ''}</span></div>`).join('');
 }
 
-function taskDotsHtml(c){
+const taskPrev = new Map();   // 'charId:taskKey' -> done at the last render (to animate the bars)
+function taskDotsHtml(c, tr, wave){
+  tr = tr || {};
   const t = getTasks(c);
-  const status = WEEKLY_TASKS.map(k => `${k.label} ${t[k.key] ? '✓' : '✗'}`).join(' · ');
-  const hint = isFlipped(c) ? 'click to flip back to the raids' : 'click to flip to the weekly tasks';
-  return `<button type="button" class="task-dots" data-flip="${c.id}" title="${status} — ${hint}">${WEEKLY_TASKS.map(k => `<i class="${t[k.key] ? 'ok' : ''}"></i>`).join('')}</button>`;
+  const list = visibleTasks(c);
+  if(!list.length) return '';
+  const status = list.map(k => `${k.label} ${t[k.key] ? '✓' : '✗'}`).join(' · ');
+  const hint = isFlipped(c) ? 'Click to flip back to the raids' : 'Click to flip to the weekly tasks';
+  const dots = list.map((k, i) => `<i class="${t[k.key] ? 'ok' : ''} ${tr[k.key] || ''}" style="--i:${i}"></i>`).join('');
+  return `<button type="button" class="task-dots ${wave ? 'wave' : ''}" data-flip="${c.id}" title="${status}. ${hint}">${dots}</button>`;
 }
 
 function flipCard(id){
@@ -2728,12 +3046,6 @@ function initHomeDragDrop(){
     grid.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
   });
 
-  document.getElementById('btnResetOrder').addEventListener('click', () => {
-    manualOrder = false;
-    renderHome();
-    saveState();
-    showToast('Sorted by ilvl');
-  });
 }
 
 
